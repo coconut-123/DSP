@@ -1,0 +1,226 @@
+{
+  "cohort_size": 3216,
+  "total_bounding_boxes": 8334,
+  "num_classes": 52,
+  "primary_groups_count": 543,
+  "multi_frame_groups_count": 332,
+  "mean_frames_per_group": 5.923,
+  "max_frames_per_group": 46,
+  "merge_counts": {
+    "exact_md5_duplicates": 0,
+    "temporal_burst_sequences": 2624,
+    "perceptual_near_duplicates": 49
+  },
+  "split_hash_sha256": "d9270e1ad2ceda3f5d57544dd7137e24cb11f84a0cffb9e030a22d7d1b3510a8",
+  "grouped_partition": {
+    "groups_crossing": 0,
+    "train_count": 2251,
+    "val_count": 322,
+    "test_count": 643,
+    "train_classes_present": 52,
+    "val_classes_present": 49,
+    "test_classes_present": 50,
+    "supergroup_composition": {
+      "train": {
+        "P (Prohibitory)": 1156,
+        "Other": 22,
+        "W (Warning)": 691,
+        "I (Informatory)": 152,
+        "R (Mandatory)": 174,
+        "S (Auxiliary)": 56
+      },
+      "val": {
+        "P (Prohibitory)": 212,
+        "Other": 1,
+        "I (Informatory)": 13,
+        "R (Mandatory)": 16,
+        "W (Warning)": 68,
+        "S (Auxiliary)": 12
+      },
+      "test": {
+        "P (Prohibitory)": 294,
+        "W (Warning)": 178,
+        "R (Mandatory)": 83,
+        "I (Informatory)": 73,
+        "S (Auxiliary)": 13,
+        "Other": 2
+      }
+    }
+  },
+  "random_partition": {
+    "groups_crossing_total": 280,
+    "groups_crossing_train_test": 249,
+    "original_archive_split_crossing": 263,
+    "train_count": 2253,
+    "val_count": 320,
+    "test_count": 643,
+    "supergroup_composition": {
+      "test": {
+        "P (Prohibitory)": 332,
+        "Other": 5,
+        "W (Warning)": 187,
+        "I (Informatory)": 48,
+        "R (Mandatory)": 55,
+        "S (Auxiliary)": 16
+      },
+      "train": {
+        "P (Prohibitory)": 1163,
+        "Other": 18,
+        "W (Warning)": 656,
+        "I (Informatory)": 167,
+        "R (Mandatory)": 192,
+        "S (Auxiliary)": 57
+      },
+      "val": {
+        "P (Prohibitory)": 167,
+        "W (Warning)": 94,
+        "R (Mandatory)": 26,
+        "I (Informatory)": 23,
+        "S (Auxiliary)": 8,
+        "Other": 2
+      }
+    }
+  },
+  "train_only_normalisation_stats": {
+    "grouped_arm": {
+      "n": 2251,
+      "mean": [
+        0.4739,
+        0.4765,
+        0.4682
+      ],
+      "std": [
+        0.211,
+        0.2076,
+        0.2258
+      ]
+    },
+    "random_arm": {
+      "n": 2253,
+      "mean": [
+        0.4739,
+        0.4775,
+        0.4704
+      ],
+      "std": [
+        0.2139,
+        0.2109,
+        0.2296
+      ]
+    },
+    "imagenet_default": {
+      "mean": [
+        0.485,
+        0.456,
+        0.406
+      ],
+      "std": [
+        0.229,
+        0.224,
+        0.225
+      ]
+    }
+  },
+  "rare_classes_group_support": [
+    {
+      "class_id": 44,
+      "code": "W.233",
+      "name_vi": "Nguy hiểm khác",
+      "independent_groups": 1,
+      "total_images": 3,
+      "train_support_grouped": 3,
+      "val_support_grouped": 0,
+      "test_support_grouped": 0
+    },
+    {
+      "class_id": 51,
+      "code": "W.246c",
+      "name_vi": "Chú ý chướng ngại vật – vòng tránh sang bên phải",
+      "independent_groups": 1,
+      "total_images": 5,
+      "train_support_grouped": 5,
+      "val_support_grouped": 0,
+      "test_support_grouped": 0
+    },
+    {
+      "class_id": 33,
+      "code": "W.202b",
+      "name_vi": "Nhiều chỗ ngoặt nguy hiểm liên tiếp, chỗ đầu tiên sang phải",
+      "independent_groups": 2,
+      "total_images": 19,
+      "train_support_grouped": 6,
+      "val_support_grouped": 0,
+      "test_support_grouped": 13
+    },
+    {
+      "class_id": 11,
+      "code": "I.409",
+      "name_vi": "Chỗ quay xe",
+      "independent_groups": 3,
+      "total_images": 26,
+      "train_support_grouped": 12,
+      "val_support_grouped": 9,
+      "test_support_grouped": 5
+    },
+    {
+      "class_id": 29,
+      "code": "P.104",
+      "name_vi": "Cấm mô tô và xe máy",
+      "independent_groups": 3,
+      "total_images": 45,
+      "train_support_grouped": 33,
+      "val_support_grouped": 9,
+      "test_support_grouped": 3
+    },
+    {
+      "class_id": 42,
+      "code": "R.301e",
+      "name_vi": "Các xe chỉ được rẽ trái",
+      "independent_groups": 3,
+      "total_images": 21,
+      "train_support_grouped": 13,
+      "val_support_grouped": 7,
+      "test_support_grouped": 1
+    },
+    {
+      "class_id": 48,
+      "code": "W.210",
+      "name_vi": "Giao nhau với đường sắt có rào chắn",
+      "independent_groups": 3,
+      "total_images": 41,
+      "train_support_grouped": 26,
+      "val_support_grouped": 13,
+      "test_support_grouped": 2
+    },
+    {
+      "class_id": 27,
+      "code": "W.225",
+      "name_vi": "Trẻ em",
+      "independent_groups": 4,
+      "total_images": 36,
+      "train_support_grouped": 26,
+      "val_support_grouped": 7,
+      "test_support_grouped": 3
+    },
+    {
+      "class_id": 28,
+      "code": "S.505a*Xe tải và công",
+      "name_vi": "Xe tải và xe công*",
+      "independent_groups": 4,
+      "total_images": 27,
+      "train_support_grouped": 21,
+      "val_support_grouped": 1,
+      "test_support_grouped": 5
+    },
+    {
+      "class_id": 47,
+      "code": "P.124b1",
+      "name_vi": "Cấm ô tô quay đầu xe (được rẽ trái)",
+      "independent_groups": 4,
+      "total_images": 16,
+      "train_support_grouped": 13,
+      "val_support_grouped": 2,
+      "test_support_grouped": 1
+    }
+  ]
+}

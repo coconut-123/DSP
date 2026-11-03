@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Large raw street image archive & intermediate PyTorch feature cache
+archive/images/
+archive/labels/
+data/backbone_features_cache.pt
+
+# Heavy training checkpoints & safetensor weights (>50MB)
+traffic_vlm_peft_adapter/checkpoint-*/
+traffic_vlm_peft_adapter/*.safetensors
+*.pt
+*.pth

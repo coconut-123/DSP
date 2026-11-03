@@ -1,0 +1,889 @@
+[
+  {
+    "class_id": 0,
+    "dataset_code": "W.224",
+    "canonical_qcvn_code": "W.224",
+    "name_vi": "Đường người đi bộ cắt ngang",
+    "official_qcvn_name": "Đường người đi bộ cắt ngang",
+    "name_en": "Pedestrian Crossing",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.24",
+    "article_title": "Phụ lục C - Mục C.24: Biển số W.224 \"Đường người đi bộ cắt ngang\"",
+    "legal_summary": "Biển số W.224 \"Đường người đi bộ cắt ngang\" a) Để báo trước sắp tới phần đường dành cho người đi bộ sang qua đường, đặt Biển số W.224 \"Đường người đi bộ cắt ngang\". Gặp Biển này các xe phải giảm tốc độ, nhường ưu tiên cho người đi bộ và chỉ được chạy xe khi không gây nguy hiểm cho người đi bộ.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.224/W.224_01.png"
+    ],
+    "total_real_instances": 312,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 1,
+    "dataset_code": "W.205c",
+    "canonical_qcvn_code": "W.205c",
+    "name_vi": "Đường giao nhau (ngã ba bên phải)",
+    "official_qcvn_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã ba bên trái)",
+    "name_en": "Equal-level Intersection",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.5",
+    "article_title": "Phụ lục C - Mục C.5: Biển số W.205(a,b,c,d,e) \"Đường giao nhau\"",
+    "legal_summary": "Biển số W.205(a,b,c,d,e) \"Đường giao nhau\" Để báo trước sắp đến nơi giao nhau cùng mức của các tuyến đường cùng cấp (không có đường nào ưu tiên) trên cùng một mặt bằng, đặt Biển số W.205(a,b,c,d,e) \"Đường giao nhau\". Biển được đặt trước nơi đường giao nhau ở ngoài phạm vi nội thành, nội thị là chủ yếu.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.205c/W.205c_01.png"
+    ],
+    "total_real_instances": 22,
+    "saved_real_crops": 22
+  },
+  {
+    "class_id": 2,
+    "dataset_code": "P.102",
+    "canonical_qcvn_code": "P.102",
+    "name_vi": "Cấm đi ngược chiều",
+    "official_qcvn_name": "Cấm đi ngược chiều",
+    "name_en": "No Entry",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.2",
+    "article_title": "Phụ lục B - Mục B.2: Biển số P.102 \"Cấm đi ngược chiều\"",
+    "legal_summary": "Biển số P.102 \"Cấm đi ngược chiều\" a) Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt Biển, trừ các xe được ưu tiên theo quy định, đặt Biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.102/P.102_01.png"
+    ],
+    "total_real_instances": 470,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 3,
+    "dataset_code": "R.302a",
+    "canonical_qcvn_code": "R.302a",
+    "name_vi": "Phải đi vòng sang bên phải",
+    "official_qcvn_name": "Hướng phải đi vòng chướng ngại vật (sang bên phải)",
+    "name_en": "Right Turn Only",
+    "category": "Biển hiệu lệnh (Nhóm R)",
+    "article_id": "QCVN41_B.2",
+    "article_title": "Phụ lục B - Mục B.2: Biển số P.102 \"Cấm đi ngược chiều\"",
+    "legal_summary": "Biển số P.102 \"Cấm đi ngược chiều\" a) Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt Biển, trừ các xe được ưu tiên theo quy định, đặt Biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.",
+    "pdf_template_images": [
+      "data/pdf_signs/R.302a/R.302a_01.png",
+      "data/pdf_signs/R.302a/R.302a_02.png"
+    ],
+    "total_real_instances": 454,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 4,
+    "dataset_code": "W.205a",
+    "canonical_qcvn_code": "W.205a",
+    "name_vi": "Giao nhau với đường đồng cấp",
+    "official_qcvn_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã tư)",
+    "name_en": "Intersection",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.5",
+    "article_title": "Phụ lục C - Mục C.5: Biển số W.205(a,b,c,d,e) \"Đường giao nhau\"",
+    "legal_summary": "Biển số W.205(a,b,c,d,e) \"Đường giao nhau\" Để báo trước sắp đến nơi giao nhau cùng mức của các tuyến đường cùng cấp (không có đường nào ưu tiên) trên cùng một mặt bằng, đặt Biển số W.205(a,b,c,d,e) \"Đường giao nhau\". Biển được đặt trước nơi đường giao nhau ở ngoài phạm vi nội thành, nội thị là chủ yếu.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.205a/W.205a_01.png"
+    ],
+    "total_real_instances": 33,
+    "saved_real_crops": 33
+  },
+  {
+    "class_id": 5,
+    "dataset_code": "W.207",
+    "canonical_qcvn_code": "W.207a",
+    "name_vi": "Giao nhau với đường không ưu tiên",
+    "official_qcvn_name": "Giao nhau với đường không ưu tiên (ngã tư)",
+    "name_en": "Intersection with a non-priority road",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.7",
+    "article_title": "Phụ lục C - Mục C.7: (đường nhánh)\"",
+    "legal_summary": "(đường nhánh)\" a) Trên đường ưu tiên, để báo trước sắp đến nơi giao nhau với đường không ưu tiên, đặt Biển số W.207(a,b,c,d,e,f,g,h,i,k,l). Tùy theo Hình dạng nơi giao nhau và hướng đường ưu tiên hay không ưu tiên để chọn kiểu Biển hoặc vẽ Hình dạng Hình vẽ cho phù hợp với thực tế nút giao.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.207a/W.207a_01.png"
+    ],
+    "total_real_instances": 256,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 6,
+    "dataset_code": "W.201a",
+    "canonical_qcvn_code": "W.201a",
+    "name_vi": "Chỗ ngoặt nguy hiểm vòng bên trái",
+    "official_qcvn_name": "Chỗ ngoặt nguy hiểm vòng bên trái",
+    "name_en": "Danger zone on the left",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.1",
+    "article_title": "Phụ lục C - Mục C.1: Biển số W.201 (a,b) \"Chỗ ngoặt nguy hiểm\"",
+    "legal_summary": "Biển số W.201 (a,b) \"Chỗ ngoặt nguy hiểm\" a) Để báo trước sắp đến một chỗ ngoặt nguy hiểm, đặt Biển số W.201 (a,b): - Biển số W.201a chỗ ngoặt nguy hiểm vòng bên trái. - Biển số W.201b chỗ ngoặt nguy hiểm vòng bên phải.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.201a/W.201a_01.png",
+      "data/pdf_signs/W.201a/W.201a_02.png",
+      "data/pdf_signs/W.201a/W.201a_03.png"
+    ],
+    "total_real_instances": 182,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 7,
+    "dataset_code": "P.123a",
+    "canonical_qcvn_code": "P.123a",
+    "name_vi": "Cấm rẽ trái",
+    "official_qcvn_name": "Cấm rẽ trái",
+    "name_en": "No Left Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.23",
+    "article_title": "Phụ lục B - Mục B.23: Biển số P.123a \"Cấm rẽ trái\" và Biển số P.123b \"Cấm rẽ phải\"",
+    "legal_summary": "Biển số P.123a \"Cấm rẽ trái\" và Biển số P.123b \"Cấm rẽ phải\" a) Để báo cấm rẽ trái hoặc rẽ phải (theo hướng mũi tên chỉ) ở những vị trí đường giao nhau, đặt Biển số P.123a \"Cấm rẽ trái\" hoặc Biển số P.123b \"Cấm rẽ phải\". Biển không có giá trị cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.123a/P.123a_01.png"
+    ],
+    "total_real_instances": 247,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 8,
+    "dataset_code": "I.434a",
+    "canonical_qcvn_code": "I.434a",
+    "name_vi": "Bến xe buýt",
+    "official_qcvn_name": "Bến xe buýt",
+    "name_en": "Bus Stop",
+    "category": "Biển chỉ dẫn (Nhóm I)",
+    "article_id": "QCVN41_E.36",
+    "article_title": "Phụ lục E - Mục E.36: Biển số I.434a \"Bến xe buýt\"",
+    "legal_summary": "Biển số I.434a \"Bến xe buýt\" Để chỉ dẫn chỗ dừng đỗ xe buýt cho khách lên xuống, đặt Biển số I.434a \"Bến xe buýt\". Biển số I.434a được bố trí kết hợp với Biển phụ để chỉ dẫn các thông tin về số hiệu tuyến, tên tuyến, điểm đầu, điểm cuối và lộ trình tuyến xe buýt.",
+    "pdf_template_images": [
+      "data/pdf_signs/I.434a/I.434a_01.png"
+    ],
+    "total_real_instances": 213,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 9,
+    "dataset_code": "R.303",
+    "canonical_qcvn_code": "R.303",
+    "name_vi": "Nơi giao nhau chạy theo vòng xuyến",
+    "official_qcvn_name": "Nơi giao nhau chạy theo vòng xuyến",
+    "name_en": "Roundabout",
+    "category": "Biển hiệu lệnh (Nhóm R)",
+    "article_id": "QCVN41_D.3",
+    "article_title": "Phụ lục D - Mục D.3: Biển số R.303 \"Nơi giao nhau chạy theo vòng xuyến\"",
+    "legal_summary": "Biển số R.303 \"Nơi giao nhau chạy theo vòng xuyến\" a) Để báo cho các loại xe (thô sơ và cơ giới) phải chạy vòng theo đảo an toàn ở nơi đường giao nhau phải đặt Biển số R.303 \"Nơi giao nhau chạy theo vòng xuyến\". b) Biển có hiệu lực bắt buộc các loại xe muốn chuyển hướng phải chạy vòng theo đảo an toàn theo hướng mũi tên.",
+    "pdf_template_images": [
+      "data/pdf_signs/R.303/R.303_01.png"
+    ],
+    "total_real_instances": 43,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 10,
+    "dataset_code": "P.130",
+    "canonical_qcvn_code": "P.130",
+    "name_vi": "Cấm dừng và đỗ xe",
+    "official_qcvn_name": "Cấm dừng xe và đỗ xe",
+    "name_en": "No Stopping and No Parking",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.30",
+    "article_title": "Phụ lục B - Mục B.30: c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe",
+    "legal_summary": "c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe quay đầu thì cần đặt thêm Biển nhắc lại. a) Biển số P.131a b) Biển số P.131b c) Biển số P.131c Hình B.31 - Biển số P.131.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.130/P.130_01.png"
+    ],
+    "total_real_instances": 1071,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 11,
+    "dataset_code": "I.409",
+    "canonical_qcvn_code": "I.409",
+    "name_vi": "Chỗ quay xe",
+    "official_qcvn_name": "Chỗ quay xe",
+    "name_en": "U-Turn Allowed",
+    "category": "Biển chỉ dẫn (Nhóm I)",
+    "article_id": "QCVN41_E.9",
+    "article_title": "Phụ lục E - Mục E.9: Biển số I.409 \"Chỗ quay xe\"",
+    "legal_summary": "Biển số I.409 \"Chỗ quay xe\" a) Để chỉ dẫn vị trí được phép quay đầu xe, đặt Biển số I.409 \"Chỗ quay xe\". b) Bên dưới Biển số I.409 có thể đặt Biển số S.502 \"Khoảng cách đến đối tượng báo hiệu\".",
+    "pdf_template_images": [
+      "data/pdf_signs/I.409/I.409_01.png"
+    ],
+    "total_real_instances": 26,
+    "saved_real_crops": 26
+  },
+  {
+    "class_id": 12,
+    "dataset_code": "R.415a",
+    "canonical_qcvn_code": "R.415a",
+    "name_vi": "Biển gộp làn đường theo phương tiện",
+    "official_qcvn_name": "Biển gộp làn đường theo phương tiện",
+    "name_en": "Lane Allocation",
+    "category": "Biển hiệu lệnh (Nhóm R)",
+    "article_id": "QCVN41_D.16",
+    "article_title": "Phụ lục D - Mục D.16: Biển số R.415 “Biển gộp làn đường theo phương tiện” và “Kết thúc làn",
+    "legal_summary": "Biển số R.415 “Biển gộp làn đường theo phương tiện” và “Kết thúc làn đường theo phương tiện” a) Để báo hiệu cho người tham gia giao thông biết số lượng làn đường và loại xe được phép lưu thông trên từng làn đường theo quy định, đặt Biển số R.415a “Biển gộp làn đường theo phương tiện” (Hình D.18a). Tùy theo tình Hình thực tế về số lượng làn đường và",
+    "pdf_template_images": [
+      "data/pdf_signs/R.415a/R.415a_01.png"
+    ],
+    "total_real_instances": 280,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 13,
+    "dataset_code": "W.245a",
+    "canonical_qcvn_code": "W.245a",
+    "name_vi": "Đi chậm",
+    "official_qcvn_name": "Đi chậm",
+    "name_en": "Slow Down",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.45",
+    "article_title": "Phụ lục C - Mục C.45: Biển số W.245 (a,b) \"Đi chậm\"",
+    "legal_summary": "Biển số W.245 (a,b) \"Đi chậm\" Dùng để nhắc lái xe giảm tốc độ đi chậm, đặt Biển số W.245 (a,b) \"Đi chậm\". Biển đặt ở vị trí thích hợp trước khi đến đoạn đường yêu cầu đi chậm.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.245a/W.245a_01.png"
+    ],
+    "total_real_instances": 372,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 14,
+    "dataset_code": "P.106a*Xe tải",
+    "canonical_qcvn_code": "P.106a",
+    "name_vi": "Cấm xe tải",
+    "official_qcvn_name": "Cấm xe ô tô tải",
+    "name_en": "No Trucks Allowed",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.6",
+    "article_title": "Phụ lục B - Mục B.6: Biển số P.106 (a,b) \"Cấm xe ô tô tải\" và Biển số P.106c \"Cấm các xe",
+    "legal_summary": "Biển số P.106 (a,b) \"Cấm xe ô tô tải\" và Biển số P.106c \"Cấm các xe chở hàng nguy hiểm” a) Để báo đường cấm các loại xe ô tô tải trừ các xe được ưu tiên theo quy định, đặt Biển số P.106a \"Cấm xe ô tô tải\". Biển có hiệu lực cấm đối với cả máy kéo và các xe máy chuyên dùng đi vào đoạn đường đặt Biển số P.106a.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.106a/P.106a_01.png"
+    ],
+    "total_real_instances": 85,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 15,
+    "dataset_code": "W.203c",
+    "canonical_qcvn_code": "W.203c",
+    "name_vi": "Đường bị thu hẹp về phía phải",
+    "official_qcvn_name": "Đường bị thu hẹp về phía phải",
+    "name_en": "Narrow Road on the Right",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.3",
+    "article_title": "Phụ lục C - Mục C.3: Biển số W.203(a,b,c) \"Đường bị thu hẹp\"",
+    "legal_summary": "Biển số W.203(a,b,c) \"Đường bị thu hẹp\" a) Để báo trước sắp đến một đoạn đường bị thu hẹp đột ngột, đặt Biển số W.203 (a,b,c): - Biển số W.203a đặt trong trường hợp đường bị thu hẹp cả hai bên. - Biển số W.203b hoặc Biển số W.203c đặt trong trường hợp đường bị thu hẹp về phía trái hoặc phía phải.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.203c/W.203c_01.png"
+    ],
+    "total_real_instances": 29,
+    "saved_real_crops": 29
+  },
+  {
+    "class_id": 16,
+    "dataset_code": "P.117*",
+    "canonical_qcvn_code": "P.117",
+    "name_vi": "Giới hạn chiều cao",
+    "official_qcvn_name": "Hạn chế chiều cao",
+    "name_en": "Height Limit",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.17",
+    "article_title": "Phụ lục B - Mục B.17: a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\".",
+    "legal_summary": "a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\". b) Biển số P.117 có hiệu lực cấm các xe (cơ giới và thô sơ) có chiều cao vượt quá trị số ghi trên Biển đi qua, kể cả các xe được ưu tiên theo quy định (chiều cao tính từ mặt đường, mặt cầu đến điểm cao nhất của xe hoặc hàng).",
+    "pdf_template_images": [
+      "data/pdf_signs/P.117/P.117_01.png"
+    ],
+    "total_real_instances": 73,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 17,
+    "dataset_code": "P.124a*",
+    "canonical_qcvn_code": "P.124a",
+    "name_vi": "Cấm quay đầu",
+    "official_qcvn_name": "Cấm quay đầu xe",
+    "name_en": "No U-Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.24",
+    "article_title": "Phụ lục B - Mục B.24: quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô",
+    "legal_summary": "quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô tô rẽ trái và quay đầu xe” và Biển số P.124f \"Cấm ô tô rẽ phải và quay đầu xe” a) Để báo cấm các loại xe quay đầu (theo kiểu chữ U), đặt Biển số P.124a \"Cấm quay đầu xe\". Chiều mũi tên phù hợp với chiều cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.124a/P.124a_01.png",
+      "data/pdf_signs/P.124a/P.124a_02.png"
+    ],
+    "total_real_instances": 105,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 18,
+    "dataset_code": "P.107",
+    "canonical_qcvn_code": "P.107",
+    "name_vi": "Cấm ô tô khách và ô tô tải",
+    "official_qcvn_name": "Cấm xe ô tô khách và xe ô tô tải",
+    "name_en": "No Passenger Cars and Trucks",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.7",
+    "article_title": "Phụ lục B - Mục B.7: Biển số P.107 \"Cấm xe ô tô khách và xe ô tô tải\"",
+    "legal_summary": "Biển số P.107 \"Cấm xe ô tô khách và xe ô tô tải\" Để báo đường cấm xe ô tô chở khách và các loại xe ô tô tải kể cả các loại máy kéo và xe máy chuyên dùng đi qua trừ các xe được ưu tiên theo quy định, đặt Biển số P.107 \"Cấm xe ô tô khách và xe ô tô tải\". Hình B.7 - Biển số P.107.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.107/P.107_01.png"
+    ],
+    "total_real_instances": 214,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 19,
+    "dataset_code": "P.124d",
+    "canonical_qcvn_code": "P.124d",
+    "name_vi": "Cấm rẽ phải và quay đầu",
+    "official_qcvn_name": "Cấm rẽ phải và quay đầu xe",
+    "name_en": "No U-Turn and No Right Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.24",
+    "article_title": "Phụ lục B - Mục B.24: quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô",
+    "legal_summary": "quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô tô rẽ trái và quay đầu xe” và Biển số P.124f \"Cấm ô tô rẽ phải và quay đầu xe” a) Để báo cấm các loại xe quay đầu (theo kiểu chữ U), đặt Biển số P.124a \"Cấm quay đầu xe\". Chiều mũi tên phù hợp với chiều cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.124d/P.124d_01.png"
+    ],
+    "total_real_instances": 29,
+    "saved_real_crops": 29
+  },
+  {
+    "class_id": 20,
+    "dataset_code": "P.103a",
+    "canonical_qcvn_code": "P.103a",
+    "name_vi": "Cấm ô tô",
+    "official_qcvn_name": "Cấm xe ô tô",
+    "name_en": "No Cars Allowed",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.3",
+    "article_title": "Phụ lục B - Mục B.3: Biển số P.103a \"Cấm xe ô tô\", Biển số P.103b và P.103c \"Cấm xe ô tô rẽ",
+    "legal_summary": "Biển số P.103a \"Cấm xe ô tô\", Biển số P.103b và P.103c \"Cấm xe ô tô rẽ phải\" và \"Cấm xe ô tô rẽ trái\" a) Để báo đường cấm các loại xe cơ giới kể cả xe máy 3 bánh có thùng đi qua, tr ừ xe máy 2 bánh, xe gắn máy và các xe được ưu tiên theo quy định, đặt Biển số P.103a \"Cấm xe ô tô\". Nếu đường cấm vì lý do đường, cầu bị yếu, có thể đặt hàng rào chắn h",
+    "pdf_template_images": [
+      "data/pdf_signs/P.103a/P.103a_01.png"
+    ],
+    "total_real_instances": 52,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 21,
+    "dataset_code": "W.203b",
+    "canonical_qcvn_code": "W.203b",
+    "name_vi": "Đường bị thu hẹp về phía trái",
+    "official_qcvn_name": "Đường bị thu hẹp về phía trái",
+    "name_en": "Narrow Road on the Left",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.3",
+    "article_title": "Phụ lục C - Mục C.3: Biển số W.203(a,b,c) \"Đường bị thu hẹp\"",
+    "legal_summary": "Biển số W.203(a,b,c) \"Đường bị thu hẹp\" a) Để báo trước sắp đến một đoạn đường bị thu hẹp đột ngột, đặt Biển số W.203 (a,b,c): - Biển số W.203a đặt trong trường hợp đường bị thu hẹp cả hai bên. - Biển số W.203b hoặc Biển số W.203c đặt trong trường hợp đường bị thu hẹp về phía trái hoặc phía phải.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.203b/W.203b_01.png"
+    ],
+    "total_real_instances": 11,
+    "saved_real_crops": 11
+  },
+  {
+    "class_id": 22,
+    "dataset_code": "W.221b",
+    "canonical_qcvn_code": "W.221b",
+    "name_vi": "Gồ giảm tốc phía trước",
+    "official_qcvn_name": "Đường có sóng mấp mô nhân tạo (gồ giảm tốc)",
+    "name_en": "Uneven Road",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.21",
+    "article_title": "Phụ lục C - Mục C.21: Biển số W.221(a,b) \"Đường không bằng phẳng\"",
+    "legal_summary": "Biển số W.221(a,b) \"Đường không bằng phẳng\" Để báo trước sắp tới đoạn đường có mặt đường không bằng phẳng, lồi lõm, v.v... xe chạy với tốc độ cao sẽ nguy hiểm, đặt Biển số W.221 (a,b): - Biển số W.221a \"Đường lồi lõm\" đặt trong trường hợp đường đang tốt, xe chạy nhanh lại đột ngột chuyển sang những đoạn lồi lõm, gập ghềnh, ổ gà, lượn sóng.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.221b/W.221b_01.png"
+    ],
+    "total_real_instances": 131,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 23,
+    "dataset_code": "P.111",
+    "canonical_qcvn_code": "P.111a",
+    "name_vi": "Cấm xe hai và ba bánh",
+    "official_qcvn_name": "Cấm xe gắn máy",
+    "name_en": "No Two or Three-wheeled Vehicles",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.11",
+    "article_title": "Phụ lục B - Mục B.11: Biển số P.111a \"Cấm xe gắn máy\", Biển số P.111 (b,c) \"Cấm xe ba bánh",
+    "legal_summary": "Biển số P.111a \"Cấm xe gắn máy\", Biển số P.111 (b,c) \"Cấm xe ba bánh loại có động cơ\" và Biển số P.111d \"Cấm xe ba bánh loại không có động cơ\"\u0001 a) Để báo đường cấm xe gắn máy đi qua, đặt Biển số P.111a \"Cấm xe gắn máy\". Biển không có giá trị đối với xe đạp.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.111a/P.111a_01.png"
+    ],
+    "total_real_instances": 465,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 24,
+    "dataset_code": "P.129",
+    "canonical_qcvn_code": "P.129",
+    "name_vi": "Kiểm tra",
+    "official_qcvn_name": "Kiểm tra",
+    "name_en": "Customs Checkpoint",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.29",
+    "article_title": "Phụ lục B - Mục B.29: Biển số P.129 \"Kiểm tra\"",
+    "legal_summary": "Biển số P.129 \"Kiểm tra\" Để báo nơi đặt trạm kiểm tra. các loại phương tiện vận tải qua đó phải dừng lại để làm thủ tục kiểm tra, kiểm soát theo quy định, đặt Biển số P.129 “Kiểm tra”.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.129/P.129_01.png"
+    ],
+    "total_real_instances": 56,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 25,
+    "dataset_code": "S.505a*Xe máy",
+    "canonical_qcvn_code": "S.505a",
+    "name_vi": "Chỉ dành cho xe máy*",
+    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "name_en": "Motorcycles Only",
+    "category": "Biển phụ (Nhóm S)",
+    "article_id": "QCVN41_F.5",
+    "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
+    "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
+    "pdf_template_images": [
+      "data/pdf_signs/S.505a/S.505a_01.png"
+    ],
+    "total_real_instances": 25,
+    "saved_real_crops": 25
+  },
+  {
+    "class_id": 26,
+    "dataset_code": "W.246a",
+    "canonical_qcvn_code": "W.246a",
+    "name_vi": "Chướng ngoại vật phía trước",
+    "official_qcvn_name": "Chú ý chướng ngại vật (vòng tránh sang hai bên)",
+    "name_en": "Obstacle on the Road",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.46",
+    "article_title": "Phụ lục C - Mục C.46: Biển số W.246 (a,b,c) \"Chú ý chướng ngại vật\"",
+    "legal_summary": "Biển số W.246 (a,b,c) \"Chú ý chướng ngại vật\" Dùng để báo trước cho lái xe biết phía trước có chướng ngại vật, xe cần giảm tốc độ và đi theo chỉ dẫn trên Biển báo, đặt Biển số W.246a \"Chú ý chướng ngại vật - Vòng tránh ra hai bên\", Biển số W.246b \"Chú ý chướng ngại vật - Vòng tránh sang bên trái” và Biển số W.246c \"Chú ý chướng ngại vật - Vòng trán",
+    "pdf_template_images": [
+      "data/pdf_signs/W.246a/W.246a_01.png"
+    ],
+    "total_real_instances": 80,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 27,
+    "dataset_code": "W.225",
+    "canonical_qcvn_code": "W.225",
+    "name_vi": "Trẻ em",
+    "official_qcvn_name": "Trẻ em",
+    "name_en": "Children Present",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.25",
+    "article_title": "Phụ lục C - Mục C.25: Biển số W.225 \"Trẻ em\"",
+    "legal_summary": "Biển số W.225 \"Trẻ em\" a) Để báo trước là gần đến đoạn đường thường có trẻ em đi ngang qua hoặc tụ tập trên đường như ở vườn trẻ, trường học, câu lạc bộ, đặt Biển số W.225 \"Trẻ em\". b) Chiều dài của đoạn đường này được chỉ dẫn bằng Biển số S.501 \"Phạm vi tác dụng của Biển\" đặt bên dưới Biển chính.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.225/W.225_01.png"
+    ],
+    "total_real_instances": 36,
+    "saved_real_crops": 36
+  },
+  {
+    "class_id": 28,
+    "dataset_code": "S.505a*Xe tải và công",
+    "canonical_qcvn_code": "S.505a",
+    "name_vi": "Xe tải và xe công*",
+    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "name_en": "Trucks and Containers",
+    "category": "Biển phụ (Nhóm S)",
+    "article_id": "QCVN41_F.5",
+    "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
+    "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
+    "pdf_template_images": [
+      "data/pdf_signs/S.505a/S.505a_01.png"
+    ],
+    "total_real_instances": 27,
+    "saved_real_crops": 27
+  },
+  {
+    "class_id": 29,
+    "dataset_code": "P.104",
+    "canonical_qcvn_code": "P.104",
+    "name_vi": "Cấm mô tô và xe máy",
+    "official_qcvn_name": "Cấm xe máy",
+    "name_en": "No Motorcycles Allowed",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.4",
+    "article_title": "Phụ lục B - Mục B.4: Biển số P.104 \"Cấm xe máy\"",
+    "legal_summary": "Biển số P.104 \"Cấm xe máy\" Để báo đường cấm các loại xe máy, trừ các xe được ưu tiên theo quy định, đặt Biển số P.104 \"Cấm xe máy\". Biển không có giá trị cấm những người dắt xe máy.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.104/P.104_01.png"
+    ],
+    "total_real_instances": 45,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 30,
+    "dataset_code": "S.505a*Xe tải",
+    "canonical_qcvn_code": "S.505a",
+    "name_vi": "Chỉ dành cho xe tải*",
+    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "name_en": "Trucks Only",
+    "category": "Biển phụ (Nhóm S)",
+    "article_id": "QCVN41_F.5",
+    "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
+    "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
+    "pdf_template_images": [
+      "data/pdf_signs/S.505a/S.505a_01.png"
+    ],
+    "total_real_instances": 138,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 31,
+    "dataset_code": "Camera",
+    "canonical_qcvn_code": "Camera",
+    "name_vi": "Đường có camera giám sát",
+    "official_qcvn_name": "Đường có camera giám sát",
+    "name_en": "Road with Surveillance Camera",
+    "category": "Biển chỉ dẫn (Nhóm I)",
+    "article_id": "QCVN41_CAMERA",
+    "article_title": "Quy chuẩn QCVN 41:2019/BGTVT: Biển chỉ dẫn đường có Camera giám sát giao thông",
+    "legal_summary": "Biển chỉ dẫn đoạn đường có hệ thống camera giám sát giao thông để hướng dẫn người điều khiển phương tiện chấp hành đúng quy tắc báo hiệu đường bộ.",
+    "pdf_template_images": [],
+    "total_real_instances": 38,
+    "saved_real_crops": 38
+  },
+  {
+    "class_id": 32,
+    "dataset_code": "P.123b",
+    "canonical_qcvn_code": "P.123b",
+    "name_vi": "Cấm rẽ phải",
+    "official_qcvn_name": "Cấm rẽ phải",
+    "name_en": "No Right Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.23",
+    "article_title": "Phụ lục B - Mục B.23: Biển số P.123a \"Cấm rẽ trái\" và Biển số P.123b \"Cấm rẽ phải\"",
+    "legal_summary": "Biển số P.123a \"Cấm rẽ trái\" và Biển số P.123b \"Cấm rẽ phải\" a) Để báo cấm rẽ trái hoặc rẽ phải (theo hướng mũi tên chỉ) ở những vị trí đường giao nhau, đặt Biển số P.123a \"Cấm rẽ trái\" hoặc Biển số P.123b \"Cấm rẽ phải\". Biển không có giá trị cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.123b/P.123b_01.png"
+    ],
+    "total_real_instances": 186,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 33,
+    "dataset_code": "W.202b",
+    "canonical_qcvn_code": "W.202b",
+    "name_vi": "Nhiều chỗ ngoặt nguy hiểm liên tiếp, chỗ đầu tiên sang phải",
+    "official_qcvn_name": "Nhiều chỗ ngoặt nguy hiểm liên tiếp (chỗ đầu tiên sang phải)",
+    "name_en": "Double curve first to right",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.2",
+    "article_title": "Phụ lục C - Mục C.2: Biển số W.202(a,b) \"Nhiều chỗ ngoặt nguy hiểm liên tiếp\"",
+    "legal_summary": "Biển số W.202(a,b) \"Nhiều chỗ ngoặt nguy hiểm liên tiếp\" a) Để báo trước sắp đến hai chỗ ngoặt ngược chiều nhau liên tiếp, đặt Biển số W.202 (a,b): - Biển số W.202a đặt trong trường hợp có từ 2 chỗ ngoặt, ở gần nhau trong đó có ít nhất một chỗ ngoặt nguy hiểm mà chỗ ngoặt đầu tiên hướng vòng bên trái. - Biển số W.202b đặt trong trường hợp như Biển ",
+    "pdf_template_images": [
+      "data/pdf_signs/W.202b/W.202b_01.png"
+    ],
+    "total_real_instances": 19,
+    "saved_real_crops": 19
+  },
+  {
+    "class_id": 34,
+    "dataset_code": "B.8a",
+    "canonical_qcvn_code": "P.108a",
+    "name_vi": "Cấm xe sơ-mi rơ-moóc",
+    "official_qcvn_name": "Cấm xe sơ-mi rơ-moóc",
+    "name_en": "No Containers Allowed",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.8",
+    "article_title": "Phụ lục B - Mục B.8: Biển số P.108 \" Cấm xe kéo rơ-moóc\"",
+    "legal_summary": "Biển số P.108 \" Cấm xe kéo rơ-moóc\" Để báo đường cấm các loại xe cơ giới kéo theo rơ-moóc kể cả xe máy, máy kéo, ô tô khách kéo theo rơ-moóc đi lại, trừ loại ô tô sơ-mi rơ-moóc và các xe được ưu tiên (có kéo theo rơ-moóc) theo quy định, đặt Biển số P.108 \"Cấm xe ô tô, máy kéo kéo rơ-moóc\". .\u0001 \u0001\u0001 Hình B.8 - Biển số P.108.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.108a/P.108a_01.png"
+    ],
+    "total_real_instances": 82,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 35,
+    "dataset_code": "P.137",
+    "canonical_qcvn_code": "P.137",
+    "name_vi": "Cấm rẽ trái và phải",
+    "official_qcvn_name": "Cấm rẽ trái, rẽ phải",
+    "name_en": "No Left or Right Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.37",
+    "article_title": "Phụ lục B - Mục B.37: Biển số P.137 \"Cấm rẽ trái, rẽ phải\"",
+    "legal_summary": "Biển số P.137 \"Cấm rẽ trái, rẽ phải\" Các ngả đường phía trước cấm tất cả các loại xe (trừ xe ưu tiên theo qui định) rẽ trái hay rẽ phải, đặt Biển số P.137 \"Cấm rẽ trái, rẽ phải\". Biển được đặt ở vị trí ngay trước nút giao của đường cấm rẽ phải, rẽ trái.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.137/P.137_01.png"
+    ],
+    "total_real_instances": 87,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 36,
+    "dataset_code": "P.139",
+    "canonical_qcvn_code": "P.139",
+    "name_vi": "Cấm đi thẳng và rẽ phải",
+    "official_qcvn_name": "Cấm đi thẳng, rẽ phải",
+    "name_en": "No Straight and Right Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.39",
+    "article_title": "Phụ lục B - Mục B.39: Biểu thị đường qua nút giao cấm tất cả các loại xe (trừ xe ưu tiên theo qui định) đi",
+    "legal_summary": "Biểu thị đường qua nút giao cấm tất cả các loại xe (trừ xe ưu tiên theo qui định) đi thẳng, rẽ phải, đặt Biển số P.139 \"Cấm đi thẳng, rẽ phải\". Biển đặt ở vị trí ngay trước nút giao.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.139/P.139_01.png"
+    ],
+    "total_real_instances": 75,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 37,
+    "dataset_code": "W.205b",
+    "canonical_qcvn_code": "W.205b",
+    "name_vi": "Đường giao nhau (ngã ba bên trái)",
+    "official_qcvn_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã ba bên phải)",
+    "name_en": "Intersection with T-Junction",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.5",
+    "article_title": "Phụ lục C - Mục C.5: Biển số W.205(a,b,c,d,e) \"Đường giao nhau\"",
+    "legal_summary": "Biển số W.205(a,b,c,d,e) \"Đường giao nhau\" Để báo trước sắp đến nơi giao nhau cùng mức của các tuyến đường cùng cấp (không có đường nào ưu tiên) trên cùng một mặt bằng, đặt Biển số W.205(a,b,c,d,e) \"Đường giao nhau\". Biển được đặt trước nơi đường giao nhau ở ngoài phạm vi nội thành, nội thị là chủ yếu.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.205b/W.205b_01.png"
+    ],
+    "total_real_instances": 47,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 38,
+    "dataset_code": "P.127*50",
+    "canonical_qcvn_code": "P.127",
+    "name_vi": "Giới hạn tốc độ (50km/h)",
+    "official_qcvn_name": "Tốc độ tối đa cho phép",
+    "name_en": "Speed limit (50km/h)",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.27",
+    "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
+    "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.127/P.127_01.png"
+    ],
+    "total_real_instances": 189,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 39,
+    "dataset_code": "P.127*60",
+    "canonical_qcvn_code": "P.127",
+    "name_vi": "Giới hạn tốc độ (60km/h)",
+    "official_qcvn_name": "Tốc độ tối đa cho phép",
+    "name_en": "Speed limit (60km/h)",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.27",
+    "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
+    "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.127/P.127_01.png"
+    ],
+    "total_real_instances": 459,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 40,
+    "dataset_code": "P.127*80",
+    "canonical_qcvn_code": "P.127",
+    "name_vi": "Giới hạn tốc độ (80km/h)",
+    "official_qcvn_name": "Tốc độ tối đa cho phép",
+    "name_en": "Speed limit (80km/h)",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.27",
+    "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
+    "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.127/P.127_01.png"
+    ],
+    "total_real_instances": 210,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 41,
+    "dataset_code": "P.127*40",
+    "canonical_qcvn_code": "P.127",
+    "name_vi": "Giới hạn tốc độ (40km/h)",
+    "official_qcvn_name": "Tốc độ tối đa cho phép",
+    "name_en": "Speed limit (40km/h)",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.27",
+    "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
+    "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.127/P.127_01.png"
+    ],
+    "total_real_instances": 275,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 42,
+    "dataset_code": "R.301e",
+    "canonical_qcvn_code": "R.301e",
+    "name_vi": "Các xe chỉ được rẽ trái",
+    "official_qcvn_name": "Các xe chỉ được rẽ trái (đặt sau ngã ba, ngã tư)",
+    "name_en": "Left Turn",
+    "category": "Biển hiệu lệnh (Nhóm R)",
+    "article_id": "QCVN41_D.1A",
+    "article_title": "Phụ lục D - Mục D.1A: Biển số R.301 (a,b,c,d,e,f,g,h) \"Hướng đi phải theo\"",
+    "legal_summary": "Biển số R.301 (a,b,c,d,e,f,g,h) \"Hướng đi phải theo\" a) Để báo cho các loại xe (thô sơ và cơ giới) phải đi theo hướng quy định, đặt một trong những kiểu Biển số R.301(a,b,c,d,e,f,g,h) \"Hướng đi phải theo\". Tùy theo hướng đi mà chọn kiểu Biển cho phù hợp.",
+    "pdf_template_images": [
+      "data/pdf_signs/R.301e/R.301e_01.png"
+    ],
+    "total_real_instances": 21,
+    "saved_real_crops": 21
+  },
+  {
+    "class_id": 43,
+    "dataset_code": "W.239b*",
+    "canonical_qcvn_code": "W.239b",
+    "name_vi": "Chiều cao tĩnh không thực tế",
+    "official_qcvn_name": "Chiều cao tĩnh không thực tế",
+    "name_en": "Low Clearance",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_B.17",
+    "article_title": "Phụ lục B - Mục B.17: a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\".",
+    "legal_summary": "a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\". b) Biển số P.117 có hiệu lực cấm các xe (cơ giới và thô sơ) có chiều cao vượt quá trị số ghi trên Biển đi qua, kể cả các xe được ưu tiên theo quy định (chiều cao tính từ mặt đường, mặt cầu đến điểm cao nhất của xe hoặc hàng).",
+    "pdf_template_images": [
+      "data/pdf_signs/W.239b/W.239b_01.png"
+    ],
+    "total_real_instances": 27,
+    "saved_real_crops": 27
+  },
+  {
+    "class_id": 44,
+    "dataset_code": "W.233",
+    "canonical_qcvn_code": "W.233",
+    "name_vi": "Nguy hiểm khác",
+    "official_qcvn_name": "Nguy hiểm khác",
+    "name_en": "Other Danger",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.33",
+    "article_title": "Phụ lục C - Mục C.33: Biển số W.233 \"Nguy hiểm khác\"",
+    "legal_summary": "Biển số W.233 \"Nguy hiểm khác\" Nếu trên đường có những nguy hiểm mà không thể vận dụng được các kiểu Biển từ Biển số W.201a đến Biển số W.232 theo quy định từ phần C.1 đến phần C.32 Phụ lục này, đặt Biển số W.233 \"Nguy hiểm khác\". Hình C.35 - Biển số W.233.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.233/W.233_01.png"
+    ],
+    "total_real_instances": 3,
+    "saved_real_crops": 3
+  },
+  {
+    "class_id": 45,
+    "dataset_code": "I.407a",
+    "canonical_qcvn_code": "I.407a",
+    "name_vi": "Đường một chiều",
+    "official_qcvn_name": "Đường một chiều (đi thẳng)",
+    "name_en": "One-way street",
+    "category": "Biển chỉ dẫn (Nhóm I)",
+    "article_id": "QCVN41_B.2",
+    "article_title": "Phụ lục B - Mục B.2: Biển số P.102 \"Cấm đi ngược chiều\"",
+    "legal_summary": "Biển số P.102 \"Cấm đi ngược chiều\" a) Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt Biển, trừ các xe được ưu tiên theo quy định, đặt Biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.",
+    "pdf_template_images": [
+      "data/pdf_signs/I.407a/I.407a_01.png"
+    ],
+    "total_real_instances": 195,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 46,
+    "dataset_code": "P.131a",
+    "canonical_qcvn_code": "P.131a",
+    "name_vi": "Cấm đỗ xe",
+    "official_qcvn_name": "Cấm đỗ xe",
+    "name_en": "No Parking",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.30",
+    "article_title": "Phụ lục B - Mục B.30: c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe",
+    "legal_summary": "c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe quay đầu thì cần đặt thêm Biển nhắc lại. a) Biển số P.131a b) Biển số P.131b c) Biển số P.131c Hình B.31 - Biển số P.131.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.131a/P.131a_01.png"
+    ],
+    "total_real_instances": 435,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 47,
+    "dataset_code": "P.124b1",
+    "canonical_qcvn_code": "P.124b",
+    "name_vi": "Cấm ô tô quay đầu xe (được rẽ trái)",
+    "official_qcvn_name": "Cấm ô tô quay đầu xe",
+    "name_en": "No U-Turn for Cars",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.24",
+    "article_title": "Phụ lục B - Mục B.24: quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô",
+    "legal_summary": "quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô tô rẽ trái và quay đầu xe” và Biển số P.124f \"Cấm ô tô rẽ phải và quay đầu xe” a) Để báo cấm các loại xe quay đầu (theo kiểu chữ U), đặt Biển số P.124a \"Cấm quay đầu xe\". Chiều mũi tên phù hợp với chiều cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.124b/P.124b_01.png",
+      "data/pdf_signs/P.124b/P.124b_02.png"
+    ],
+    "total_real_instances": 16,
+    "saved_real_crops": 16
+  },
+  {
+    "class_id": 48,
+    "dataset_code": "W.210",
+    "canonical_qcvn_code": "W.210",
+    "name_vi": "Giao nhau với đường sắt có rào chắn",
+    "official_qcvn_name": "Giao nhau với đường sắt có rào chắn",
+    "name_en": "Level Crossing with Barriers",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.10",
+    "article_title": "Phụ lục C - Mục C.10: Để báo trước sắp đến chỗ giao nhau giữa đường bộ và đường sắt có rào chắn",
+    "legal_summary": "Để báo trước sắp đến chỗ giao nhau giữa đường bộ và đường sắt có rào chắn (cần chắn hoặc giàn chắn), đặt Biển số W.210 \"Giao nhau với đường sắt có rào chắn\".. Hình C.12 - Biển số W.210.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.210/W.210_01.png"
+    ],
+    "total_real_instances": 41,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 49,
+    "dataset_code": "P.124c",
+    "canonical_qcvn_code": "P.124c",
+    "name_vi": "Cấm rẽ trái và quay đầu xe",
+    "official_qcvn_name": "Cấm rẽ trái và quay đầu xe",
+    "name_en": "No U-Turn and No Left Turn",
+    "category": "Biển báo cấm (Nhóm P)",
+    "article_id": "QCVN41_B.24",
+    "article_title": "Phụ lục B - Mục B.24: quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô",
+    "legal_summary": "quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô tô rẽ trái và quay đầu xe” và Biển số P.124f \"Cấm ô tô rẽ phải và quay đầu xe” a) Để báo cấm các loại xe quay đầu (theo kiểu chữ U), đặt Biển số P.124a \"Cấm quay đầu xe\". Chiều mũi tên phù hợp với chiều cấm quay đầu xe.",
+    "pdf_template_images": [
+      "data/pdf_signs/P.124c/P.124c_01.png"
+    ],
+    "total_real_instances": 221,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 50,
+    "dataset_code": "W.201b",
+    "canonical_qcvn_code": "W.201b",
+    "name_vi": "Chỗ ngoặt nguy hiểm vòng bên phải",
+    "official_qcvn_name": "Chỗ ngoặt nguy hiểm vòng bên phải",
+    "name_en": "Danger zone on the right",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.1",
+    "article_title": "Phụ lục C - Mục C.1: Biển số W.201 (a,b) \"Chỗ ngoặt nguy hiểm\"",
+    "legal_summary": "Biển số W.201 (a,b) \"Chỗ ngoặt nguy hiểm\" a) Để báo trước sắp đến một chỗ ngoặt nguy hiểm, đặt Biển số W.201 (a,b): - Biển số W.201a chỗ ngoặt nguy hiểm vòng bên trái. - Biển số W.201b chỗ ngoặt nguy hiểm vòng bên phải.",
+    "pdf_template_images": [
+      "data/pdf_signs/W.201b/W.201b_01.png"
+    ],
+    "total_real_instances": 121,
+    "saved_real_crops": 40
+  },
+  {
+    "class_id": 51,
+    "dataset_code": "W.246c",
+    "canonical_qcvn_code": "W.246c",
+    "name_vi": "Chú ý chướng ngại vật – vòng tránh sang bên phải",
+    "official_qcvn_name": "Chú ý chướng ngại vật (vòng tránh sang bên trái)",
+    "name_en": "Warning: Obstacle ahead – pass on the right",
+    "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
+    "article_id": "QCVN41_C.46",
+    "article_title": "Phụ lục C - Mục C.46: Biển số W.246 (a,b,c) \"Chú ý chướng ngại vật\"",
+    "legal_summary": "Biển số W.246 (a,b,c) \"Chú ý chướng ngại vật\" Dùng để báo trước cho lái xe biết phía trước có chướng ngại vật, xe cần giảm tốc độ và đi theo chỉ dẫn trên Biển báo, đặt Biển số W.246a \"Chú ý chướng ngại vật - Vòng tránh ra hai bên\", Biển số W.246b \"Chú ý chướng ngại vật - Vòng tránh sang bên trái” và Biển số W.246c \"Chú ý chướng ngại vật - Vòng trán",
+    "pdf_template_images": [
+      "data/pdf_signs/W.246c/W.246c_01.png"
+    ],
+    "total_real_instances": 5,
+    "saved_real_crops": 5
+  }
+]

@@ -1,0 +1,695 @@
+{
+  "split_hash_sha256": "d9270e1ad2ceda3f5d57544dd7137e24cb11f84a0cffb9e030a22d7d1b3510a8",
+  "gpu_device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "seeds": [
+    42,
+    123,
+    2024
+  ],
+  "cohort_counts": {
+    "real_street_crops": 1807,
+    "pdf_canonical_crops": 51,
+    "grouped_split": {
+      "train": 1404,
+      "val": 195,
+      "test": 208
+    },
+    "random_split": {
+      "train": 1417,
+      "val": 182,
+      "test": 208
+    }
+  },
+  "table4_lr_audit": [
+    {
+      "configuration": "ViT-B/16 + CE",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 1.859,
+          "val_f1m": 0.555
+        },
+        "2e-04": {
+          "val_loss": 1.114,
+          "val_f1m": 0.72
+        },
+        "8e-04": {
+          "val_loss": 0.987,
+          "val_f1m": 0.749
+        },
+        "2e-03": {
+          "val_loss": 0.969,
+          "val_f1m": 0.758
+        }
+      },
+      "selected_lr": 0.002
+    },
+    {
+      "configuration": "ViT-B/16 + WLS+MSDA",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 1.783,
+          "val_f1m": 0.586
+        },
+        "2e-04": {
+          "val_loss": 1.1,
+          "val_f1m": 0.8
+        },
+        "8e-04": {
+          "val_loss": 0.986,
+          "val_f1m": 0.826
+        },
+        "2e-03": {
+          "val_loss": 1.016,
+          "val_f1m": 0.812
+        }
+      },
+      "selected_lr": 0.0008
+    },
+    {
+      "configuration": "Swin-T + CE",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 1.562,
+          "val_f1m": 0.623
+        },
+        "2e-04": {
+          "val_loss": 0.866,
+          "val_f1m": 0.8
+        },
+        "8e-04": {
+          "val_loss": 0.704,
+          "val_f1m": 0.821
+        },
+        "2e-03": {
+          "val_loss": 0.606,
+          "val_f1m": 0.848
+        }
+      },
+      "selected_lr": 0.002
+    },
+    {
+      "configuration": "Swin-T + WLS+MSDA",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 1.493,
+          "val_f1m": 0.66
+        },
+        "2e-04": {
+          "val_loss": 0.988,
+          "val_f1m": 0.82
+        },
+        "8e-04": {
+          "val_loss": 0.915,
+          "val_f1m": 0.869
+        },
+        "2e-03": {
+          "val_loss": 0.921,
+          "val_f1m": 0.87
+        }
+      },
+      "selected_lr": 0.0008
+    },
+    {
+      "configuration": "EfficientNet-B3 + CE",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 0.902,
+          "val_f1m": 0.772
+        },
+        "2e-04": {
+          "val_loss": 0.749,
+          "val_f1m": 0.789
+        },
+        "8e-04": {
+          "val_loss": 0.781,
+          "val_f1m": 0.81
+        },
+        "2e-03": {
+          "val_loss": 8.493,
+          "val_f1m": 0.808
+        }
+      },
+      "selected_lr": 0.0002
+    },
+    {
+      "configuration": "EfficientNet-B3 + WLS+MSDA",
+      "candidates": {
+        "4e-05": {
+          "val_loss": 1.004,
+          "val_f1m": 0.78
+        },
+        "2e-04": {
+          "val_loss": 0.969,
+          "val_f1m": 0.825
+        },
+        "8e-04": {
+          "val_loss": 0.986,
+          "val_f1m": 0.812
+        },
+        "2e-03": {
+          "val_loss": 0.973,
+          "val_f1m": 0.814
+        }
+      },
+      "selected_lr": 0.0002
+    }
+  ],
+  "table5_leakage_effect": [
+    {
+      "configuration": "ViT-B/16 + CE",
+      "grouped_f1m": 0.816,
+      "grouped_sd": 0.023,
+      "random_f1m": 0.982,
+      "random_sd": 0.003,
+      "inflation_paired": 0.166,
+      "relative_inflation_pct": 20.4,
+      "ci95": [
+        0.101,
+        0.232
+      ],
+      "nominal_p": 0.0083,
+      "seed_pairs": [
+        {
+          "seed": 42,
+          "grouped": 0.7933,
+          "random": 0.9863,
+          "diff": 0.1929
+        },
+        {
+          "seed": 123,
+          "grouped": 0.8147,
+          "random": 0.9805,
+          "diff": 0.1658
+        },
+        {
+          "seed": 2024,
+          "grouped": 0.8402,
+          "random": 0.9805,
+          "diff": 0.1403
+        }
+      ],
+      "holm_p": 0.0107
+    },
+    {
+      "configuration": "Swin-T + CE",
+      "grouped_f1m": 0.873,
+      "grouped_sd": 0.018,
+      "random_f1m": 0.982,
+      "random_sd": 0.005,
+      "inflation_paired": 0.109,
+      "relative_inflation_pct": 12.5,
+      "ci95": [
+        0.075,
+        0.143
+      ],
+      "nominal_p": 0.0053,
+      "seed_pairs": [
+        {
+          "seed": 42,
+          "grouped": 0.8545,
+          "random": 0.9787,
+          "diff": 0.1242
+        },
+        {
+          "seed": 123,
+          "grouped": 0.891,
+          "random": 0.9882,
+          "diff": 0.0973
+        },
+        {
+          "seed": 2024,
+          "grouped": 0.8736,
+          "random": 0.979,
+          "diff": 0.1054
+        }
+      ],
+      "holm_p": 0.0107
+    },
+    {
+      "configuration": "ViT-B/16 + WLS+MSDA",
+      "grouped_f1m": 0.864,
+      "grouped_sd": 0.005,
+      "random_f1m": 0.987,
+      "random_sd": 0.004,
+      "inflation_paired": 0.123,
+      "relative_inflation_pct": 14.3,
+      "ci95": [
+        0.101,
+        0.145
+      ],
+      "nominal_p": 0.0017,
+      "seed_pairs": [
+        {
+          "seed": 42,
+          "grouped": 0.8576,
+          "random": 0.9898,
+          "diff": 0.1322
+        },
+        {
+          "seed": 123,
+          "grouped": 0.8676,
+          "random": 0.9821,
+          "diff": 0.1145
+        },
+        {
+          "seed": 2024,
+          "grouped": 0.8662,
+          "random": 0.9898,
+          "diff": 0.1236
+        }
+      ],
+      "holm_p": 0.0051
+    }
+  ],
+  "table6_arch_strategy": [
+    {
+      "backbone": "Swin-T",
+      "strategy": "WLS+MSDA",
+      "lr": "8e-04",
+      "acc_mean": 0.923,
+      "acc_sd": 0.0,
+      "f1m_mean": 0.886,
+      "f1m_sd": 0.011,
+      "f1m_ci95": [
+        0.859,
+        0.914
+      ],
+      "delta_f1m_from_audit": 0.099
+    },
+    {
+      "backbone": "Swin-T",
+      "strategy": "CE",
+      "lr": "2e-03",
+      "acc_mean": 0.918,
+      "acc_sd": 0.0,
+      "f1m_mean": 0.873,
+      "f1m_sd": 0.018,
+      "f1m_ci95": [
+        0.828,
+        0.918
+      ],
+      "delta_f1m_from_audit": 0.076
+    },
+    {
+      "backbone": "ViT-B/16",
+      "strategy": "WLS+MSDA",
+      "lr": "8e-04",
+      "acc_mean": 0.925,
+      "acc_sd": 0.006,
+      "f1m_mean": 0.864,
+      "f1m_sd": 0.005,
+      "f1m_ci95": [
+        0.85,
+        0.877
+      ],
+      "delta_f1m_from_audit": 0.091
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "strategy": "CE",
+      "lr": "2e-04",
+      "acc_mean": 0.921,
+      "acc_sd": 0.006,
+      "f1m_mean": 0.84,
+      "f1m_sd": 0.007,
+      "f1m_ci95": [
+        0.823,
+        0.857
+      ],
+      "delta_f1m_from_audit": 0.005
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "strategy": "WLS+MSDA",
+      "lr": "2e-04",
+      "acc_mean": 0.909,
+      "acc_sd": 0.005,
+      "f1m_mean": 0.838,
+      "f1m_sd": 0.001,
+      "f1m_ci95": [
+        0.835,
+        0.84
+      ],
+      "delta_f1m_from_audit": -0.003
+    },
+    {
+      "backbone": "ViT-B/16",
+      "strategy": "CE",
+      "lr": "2e-03",
+      "acc_mean": 0.888,
+      "acc_sd": 0.015,
+      "f1m_mean": 0.816,
+      "f1m_sd": 0.023,
+      "f1m_ci95": [
+        0.758,
+        0.874
+      ],
+      "delta_f1m_from_audit": 0.039
+    }
+  ],
+  "table7_per_class_f1": [
+    {
+      "configuration": "ViT-B/16 + CE",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.96,
+          "sd": 0.009
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 0.993,
+          "sd": 0.0
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.8,
+          "sd": 0.0
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.904,
+          "sd": 0.008
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.944,
+          "sd": 0.048
+        }
+      }
+    },
+    {
+      "configuration": "ViT-B/16 + WLS+MSDA",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.992,
+          "sd": 0.004
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 1.0,
+          "sd": 0.0
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.693,
+          "sd": 0.023
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.923,
+          "sd": 0.0
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.975,
+          "sd": 0.021
+        }
+      }
+    },
+    {
+      "configuration": "Swin-T + CE",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.99,
+          "sd": 0.007
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 1.0,
+          "sd": 0.0
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.706,
+          "sd": 0.0
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.937,
+          "sd": 0.0
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.93,
+          "sd": 0.052
+        }
+      }
+    },
+    {
+      "configuration": "Swin-T + WLS+MSDA",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.991,
+          "sd": 0.01
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 0.995,
+          "sd": 0.004
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.735,
+          "sd": 0.025
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.942,
+          "sd": 0.007
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.942,
+          "sd": 0.053
+        }
+      }
+    },
+    {
+      "configuration": "EfficientNet-B3 + CE",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.983,
+          "sd": 0.004
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 0.993,
+          "sd": 0.0
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.627,
+          "sd": 0.039
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.919,
+          "sd": 0.02
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.923,
+          "sd": 0.0
+        }
+      }
+    },
+    {
+      "configuration": "EfficientNet-B3 + WLS+MSDA",
+      "per_group_f1": {
+        "Nhóm P (Cấm)": {
+          "mean": 0.981,
+          "sd": 0.007
+        },
+        "Nhóm W (Cảnh báo)": {
+          "mean": 1.0,
+          "sd": 0.0
+        },
+        "Nhóm R (Hiệu lệnh)": {
+          "mean": 0.613,
+          "sd": 0.021
+        },
+        "Nhóm I (Chỉ dẫn)": {
+          "mean": 0.934,
+          "sd": 0.008
+        },
+        "Nhóm S (Biển phụ)": {
+          "mean": 0.929,
+          "sd": 0.033
+        }
+      }
+    }
+  ],
+  "table8_normalisation_peft_ablation": [
+    {
+      "normalisation": "Per-channel (train-only)",
+      "peft_treatment": "Frozen stem + LoRA",
+      "acc_mean": 0.92,
+      "acc_sd": 0.007,
+      "f1m_mean": 0.861,
+      "f1m_sd": 0.006,
+      "f1m_ci95": [
+        0.846,
+        0.877
+      ]
+    },
+    {
+      "normalisation": "Per-channel (train-only)",
+      "peft_treatment": "Fine-tuned stem + LoRA",
+      "acc_mean": 0.925,
+      "acc_sd": 0.006,
+      "f1m_mean": 0.864,
+      "f1m_sd": 0.005,
+      "f1m_ci95": [
+        0.85,
+        0.877
+      ]
+    },
+    {
+      "normalisation": "ImageNet-default",
+      "peft_treatment": "Fine-tuned stem + LoRA",
+      "acc_mean": 0.92,
+      "acc_sd": 0.003,
+      "f1m_mean": 0.858,
+      "f1m_sd": 0.003,
+      "f1m_ci95": [
+        0.851,
+        0.865
+      ]
+    },
+    {
+      "normalisation": "ImageNet-default",
+      "peft_treatment": "Frozen stem + LoRA",
+      "acc_mean": 0.913,
+      "acc_sd": 0.008,
+      "f1m_mean": 0.859,
+      "f1m_sd": 0.006,
+      "f1m_ci95": [
+        0.845,
+        0.873
+      ]
+    }
+  ],
+  "table9_msda_ablation": [
+    {
+      "configuration": "WLS, no MSDA",
+      "acc_mean": 0.929,
+      "acc_sd": 0.01,
+      "f1m_mean": 0.874,
+      "f1m_sd": 0.023,
+      "f1w_mean": 0.926,
+      "f1w_sd": 0.01
+    },
+    {
+      "configuration": "WLS + MSDA",
+      "acc_mean": 0.925,
+      "acc_sd": 0.006,
+      "f1m_mean": 0.864,
+      "f1m_sd": 0.005,
+      "f1w_mean": 0.923,
+      "f1w_sd": 0.005
+    }
+  ],
+  "table10_pdf_canonical_augmentation_52classes": [
+    {
+      "configuration": "Protocol B: Real Street Images Only (without PDF Canonical Crops)",
+      "acc_mean": 0.925,
+      "acc_sd": 0.006,
+      "f1m_mean": 0.864,
+      "f1m_sd": 0.005,
+      "f1m_ci95": [
+        0.85,
+        0.877
+      ],
+      "f1w_mean": 0.923
+    },
+    {
+      "configuration": "Protocol A: Real Street Images + PDF Canonical Crops (QCVN 41:2019)",
+      "acc_mean": 0.92,
+      "acc_sd": 0.007,
+      "f1m_mean": 0.865,
+      "f1m_sd": 0.022,
+      "f1m_ci95": [
+        0.809,
+        0.92
+      ],
+      "f1w_mean": 0.914
+    }
+  ],
+  "table11_hardware_efficiency": [
+    {
+      "model": "ViT-B/16 + PEFT LoRA",
+      "total_params_m": 86.39,
+      "trainable_peft_params_m": 0.32,
+      "flops_g": 16.98,
+      "latency_ms_mean": 9.16,
+      "latency_ms_sd": 1.31,
+      "throughput_img_s": 109.2,
+      "peak_mem_mb": 531
+    },
+    {
+      "model": "Swin-T + PEFT LoRA",
+      "total_params_m": 27.53,
+      "trainable_peft_params_m": 0.28,
+      "flops_g": 4.52,
+      "latency_ms_mean": 20.61,
+      "latency_ms_sd": 4.51,
+      "throughput_img_s": 48.5,
+      "peak_mem_mb": 196
+    },
+    {
+      "model": "EfficientNet-B3 + Adapter",
+      "total_params_m": 10.7,
+      "trainable_peft_params_m": 0.24,
+      "flops_g": 1.0,
+      "latency_ms_mean": 23.38,
+      "latency_ms_sd": 5.36,
+      "throughput_img_s": 42.8,
+      "peak_mem_mb": 95
+    }
+  ],
+  "legal_ir_evaluation": [
+    {
+      "method": "BM25 Lexical Only (Text Query)",
+      "recall_at_1": 0.149,
+      "recall_at_3": 0.2067,
+      "recall_at_5": 0.2067,
+      "mrr": 0.1755
+    },
+    {
+      "method": "Dense Semantic SVD Only (Text Query)",
+      "recall_at_1": 0.149,
+      "recall_at_3": 0.1875,
+      "recall_at_5": 0.2019,
+      "mrr": 0.1655
+    },
+    {
+      "method": "Text Hybrid RRF (No Visual Input)",
+      "recall_at_1": 0.149,
+      "recall_at_3": 0.2019,
+      "recall_at_5": 0.2067,
+      "mrr": 0.1767
+    },
+    {
+      "method": "Visual-Conditioned Hybrid RRF (Ours)",
+      "recall_at_1": 1.0,
+      "recall_at_3": 1.0,
+      "recall_at_5": 1.0,
+      "mrr": 1.0
+    }
+  ],
+  "multimodal_legal_qa_evaluation": [
+    {
+      "system": "1. Text-Only Legal QA (BM25 + LLM, No Vision)",
+      "sign_acc": 0.0,
+      "legal_citation_acc": 0.149,
+      "answer_token_f1": 0.253,
+      "rouge_l": 0.2631
+    },
+    {
+      "system": "2. Zero-Shot VLM (Qwen2-VL Base, No PEFT, No Legal IR)",
+      "sign_acc": 0.5673,
+      "legal_citation_acc": 0.2692,
+      "answer_token_f1": 0.1284,
+      "rouge_l": 0.1336
+    },
+    {
+      "system": "3. PEFT Fine-Tuned VLM (QLoRA, No Legal IR)",
+      "sign_acc": 0.8462,
+      "legal_citation_acc": 0.6106,
+      "answer_token_f1": 0.5179,
+      "rouge_l": 0.5387
+    },
+    {
+      "system": "4. PEFT VLM + PDF Canonical Crops + Visual-Hybrid Legal IR (Ours)",
+      "sign_acc": 0.8894,
+      "legal_citation_acc": 0.8894,
+      "answer_token_f1": 0.7002,
+      "rouge_l": 0.7282
+    }
+  ],
+  "calibration_and_representation": {
+    "ece_protocol_a": 0.2606,
+    "silhouette_raw": -0.01600000075995922,
+    "silhouette_learned": 0.14020000398159027
+  }
+}

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrafficSign VLM - Trợ Lý Pháp Lý Giao Thông Đa Phương Thức</title>
+  <meta name="description" content="Trợ lý AI đa phương thức nhận diện biển báo giao thông Việt Nam và tra cứu pháp lý theo QCVN 41:2019/BGTVT">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top App Navigation -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">🚦</div>
+      <div class="brand-text">
+        <h1>TrafficSign VLM Assistant</h1>
+        <p>Multimodal Vision-Language AI &middot; QCVN 41:2019/BGTVT</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="header-badges">
+        <span class="tech-badge active" id="backendStatusBadge">
+          <span class="dot"></span> Backend AI: Checking...
+        </span>
+        <span class="tech-badge">
+          Grounded Legal RAG
+        </span>
+      </div>
+      <button class="new-chat-btn" id="newChatBtn" title="Bắt đầu phiên hội thoại mới">
+        <span>🔄</span> Cuộc trò chuyện mới
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Chat Workspace -->
+  <main class="chat-workspace" id="chatWorkspace">
+    
+    <!-- Drag & Drop Overlay Indicator -->
+    <div class="drag-drop-overlay" id="dragDropOverlay">
+      <div class="drag-drop-box">
+        <div class="drag-icon">📥</div>
+        <h3>Thả hình ảnh biển báo vào đây</h3>
+        <p>Thuật toán VLM sẽ tự động nhận diện và phân tích quy định giao thông</p>
+      </div>
+    </div>
+
+    <!-- Messages Scroll Area -->
+    <div class="chat-scroll-area" id="chatContainer">
+      <!-- Welcome Hero screen when empty -->
+      <div class="welcome-hero" id="welcomeHero">
+        <div class="hero-badge">Vision-Language Model (VLM)</div>
+        <h2>Trợ Lý Nhận Diện Biển Báo & Tham Vấn Giao Thông</h2>
+        <p class="hero-desc">
+          Gửi bất kỳ hình ảnh biển báo giao thông nào (từ camera, dashcam hoặc ảnh có sẵn) và đặt câu hỏi. 
+          Thuật toán VLM sẽ nhận diện biển báo, trích xuất đặc trưng thị giác và đưa ra căn cứ pháp lý theo 
+          <strong>QCVN 41:2019/BGTVT</strong> cùng mức phạt theo Nghị định 100/123.
+        </p>
+
+        <!-- Quick Demo Benchmark Picker -->
+        <div class="demo-samples-wrapper">
+          <div class="demo-samples-header">
+            <div class="demo-samples-title">
+              <span>✨</span> Bộ mẫu biển báo kiểm thử đa dạng (50+ biển):
+            </div>
+            <div class="demo-filter-tabs" id="demoFilterTabs">
+              <button type="button" class="demo-filter-btn active" data-cat="all">Tất cả</button>
+              <button type="button" class="demo-filter-btn" data-cat="Biển báo cấm (P)">Biển cấm (P)</button>
+              <button type="button" class="demo-filter-btn" data-cat="Biển cảnh báo (W)">Cảnh báo (W)</button>
+              <button type="button" class="demo-filter-btn" data-cat="Biển hiệu lệnh (R)">Hiệu lệnh (R)</button>
+              <button type="button" class="demo-filter-btn" data-cat="Biển chỉ dẫn (I)">Chỉ dẫn (I)</button>
+              <button type="button" class="demo-filter-btn" data-cat="Cao tốc (IE)">Cao tốc (IE)</button>
+            </div>
+          </div>
+          <div class="demo-samples-grid" id="demoSamplesGrid">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-item">
+            <span class="f-icon">📷</span>
+            <h4>Nhận Diện Thị Giác</h4>
+            <p>Phân tích màu sắc, hình dáng và ký hiệu biển báo chuẩn xác cao.</p>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">⚖️</span>
+            <h4>Quy Chuẩn QCVN 41</h4>
+            <p>Trích lục điều luật, phụ lục và phạm vi áp dụng chi tiết.</p>
+          </div>
+          <div class="feature-item">
+            <span class="f-icon">💬</span>
+            <h4>Hỏi Đáp Đa Lượt</h4>
+            <p>Hỏi sâu về quyền ưu tiên, loại xe được phép lưu thông, mức xử phạt.</p>
+          </div>
+        </div>
+      </div>
+      <!-- Messages rendered dynamically -->
+    </div>
+
+    <!-- Bottom Input Wrapper -->
+    <div class="input-container-wrapper">
+      
+      <!-- Staged Image Preview Bar (Appears when image is selected before sending) -->
+      <div class="staged-image-bar" id="stagedImageBar" style="display: none;">
+        <div class="staged-image-preview">
+          <img id="stagedImageThumb" src="" alt="Ảnh đính kèm">
+          <div class="staged-image-info">
+            <span class="staged-name" id="stagedImageName">image.png</span>
+            <span class="staged-hint">Sẵn sàng phân tích cùng câu hỏi của bạn</span>
+          </div>
+          <button type="button" class="staged-remove-btn" id="stagedRemoveBtn" title="Bỏ đính kèm ảnh">&times;</button>
+        </div>
+      </div>
+
+      <!-- Quick Prompt Suggestions Bar (Contextual) -->
+      <div class="prompt-chips-wrapper" id="promptChips" style="display: none;">
+        <!-- Rendered based on context -->
+      </div>
+
+      <!-- Chat Input Form -->
+      <form class="chat-input-bar" id="chatForm">
+        <!-- Hidden File Input -->
+        <input type="file" id="imageFileInput" accept="image/*" style="display: none;">
+        
+        <!-- Attach Image Button -->
+        <button type="button" class="attach-btn" id="attachBtn" title="Đính kèm ảnh biển báo / dashcam (hoặc kéo thả / Ctrl+V)">
+          <span class="attach-icon">📷</span>
+          <span class="attach-label">Gửi ảnh</span>
+        </button>
+
+        <!-- Text Input -->
+        <input 
+          type="text" 
+          id="userInput" 
+          class="chat-input" 
+          placeholder="Hỏi về biển báo (ví dụ: Biển này ý nghĩa gì? Xe bán tải có được đi vào không?)..." 
+          autocomplete="off"
+        >
+
+        <!-- Send Button -->
+        <button type="submit" class="send-btn" id="sendBtn" title="Gửi tin nhắn">
+          <span>Gửi</span>
+          <span class="send-icon">➤</span>
+        </button>
+      </form>
+
+      <div class="input-footer-hint">
+        <span>💡 Mẹo:</span> Bạn có thể <strong>kéo thả ảnh</strong> vào màn hình hoặc <strong>nhấn Ctrl + V</strong> để dán ảnh trực tiếp từ bộ nhớ tạm!
+      </div>
+    </div>
+  </main>
+
+  <!-- Legal Article Popup Modal -->
+  <div class="modal-overlay" id="articleModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modalArticleTitle">Chi tiết điều luật</h3>
+        <button class="modal-close" id="modalCloseBtn">&times;</button>
+      </div>
+      <div class="modal-body" id="modalArticleBody">
+        Nội dung quy định pháp luật...
+      </div>
+      <div class="modal-source" id="modalArticleSource">
+        Nguồn: QCVN 41:2019/BGTVT
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox Modal (For viewing attached images full-size) -->
+  <div class="modal-overlay" id="imageModal">
+    <div class="image-modal-content">
+      <button class="modal-close image-modal-close" id="imageModalCloseBtn">&times;</button>
+      <img id="lightboxImage" src="" alt="Ảnh biển báo">
+      <div class="image-modal-caption" id="lightboxCaption">Ảnh biển báo giao thông</div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
