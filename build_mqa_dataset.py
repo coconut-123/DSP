@@ -1,26 +1,33 @@
-"""
+r"""
 build_mqa_dataset.py
 --------------------
 Xây dựng Bộ dữ liệu Hỏi - Đáp Pháp lý Đa phương thức về Biển báo Giao thông Việt Nam
-(Vietnamese Multimodal Traffic Sign Legal Question Answering Benchmark - VN-TrafficLaw-MQA).
+theo đúng cấu trúc bài báo "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal
+Question Answering on Traffic Sign Regulation" (Luu et al., VLSP 2025 - Mục 2, 3 & 4.1).
 
-Đặc điểm bộ dữ liệu:
-1. Tích hợp song song 2 nguồn dữ liệu hình ảnh:
-   - 346 ảnh biển báo chuẩn trích xuất từ PDF QCVN 41:2019/BGTVT (Phụ lục B, C, D, E, F - trang 80..157).
-   - 1,807 ảnh cắt biển báo thực tế (real crops) & các khung hình đa biển báo từ 3,216 ảnh đường phố Việt Nam.
-2. Bao phủ 4 nhóm tác vụ suy luận pháp lý đa phương thức (Multimodal Legal QA Tasks):
-   - Task 1 (sign_identification): Nhận diện mã biển báo, tên biển và định nghĩa pháp lý theo QCVN 41:2019/BGTVT.
-   - Task 2 (driving_compliance): Tư vấn tình huống điều khiển phương tiện cụ thể (ô tô con, xe tải, xe khách, sơ-mi rơ-moóc, xe máy).
-   - Task 3 (multi_sign_scene): Suy luận tổ hợp nhiều biển báo xuất hiện đồng thời trong cùng một khung hình giao thông thực tế (kể cả biển chính kết hợp biển phụ S.505a).
-   - Task 4 (scope_and_citation): Xác định phạm vi hiệu lực của biển báo và trích dẫn điều khoản theo QCVN 41:2019/BGTVT.
-3. Kế thừa nghiêm ngặt phân chia Group-Disjoint Partition (0 group crossing) từ split_manifest.json để chống rò rỉ dữ liệu.
+Đặc điểm bộ dữ liệu theo bài báo VLSP 2025 MLQA-TSR:
+1. Phân chia dữ liệu theo yêu cầu:
+   - Tập Huấn luyện (Train Set): Toàn bộ 1.807 ảnh cắt biển báo thực tế từ đường phố Việt Nam
+     trong `C:\ki8\DSP\datadsp\data\real_crops` (52 lớp).
+   - Tập Đánh giá / Kiểm thử (Evaluation / Test Set): 51 ảnh biển báo chuẩn trích xuất từ PDF
+     QCVN 41 trong `C:\ki8\DSP\datadsp\data\pdf_signs` (khớp với các mã biển đã có trong tập Train).
+2. Hai tác vụ chuẩn VLSP 2025 MLQA-TSR (Mục 2.1 & 2.2):
+   - Subtask 1 (Multimodal Legal Retrieval): Truy xuất danh sách các điều luật liên quan R = {d_i}
+     từ cơ sở dữ liệu luật D (mỗi câu hỏi có từ 1 đến 3 điều luật liên quan, trung bình ~2.0 điều luật
+     như Hình 1, Bảng 2 & Hình 3 của bài báo), đánh giá bằng Precision, Recall và F2-score (Công thức 1, 2, 3).
+   - Subtask 2 (Multimodal Legal Question Answering): Gồm 2 dạng câu hỏi chuẩn (Mục 3.1 & 4.1):
+     + Câu hỏi Trắc nghiệm 4 lựa chọn (Multiple-Choice: A, B, C, D).
+     + Câu hỏi Đúng/Sai (Yes/No: "Đúng" hoặc "Sai").
+     Đánh giá bằng Accuracy (Công thức 4).
 """
 
 import os
 import sys
 import json
 from pathlib import Path
-from collections import Counter, defaultdict
+from collections import Counter
+
+from legal_ir import HybridLegalRetriever
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -28,131 +35,257 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 
 
-def generate_compliance_qa(sign_code: str, dataset_code: str, sign_name: str, category: str, art_title: str, summary: str):
-    """Sinh câu hỏi và câu trả lời suy luận tình huống lái xe thực tế theo đúng ngữ nghĩa từng mã biển."""
-    c_up = dataset_code.upper()
-    base_c = sign_code.upper()
+def segment_vietnamese_tokens(text: str):
+    """Tách từ tiếng Việt tính độ dài câu hỏi (theo Mục 3.2 - Bảng 2 bài báo VLSP 2025 MLQA-TSR)."""
+    try:
+        from pyvi import ViTokenizer
+        return ViTokenizer.tokenize(text).split()
+    except Exception:
+        return text.strip().split()
 
+
+def format_mc_prompt(question: str, choices: dict) -> str:
+    """Mẫu câu lệnh (Prompt Template) chuẩn cho câu hỏi Multiple-Choice theo Mục 4.1 bài báo VLSP 2025."""
+    return (
+        f"<image>\n"
+        f"{question}\n"
+        f"A. {choices['A']}\n"
+        f"B. {choices['B']}\n"
+        f"C. {choices['C']}\n"
+        f"D. {choices['D']}\n\n"
+        f"Trả lời bằng một trong bốn đáp án: A, B, C hoặc D. Không giải thích thêm"
+    )
+
+
+def format_yn_prompt(question: str) -> str:
+    """Mẫu câu lệnh (Prompt Template) chuẩn cho câu hỏi Yes/No theo Mục 4.1 bài báo VLSP 2025."""
+    return (
+        f"<image>\n"
+        f"{question}\n\n"
+        f"Trả lời bằng một trong hai đáp án: Đúng hoặc Sai. Không giải thích thêm."
+    )
+
+
+def build_vlsp_questions_for_sign(
+    sign_code: str,
+    dataset_code: str,
+    sign_name: str,
+    category: str,
+    art_title: str,
+    summary: str,
+    idx_seed: int,
+):
+    """
+    Tạo cặp câu hỏi chuẩn VLSP 2025 MLQA-TSR (Mục 3.1 & 4.1):
+    1. Câu hỏi Multiple-Choice (4 lựa chọn A, B, C, D)
+    2. Câu hỏi Yes/No ("Đúng" hoặc "Sai")
+    3. Giải thích pháp lý đầy đủ phục vụ hội thoại đa lượt
+    """
+    base_c = sign_code.upper()
+    c_up = dataset_code.upper()
+
+    # Xác định phương án đúng và 3 phương án nhiễu hợp lý theo nhóm biển báo
     if "P.102" in base_c:
-        q = "Tôi đang lái xe ô tô con và xe máy đến đầu đường đặt biển báo trong ảnh thì có được phép đi vào không?"
-        a = (
-            f"**Không được phép.** Biển trong ảnh là **Biển số {sign_code} ({sign_name})** thuộc {category}.\n\n"
-            f"- **Quy định pháp lý ({art_title}):** Biển báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, trừ các xe được ưu tiên theo quy định của Luật Giao thông đường bộ.\n"
-            f"- **Hướng xử lý:** Bạn bắt buộc phải chuyển hướng đi theo lộ trình khác, tuyệt đối không đi ngược chiều."
-        )
-    elif "P.123A" in base_c:
-        q = "Khi gặp biển báo này tại nút giao, người lái xe ô tô có được phép rẽ trái hoặc quay đầu xe không?"
-        a = (
-            f"Theo quy chuẩn **QCVN 41:2019/BGTVT ({art_title})** đối với **Biển số {sign_code} ({sign_name})**:\n\n"
-            f"- **Rẽ trái:** **Cấm** tất cả các loại xe (cơ giới và thô sơ) rẽ sang phía trái.\n"
-            f"- **Quay đầu xe:** Theo quy chuẩn mới QCVN 41:2019/BGTVT, biển P.123a **không có giá trị cấm quay đầu xe** (người lái xe vẫn được phép quay đầu xe nếu không có biển cấm quay đầu P.124)."
-        )
-    elif "P.123B" in base_c:
-        q = "Phương tiện gặp biển báo trong hình có được phép rẽ phải tại ngã tư phía trước không?"
-        a = (
-            f"**Không được phép rẽ phải.** Đây là **Biển số {sign_code} ({sign_name})** quy định tại **{art_title}**.\n\n"
-            f"- **Nội dung cấm:** Cấm các loại phương tiện cơ giới và thô sơ rẽ sang phía phải tại nút giao.\n"
-            f"- **Lưu ý pháp lý:** Biển chỉ cấm rẽ phải, các phương tiện vẫn được phép đi thẳng hoặc rẽ trái/quay đầu nếu không có biển cấm khác."
-        )
-    elif "P.124A" in base_c:
-        q = "Gặp biển báo trong hình, tôi điều khiển xe ô tô hoặc xe máy có được quay đầu xe hay rẽ trái không?"
-        a = (
-            f"Đối với **Biển số {sign_code} ({sign_name})** theo **{art_title}**:\n\n"
-            f"- **Quay đầu xe:** **Nghiêm cấm** các loại xe cơ giới và thô sơ quay đầu xe (theo kiểu chữ U).\n"
-            f"- **Rẽ trái:** Biển này **không cấm rẽ trái**; người điều khiển phương tiện vẫn được phép rẽ trái vào đường giao nhau."
-        )
-    elif "P.124B" in base_c:
-        q = "Biển báo trong hình áp dụng lệnh cấm đối với xe máy hay xe ô tô, và có được phép rẽ trái không?"
-        a = (
-            f"Đây là **Biển số {sign_code} ({sign_name})** quy định tại **{art_title}**:\n\n"
-            f"- **Đối tượng áp dụng:** Cấm **xe ô tô** và xe mô tô 3 bánh (sidecar) quay đầu xe; **xe máy 2 bánh và xe thô sơ vẫn được phép quay đầu**.\n"
-            f"- **Quyền rẽ trái:** Biển không có giá trị cấm rẽ trái để đi vào đường nhánh."
-        )
+        mc_q = "Theo Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ, biển báo trong hình có ý nghĩa pháp lý là gì?"
+        correct_text = "Cấm tất cả các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, trừ các xe được ưu tiên theo quy định."
+        distractors = [
+            "Cấm tất cả các loại phương tiện đi lại cả hai chiều trên đoạn đường đặt biển.",
+            "Cấm các loại xe cơ giới dừng xe và đỗ xe ở phía đường có đặt biển.",
+            "Chỉ cấm xe ô tô tải và xe ô tô khách đi vào, xe máy vẫn được phép lưu thông.",
+        ]
+        yn_true_q = "Khi gặp biển báo trong hình (Biển số P.102), người điều khiển xe ô tô con và xe máy bị cấm đi vào theo chiều đặt biển (trừ xe ưu tiên), đúng hay sai?"
+        yn_false_q = "Khi gặp biển báo trong hình (Biển số P.102), người điều khiển xe mô tô hai bánh vẫn được phép đi vào bình thường, đúng hay sai?"
+    elif "P.123A" in base_c or "P.103C" in base_c:
+        mc_q = "Khi gặp biển báo trong hình trước nút giao thông, người điều khiển phương tiện phải chấp hành quy định nào sau đây?"
+        correct_text = f"Cấm rẽ sang phía trái theo hiệu lực của biển {sign_code}, nhưng không có giá trị cấm quay đầu xe."
+        distractors = [
+            "Cấm đồng thời cả hành vi rẽ trái và hành vi quay đầu xe tại nút giao.",
+            "Chỉ cấm quay đầu xe theo kiểu chữ U, người lái xe vẫn được phép rẽ trái.",
+            "Bắt buộc tất cả các phương tiện phải rẽ trái, không được phép đi thẳng.",
+        ]
+        yn_true_q = f"Theo quy chuẩn về báo hiệu đường bộ, biển báo {sign_code} ({sign_name}) cấm phương tiện rẽ trái nhưng không có giá trị cấm quay đầu xe, đúng hay sai?"
+        yn_false_q = f"Theo quy chuẩn về báo hiệu đường bộ, khi gặp biển báo {sign_code} ({sign_name}), phương tiện bị cấm cả rẽ trái lẫn quay đầu xe, đúng hay sai?"
+    elif "P.123B" in base_c or "P.103B" in base_c:
+        mc_q = "Phương tiện tham gia giao thông khi gặp biển báo trong hình tại ngã tư phía trước bị cấm thực hiện hành vi nào?"
+        correct_text = f"Bị cấm rẽ phải tại nút giao theo hiệu lực của biển {sign_code} ({sign_name})."
+        distractors = [
+            "Bị cấm đi thẳng và bắt buộc phải rẽ phải vào đường nhánh.",
+            "Bị cấm dừng xe và đỗ xe trong phạm vi 50 mét sau mặt biển.",
+            "Bị cấm quay đầu xe nhưng vẫn được phép rẽ phải bình thường.",
+        ]
+        yn_true_q = f"Khi gặp biển báo {sign_code} ({sign_name}) trong hình, phương tiện vẫn được phép đi thẳng hoặc rẽ trái nếu không có biển cấm khác, đúng hay sai?"
+        yn_false_q = f"Khi gặp biển báo {sign_code} ({sign_name}) trong hình, phương tiện được phép rẽ phải bình thường tại nút giao, đúng hay sai?"
+    elif "P.124A" in base_c or "P.124B" in base_c:
+        mc_q = "Biển báo cấm trong hình quy định như thế nào đối với hành vi chuyển hướng của phương tiện?"
+        correct_text = f"Cấm quay đầu xe (theo kiểu chữ U) theo biển {sign_code} ({sign_name}), nhưng không có giá trị cấm rẽ trái để đi vào đường giao nhau."
+        distractors = [
+            "Cấm đồng thời cả hành vi quay đầu xe và hành vi rẽ trái tại nơi đường giao nhau.",
+            "Cho phép các loại phương tiện quay đầu xe nhưng cấm rẽ phải.",
+            "Cấm tất cả các loại xe cơ giới đi thẳng qua nút giao thông phía trước.",
+        ]
+        yn_true_q = f"Tại vị trí đặt biển báo {sign_code} ({sign_name}) trong hình, người điều khiển phương tiện bị cấm quay đầu xe nhưng vẫn được phép rẽ trái, đúng hay sai?"
+        yn_false_q = f"Tại vị trí đặt biển báo {sign_code} ({sign_name}) trong hình, người điều khiển phương tiện bị cấm rẽ trái vào đường giao nhau, đúng hay sai?"
     elif "P.124C" in base_c or "P.124D" in base_c:
         direction = "rẽ trái và quay đầu xe" if "124C" in base_c else "rẽ phải và quay đầu xe"
-        q = f"Khi gặp biển báo này trước nút giao, người lái xe có được phép {direction} không?"
-        a = (
-            f"**Tuyệt đối không được phép.** Biển trong hình là **Biển số {sign_code} ({sign_name})** theo **{art_title}**.\n\n"
-            f"- **Quy định:** Cấm tất cả các loại phương tiện đồng thời cả hai hành vi: **{direction}** tại khu vực nút giao.\n"
-            f"- **Hướng đi hợp pháp:** Người lái xe chỉ được phép đi thẳng hoặc rẽ theo hướng không bị cấm trên biển."
-        )
+        mc_q = "Khi gặp biển báo trong hình trước nút giao, những hành vi chuyển hướng nào bị nghiêm cấm?"
+        correct_text = f"Cấm tất cả các loại xe thực hiện đồng thời cả hai hành vi: {direction} (Biển số {sign_code})."
+        distractors = [
+            "Chỉ cấm rẽ trái nhưng vẫn cho phép người điều khiển phương tiện quay đầu xe.",
+            "Chỉ cấm xe ô tô tải trên 2,5 tấn, xe ô tô con được phép quay đầu bình thường.",
+            "Bắt buộc phương tiện phải quay đầu xe trở lại, cấm đi thẳng qua nút giao.",
+        ]
+        yn_true_q = f"Biển báo {sign_code} trong hình có hiệu lực cấm các loại phương tiện đồng thời cả hai hành vi {direction}, đúng hay sai?"
+        yn_false_q = f"Khi gặp biển báo {sign_code} trong hình, người điều khiển xe ô tô con vẫn được phép quay đầu xe tại nút giao, đúng hay sai?"
     elif "P.127" in base_c:
         spd = "50 km/h"
-        if "*60" in c_up:
-            spd = "60 km/h"
-        elif "*80" in c_up:
-            spd = "80 km/h"
-        elif "*40" in c_up:
-            spd = "40 km/h"
-        q = f"Biển báo trong ảnh quy định tốc độ lưu thông như thế nào? Tôi chạy xe ở tốc độ vượt mức {spd} có vi phạm không?"
-        a = (
-            f"**Có vi phạm.** Đây là **Biển số {sign_code} ({sign_name})** quy định tại **{art_title}**.\n\n"
-            f"- **Giới hạn tốc độ:** Cấm tất cả các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên biển (**{spd}**), trừ các xe được ưu tiên theo quy định.\n"
-            f"- **Trách nhiệm người lái:** Phải chủ động giảm tốc độ xuống dưới hoặc bằng {spd} kể từ vị trí đặt biển cho đến khi gặp biển hết hạn chế tốc độ (DP.134/DP.135) hoặc qua nút giao."
-        )
+        for s_val in ["40", "60", "70", "80"]:
+            if f"*{s_val}" in c_up:
+                spd = f"{s_val} km/h"
+        mc_q = "Biển báo trong ảnh quy định về giới hạn tốc độ lưu thông như thế nào đối với các phương tiện cơ giới?"
+        correct_text = f"Cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên biển ({spd}), trừ các xe được ưu tiên theo quy định."
+        distractors = [
+            f"Bắt buộc các loại xe cơ giới phải chạy với tốc độ tối thiểu từ {spd} trở lên.",
+            f"Chỉ dẫn khoảng cách an toàn tối thiểu giữa hai xe đang chạy trên đường là {spd.split()[0]} mét.",
+            "Báo hiệu hết đoạn đường hạn chế tốc độ tối đa, cho phép xe chạy tốc độ bình thường.",
+        ]
+        yn_true_q = f"Khi gặp biển báo {sign_code} ({sign_name}) trong hình, người điều khiển xe cơ giới chạy vượt quá tốc độ ghi trên biển ({spd}) là vi phạm quy chuẩn giao thông, đúng hay sai?"
+        yn_false_q = f"Biển báo {sign_code} trong hình quy định tốc độ tối thiểu bắt buộc các xe phải đạt được trên đường, đúng hay sai?"
     elif "P.130" in base_c:
-        q = "Trên đoạn đường đặt biển báo này, tôi bật đèn cảnh báo (hazard) để dừng xe chờ đón người trong 2 phút có được phép không?"
-        a = (
-            f"**Không được phép.** Biển trong ảnh là **Biển số {sign_code} ({sign_name})** quy định tại **{art_title}**.\n\n"
-            f"- **Nội dung cấm:** Cấm tất cả các loại xe cơ giới **dừng xe và đỗ xe** ở phía đường có đặt biển, bất kể thời gian ngắn hay có bật đèn tín hiệu, trừ các xe được ưu tiên theo luật định.\n"
-            f"- **Phân biệt với P.131a:** Khác với biển P.131a (chỉ cấm đỗ xe nhưng cho phép dừng xe tạm thời), biển P.130 cấm tuyệt đối cả dừng xe lẫn đỗ xe."
-        )
+        mc_q = "Trên đoạn đường có đặt biển báo trong hình, quy định về dừng xe và đỗ xe được áp dụng như thế nào?"
+        correct_text = "Cấm các loại xe cơ giới dừng xe và đỗ xe ở phía đường có đặt biển (Biển số P.130), trừ các xe được ưu tiên theo quy định."
+        distractors = [
+            "Chỉ cấm đỗ xe lâu dài, tài xế vẫn được phép dừng xe tạm thời để đón trả khách hoặc xếp dỡ hàng hóa.",
+            "Cho phép các phương tiện dừng xe và đỗ xe tự do trên vỉa hè và lòng đường.",
+            "Chỉ cấm xe ô tô tải dừng đỗ, xe ô tô con cá nhân được phép đỗ xe trong 15 phút.",
+        ]
+        yn_true_q = "Tại đoạn đường đặt biển số P.130 (Cấm dừng xe và đỗ xe) như trong hình, mọi xe cơ giới (trừ xe ưu tiên) đều bị cấm cả dừng xe lẫn đỗ xe ở phía đặt biển, đúng hay sai?"
+        yn_false_q = "Tại đoạn đường đặt biển số P.130 như trong hình, tài xế xe ô tô con được phép bật đèn cảnh báo để dừng xe chờ đón người trong 5 phút, đúng hay sai?"
     elif "P.131" in base_c:
-        q = "Gặp biển báo trong hình, tài xế xe ô tô có được phép dừng xe tạm thời để xếp dỡ hàng hóa hoặc đón trả khách không?"
-        a = (
-            f"**Được phép dừng xe tạm thời nhưng cấm đỗ xe.** Đây là **Biển số {sign_code} ({sign_name})** theo **{art_title}**.\n\n"
-            f"- **Quy định:** Biển cấm các loại xe cơ giới đỗ xe ở phía đường có đặt biển.\n"
-            f"- **Ngoại lệ hợp pháp:** Người điều khiển phương tiện vẫn được phép dừng xe tạm thời (không tắt máy, tài xế không rời vị trí lái) để đón trả khách hoặc xếp dỡ hàng hóa khi không gây cản trở giao thông."
-        )
+        mc_q = "Khi gặp biển báo trong hình (Biển số P.131), người điều khiển xe cơ giới được phép và bị cấm thực hiện hành vi nào?"
+        correct_text = "Bị cấm đỗ xe ở phía đường có đặt biển, nhưng vẫn được phép dừng xe tạm thời để đón trả khách hoặc xếp dỡ hàng hóa."
+        distractors = [
+            "Bị cấm tuyệt đối cả việc dừng xe tạm thời lẫn việc đỗ xe ở phía đường có đặt biển.",
+            "Bị cấm đi vào đoạn đường phía trước đối với tất cả các loại phương tiện cơ giới.",
+            "Được phép đỗ xe không giới hạn thời gian vào các ngày làm việc trong tuần.",
+        ]
+        yn_true_q = f"Gặp biển báo {sign_code} ({sign_name}) trong hình, tài xế bị cấm đỗ xe nhưng vẫn được phép dừng xe tạm thời để đón trả khách, đúng hay sai?"
+        yn_false_q = f"Biển báo {sign_code} ({sign_name}) trong hình cấm tuyệt đối cả việc dừng xe tạm thời lẫn việc đỗ xe, đúng hay sai?"
     elif "P.106" in base_c or "P.107" in base_c or "P.108" in base_c:
-        q = "Biển báo cấm trong hình áp dụng cho những loại phương tiện nào? Xe ô tô con 5 chỗ có bị cấm đi vào không?"
-        a = (
-            f"Theo quy định tại **{art_title}** đối với **Biển số {sign_code} ({sign_name})**:\n\n"
-            f"- **Đối tượng bị cấm:** {summary}\n"
-            f"- **Đối với xe ô tô con cá nhân:** Biển hạn chế xe ô tô tải / xe khách / xe sơ-mi rơ-moóc **không có hiệu lực cấm xe ô tô con**, do đó xe ô tô con vẫn được phép lưu thông bình thường."
-        )
-    elif "S.505A" in base_c:
-        veh = "phương tiện hiển thị trên biển phụ"
-        if "XE MÁY" in c_up:
-            veh = "xe mô tô, xe gắn máy"
-        elif "XE TẢI VÀ CÔNG" in c_up:
-            veh = "xe ô tô tải và xe container (sơ-mi rơ-moóc)"
-        elif "XE TẢI" in c_up:
-            veh = "xe ô tô tải"
-        q = "Biển phụ hình chữ nhật nền trắng trong ảnh có vai trò pháp lý như thế nào khi đặt bên dưới biển chính?"
-        a = (
-            f"Đây là **Biển phụ số {sign_code} ({sign_name})** được quy định tại **{art_title}**.\n\n"
-            f"- **Ý nghĩa kết hợp:** Biển số S.505a được đặt ngay bên dưới các biển báo cấm, biển hiệu lệnh hoặc biển chỉ dẫn để **giới hạn đối tượng áp dụng của biển chính chỉ dành riêng cho loại xe vẽ trên biển phụ ({veh})**.\n"
-            f"- **Quy tắc tuân thủ:** Chỉ người điều khiển **{veh}** mới phải chịu sự điều chỉnh của biển chính phía trên."
-        )
+        mc_q = "Những loại phương tiện nào chịu sự điều chỉnh của biển báo cấm trong hình và xe ô tô con có được phép đi vào không?"
+        correct_text = f"Biển {sign_code} ({sign_name}) cấm các loại xe vận tải/xe khách/rơ-moóc theo quy định trên biển, nhưng xe ô tô con cá nhân vẫn được phép đi vào bình thường."
+        distractors = [
+            "Cấm tất cả các loại xe cơ giới bao gồm cả xe ô tô con 4–7 chỗ và xe mô tô hai bánh.",
+            "Chỉ cấm xe đạp và người đi bộ, tất cả các loại xe ô tô tải nặng đều được phép đi vào.",
+            "Báo hiệu đường dành riêng cho xe ô tô tải và xe kéo rơ-moóc lưu thông.",
+        ]
+        yn_true_q = f"Tại đoạn đường đặt biển số {sign_code} ({sign_name}) trong hình, người điều khiển xe ô tô con cá nhân vẫn được phép đi vào bình thường, đúng hay sai?"
+        yn_false_q = f"Biển số {sign_code} ({sign_name}) trong hình có hiệu lực cấm cả xe ô tô con 5 chỗ và xe mô tô hai bánh đi vào, đúng hay sai?"
     elif base_c.startswith("W."):
-        q = "Khi quan sát thấy biển cảnh báo tam giác nền vàng viền đỏ này trên đường, người điều khiển phương tiện phải xử lý như thế nào để đúng luật?"
-        a = (
-            f"Biển trong hình là **Biển số {sign_code} ({sign_name})** thuộc nhóm **Biển báo nguy hiểm và cảnh báo** theo **{art_title}**.\n\n"
-            f"- **Ý nghĩa cảnh báo:** {summary}\n"
-            f"- **Nghĩa vụ pháp lý:** Người điều khiển phương tiện phải chủ động giảm tốc độ đến mức an toàn, giữ khoảng cách, chú ý quan sát chướng ngại vật/người đi bộ/phương tiện giao cắt và tuyệt đối không vượt xe ở đoạn đường nguy hiểm."
-        )
+        mc_q = "Biển báo hình tam giác nền vàng viền đỏ trong hình thuộc nhóm biển nào và người lái xe cần xử lý ra sao?"
+        correct_text = f"Thuộc nhóm Biển báo nguy hiểm và cảnh báo — Biển số {sign_code} ({sign_name}); người lái xe phải chủ động giảm tốc độ, chú ý quan sát và đi đúng phần đường."
+        distractors = [
+            f"Thuộc nhóm Biển báo cấm — cấm tất cả các phương tiện cơ giới đi qua khu vực phía trước.",
+            f"Thuộc nhóm Biển hiệu lệnh — bắt buộc các phương tiện phải tăng tốc độ tối thiểu lên 60 km/h.",
+            f"Thuộc nhóm Biển phụ — chỉ có tác dụng bổ sung hiệu lực khi đặt kèm dưới biển báo cấm.",
+        ]
+        yn_true_q = f"Biển báo trong hình là Biển số {sign_code} ({sign_name}) thuộc nhóm Biển báo nguy hiểm và cảnh báo, yêu cầu người lái xe chú ý quan sát và giảm tốc độ an toàn, đúng hay sai?"
+        yn_false_q = f"Biển báo tam giác nền vàng {sign_code} trong hình là biển báo cấm mọi phương tiện cơ giới đi tiếp qua đoạn đường này, đúng hay sai?"
     elif base_c.startswith("R."):
-        q = "Biển báo nền xanh trong ảnh mang tính chất khuyến nghị hay bắt buộc thi hành đối với người tham gia giao thông?"
-        a = (
-            f"**Bắt buộc thi hành.** Đây là **Biển số {sign_code} ({sign_name})** thuộc nhóm **Biển hiệu lệnh** quy định tại **{art_title}**.\n\n"
-            f"- **Mệnh lệnh giao thông:** {summary}\n"
-            f"- **Hiệu lực:** Tất cả các phương tiện tham gia giao thông bắt buộc phải chấp hành đúng hướng đi, làn đường hoặc tốc độ tối thiểu mà biển đã chỉ định."
-        )
+        mc_q = "Biển báo trong hình thuộc nhóm biển nào và có hiệu lực pháp lý như thế nào đối với người tham gia giao thông?"
+        correct_text = f"Thuộc nhóm Biển hiệu lệnh — Biển số {sign_code} ({sign_name}), báo các hiệu lệnh bắt buộc người tham gia giao thông phải chấp hành."
+        distractors = [
+            "Thuộc nhóm Biển chỉ dẫn — chỉ mang tính chất khuyến nghị hướng đi, không bắt buộc thi hành.",
+            "Thuộc nhóm Biển báo nguy hiểm — cảnh báo phía trước có công trường đang thi công.",
+            "Thuộc nhóm Biển báo cấm — cấm mọi phương tiện cơ giới và thô sơ đi vào đường này.",
+        ]
+        yn_true_q = f"Biển số {sign_code} ({sign_name}) trong hình thuộc nhóm Biển hiệu lệnh và mang tính chất bắt buộc thi hành đối với người tham gia giao thông, đúng hay sai?"
+        yn_false_q = f"Biển số {sign_code} ({sign_name}) trong hình chỉ mang tính chất tham khảo, người lái xe không bắt buộc phải chấp hành theo hướng chỉ định của biển, đúng hay sai?"
+    elif base_c.startswith("S."):
+        mc_q = "Biển hình chữ nhật trong ảnh thuộc nhóm biển nào và có vai trò pháp lý gì khi đặt kết hợp với biển chính?"
+        correct_text = f"Thuộc nhóm Biển phụ — Biển số {sign_code} ({sign_name}), được đặt kết hợp dưới biển chính để thuyết minh, bổ sung hoặc giới hạn đối tượng/phạm vi hiệu lực của biển chính."
+        distractors = [
+            "Là biển báo cấm độc lập có hiệu lực cấm toàn bộ xe cơ giới trên cả hai chiều đường.",
+            "Là biển báo nguy hiểm cảnh báo giao nhau với đường sắt có rào chắn.",
+            "Là biển hiệu lệnh bắt buộc các phương tiện phải dừng lại trước vạch dừng.",
+        ]
+        yn_true_q = f"Biển số {sign_code} ({sign_name}) trong hình là biển phụ dùng để thuyết minh, bổ sung hoặc giới hạn đối tượng phương tiện áp dụng của biển báo chính đặt phía trên, đúng hay sai?"
+        yn_false_q = f"Biển số {sign_code} trong hình là biển báo nguy hiểm độc lập cảnh báo đường trơn trượt, đúng hay sai?"
     else:
-        q = "Biển chỉ dẫn trong ảnh cung cấp thông tin pháp lý gì và người lái xe cần lưu ý điều gì khi đi qua đoạn đường này?"
-        a = (
-            f"Đây là **Biển số {sign_code} ({sign_name})** thuộc nhóm **Biển chỉ dẫn** theo **{art_title}**.\n\n"
-            f"- **Thông tin chỉ dẫn:** {summary}\n"
-            f"- **Lưu ý tuân thủ:** Người tham gia giao thông sử dụng thông tin trên biển để định hướng lộ trình, vị trí quay đầu xe, điểm dừng xe buýt hoặc tuân thủ nghiêm ngặt quy tắc giao thông trên tuyến (như đi đúng chiều trên đường một chiều hoặc chấp hành hệ thống camera giám sát)."
-        )
-    return q, a
+        mc_q = "Biển báo trong hình thuộc nhóm biển báo nào và cung cấp thông tin pháp lý gì theo Quy chuẩn báo hiệu đường bộ?"
+        correct_text = f"Thuộc nhóm {category} — Biển số {sign_code} ({sign_name}): {summary[:180]}"
+        distractors = [
+            "Thuộc nhóm Biển báo cấm — cấm tất cả các phương tiện cơ giới rẽ trái và quay đầu xe.",
+            "Thuộc nhóm Biển báo nguy hiểm — cảnh báo đoạn đường thường xảy ra tai nạn giao thông.",
+            "Thuộc nhóm Biển hiệu lệnh — bắt buộc mọi phương tiện phải chạy tốc độ tối thiểu 80 km/h.",
+        ]
+        yn_true_q = f"Biển báo trong hình là Biển số {sign_code} ({sign_name}) thuộc nhóm {category} theo Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ, đúng hay sai?"
+        yn_false_q = f"Biển báo {sign_code} ({sign_name}) trong hình thuộc nhóm Biển báo nguy hiểm và cấm mọi phương tiện lưu thông qua đoạn đường này, đúng hay sai?"
+
+    # Xoay vòng vị trí đáp án đúng A / B / C / D theo idx_seed để phân bố đều 4 lựa chọn
+    letters = ["A", "B", "C", "D"]
+    correct_pos = idx_seed % 4
+    correct_letter = letters[correct_pos]
+    choices = {}
+    d_idx = 0
+    for pos, ltr in enumerate(letters):
+        if pos == correct_pos:
+            choices[ltr] = correct_text
+        else:
+            choices[ltr] = distractors[d_idx]
+            d_idx += 1
+
+    is_yn_true = (idx_seed % 2 == 0)
+    yn_question = yn_true_q if is_yn_true else yn_false_q
+    yn_answer = "Đúng" if is_yn_true else "Sai"
+
+    full_explanation = (
+        f"Biển báo trong hình là **Biển số {sign_code}: \"{sign_name}\"** thuộc **{category}**.\n\n"
+        f"- **Căn cứ pháp lý:** {art_title}.\n"
+        f"- **Quy định chi tiết:** {summary}\n"
+        f"- **Đáp án trắc nghiệm đúng:** **{correct_letter}** ({correct_text})"
+    )
+
+    return {
+        "mc_question": mc_q,
+        "mc_choices": choices,
+        "mc_answer": correct_letter,
+        "mc_prompt": format_mc_prompt(mc_q, choices),
+        "yn_question": yn_question,
+        "yn_answer": yn_answer,
+        "yn_prompt": format_yn_prompt(yn_question),
+        "full_explanation": full_explanation,
+    }
+
+
+def compute_split_statistics(entries):
+    """Tính bảng thống kê chuẩn Bảng 2 của bài báo VLSP 2025 MLQA-TSR (Mục 3.2)."""
+    if not entries:
+        return {}
+    unique_imgs = set(x["image"] for x in entries)
+    mc_count = sum(1 for x in entries if x["question_type"] == "multiple_choice")
+    yn_count = sum(1 for x in entries if x["question_type"] == "yes_no")
+    q_lengths = [x["question_token_length"] for x in entries]
+    rel_counts = [len(x["relevant_articles"]) for x in entries]
+    return {
+        "total_questions": len(entries),
+        "total_images": len(unique_imgs),
+        "multiple_choice_questions": mc_count,
+        "yes_no_questions": yn_count,
+        "max_length_of_question": int(max(q_lengths)),
+        "min_length_of_question": int(min(q_lengths)),
+        "avg_length_of_question": round(float(sum(q_lengths)) / len(q_lengths), 2),
+        "max_relevant_articles": int(max(rel_counts)),
+        "min_relevant_articles": int(min(rel_counts)),
+        "avg_relevant_articles": round(float(sum(rel_counts)) / len(rel_counts), 2),
+    }
 
 
 def build_benchmark():
-    print("=" * 72)
-    print(" XÂY DỰNG BỘ DỮ LIỆU MULTIMODAL LEGAL QA (VN-TrafficLaw-MQA)")
-    print("=" * 72)
+    print("=" * 76)
+    print(" XÂY DỰNG BỘ DỮ LIỆU VLSP 2025 MLQA-TSR (Train: real_crops -> Test: pdf_signs)")
+    print("=" * 76)
+
+    retriever = HybridLegalRetriever()
 
     with open(DATA_DIR / "legal_articles.json", "r", encoding="utf-8") as f:
         legal_articles = json.load(f)
@@ -174,80 +307,99 @@ def build_benchmark():
     mqa_entries = []
     compat_labels = []
 
-    # 1. Đưa toàn bộ 346 ảnh biển báo chuẩn từ PDF vào tập huấn luyện chuẩn (Canonical Reference Templates)
+    # 1. TẬP ĐÁNH GIÁ / KIỂM THỬ (TEST SET): 51 ảnh chuẩn từ PDF QCVN 41 (data/pdf_signs)
+    # Mỗi ảnh trong data/pdf_signs sinh câu hỏi Multiple-Choice và Yes/No theo đúng chuẩn Subtask 1 & Subtask 2 VLSP 2025
+    test_q_idx = 0
     for idx, item in enumerate(pdf_catalog):
         code = item["sign_code"]
         name = item["sign_name"]
         cat = item["category"]
-        art_key = item["relevant_articles"][0]
+        rel_arts = retriever.get_relevant_articles_for_sign(code)
+        art_key = rel_arts[0]
         art_obj = legal_articles.get(art_key, {})
         art_title = art_obj.get("title", f"Quy định tại {art_key}")
         summary = art_obj.get("summary", item["description"])
 
-        q_comp, a_comp = generate_compliance_qa(code, code, name, cat, art_title, summary)
+        qa_pack = build_vlsp_questions_for_sign(code, code, name, cat, art_title, summary, idx)
 
         messages = [
-            {
-                "role": "user",
-                "content": "Biển báo trong hình là biển gì và có ý nghĩa pháp lý như thế nào theo QCVN 41:2019/BGTVT?",
-            },
-            {
-                "role": "assistant",
-                "content": (
-                    f"Biển báo trong hình là **Biển số {code}: \"{name}\"** theo Quy chuẩn kỹ thuật quốc gia **QCVN 41:2019/BGTVT**.\n\n"
-                    f"- **Phân loại nhóm biển:** {cat}.\n"
-                    f"- **Căn cứ pháp lý:** {art_title} (QCVN 41:2019/BGTVT).\n"
-                    f"- **Ý nghĩa & Quy định sử dụng:** {summary}"
-                ),
-            },
-            {
-                "role": "user",
-                "content": q_comp,
-            },
-            {
-                "role": "assistant",
-                "content": a_comp,
-            },
+            {"role": "user", "content": qa_pack["mc_prompt"]},
+            {"role": "assistant", "content": qa_pack["mc_answer"]},
+            {"role": "user", "content": qa_pack["yn_question"]},
+            {"role": "assistant", "content": f"**{qa_pack['yn_answer']}.**\n\n{qa_pack['full_explanation']}"},
         ]
 
-        entry = {
-            "id": f"mqa_pdf_{idx+1:04d}",
+        # Tạo mẫu Multiple-Choice cho Test Set
+        test_q_idx += 1
+        mc_tok_len = len(segment_vietnamese_tokens(qa_pack["mc_question"]))
+        mqa_entries.append({
+            "id": f"vlsp_test_mc_{idx+1:04d}",
             "source_type": "pdf_canonical",
-            "task_type": "sign_identification_and_compliance",
+            "task_type": "subtask2_multiple_choice",
+            "question_type": "multiple_choice",
             "image": item["image"],
             "compat_image": item["compat_image"],
             "sign_code": code,
             "dataset_code": code,
             "sign_name": name,
             "category": cat,
-            "relevant_articles": [art_key],
-            "grouped_split": "train",  # Ảnh mẫu từ PDF chỉ dùng để làm giàu tập Train (Canonical Template Augmentation), không bao giờ đưa vào Test để tránh làm dễ bài kiểm tra thực tế
-            "random_split": "train",
+            "relevant_articles": rel_arts,
+            "question": qa_pack["mc_question"],
+            "choices": qa_pack["mc_choices"],
+            "correct_answer": qa_pack["mc_answer"],
+            "vlsp_prompt": qa_pack["mc_prompt"],
+            "question_token_length": mc_tok_len,
+            "grouped_split": "test",
+            "random_split": "test",
             "group_id": -1,
             "messages": messages,
-        }
-        mqa_entries.append(entry)
+        })
+
+        # Tạo mẫu Yes/No ("Đúng" / "Sai") cho Test Set (tỷ lệ ~2:1 như Public Test hoặc 1:1 như Private Test Bảng 2)
+        if idx % 2 == 0:
+            yn_tok_len = len(segment_vietnamese_tokens(qa_pack["yn_question"]))
+            mqa_entries.append({
+                "id": f"vlsp_test_yn_{idx+1:04d}",
+                "source_type": "pdf_canonical",
+                "task_type": "subtask2_yes_no",
+                "question_type": "yes_no",
+                "image": item["image"],
+                "compat_image": item["compat_image"],
+                "sign_code": code,
+                "dataset_code": code,
+                "sign_name": name,
+                "category": cat,
+                "relevant_articles": rel_arts,
+                "question": qa_pack["yn_question"],
+                "choices": {"Đúng": "Đúng", "Sai": "Sai"},
+                "correct_answer": qa_pack["yn_answer"],
+                "vlsp_prompt": qa_pack["yn_prompt"],
+                "question_token_length": yn_tok_len,
+                "grouped_split": "test",
+                "random_split": "test",
+                "group_id": -1,
+                "messages": [
+                    {"role": "user", "content": qa_pack["yn_prompt"]},
+                    {"role": "assistant", "content": qa_pack["yn_answer"]},
+                ],
+            })
 
         compat_labels.append({
             "id": f"conv_{idx+1:03d}",
             "image": item["compat_image"],
             "sign_code": code,
             "sign_name": name,
-            "relevant_articles": [art_key],
+            "relevant_articles": rel_arts,
             "messages": messages,
         })
 
-    # 2. Tạo các mẫu hỏi đáp từ dữ liệu giao thông thực tế (Real Crops & Multi-Sign Street Scenes)
+    # 2. TẬP HUẤN LUYỆN (TRAIN SET): 1.807 ảnh cắt biển báo thực tế (data/real_crops)
+    # Tỷ lệ Multiple-Choice / Yes-No = 2 / 1 (6/3) theo đúng Bảng 2 bài báo VLSP 2025 MLQA-TSR
     real_crop_qa_count = 0
-    multi_sign_scene_qa_count = 0
-
     for sc in scene_data:
         img_id = sc["image_id"]
-        g_split, r_split, gid = img_to_splits.get(img_id, ("train", "train", -1))
-        boxes = sc["boxes"]
-
-        # 2a. Tạo mẫu QA cho các ảnh cắt biển báo thực tế (Real Crops) đã lưu
-        for b in boxes:
+        orig_g_split, orig_r_split, gid = img_to_splits.get(img_id, ("train", "train", -1))
+        for b in sc["boxes"]:
             if "crop_path" in b:
                 cid = b["class_id"]
                 cm = cls_map_by_id[cid]
@@ -255,18 +407,31 @@ def build_benchmark():
                 ds_code = cm["dataset_code"]
                 name_vi = cm["name_vi"]
                 cat = cm["category"]
-                art_key = cm["article_id"]
+                rel_arts = retriever.get_relevant_articles_for_sign(can_code)
+                art_key = rel_arts[0]
                 art_obj = legal_articles.get(art_key, {})
                 art_title = art_obj.get("title", f"Mục {art_key}")
                 summary = art_obj.get("summary", cm["legal_summary"])
 
-                q_comp, a_comp = generate_compliance_qa(can_code, ds_code, name_vi, cat, art_title, summary)
                 real_crop_qa_count += 1
+                qa_pack = build_vlsp_questions_for_sign(
+                    can_code, ds_code, name_vi, cat, art_title, summary, real_crop_qa_count
+                )
+
+                # Tỷ lệ 2 câu Multiple-Choice : 1 câu Yes/No (đúng tỷ lệ 6/3 trong Bảng 2 bài báo)
+                is_mc = (real_crop_qa_count % 3 != 0)
+                q_type = "multiple_choice" if is_mc else "yes_no"
+                q_text = qa_pack["mc_question"] if is_mc else qa_pack["yn_question"]
+                q_prompt = qa_pack["mc_prompt"] if is_mc else qa_pack["yn_prompt"]
+                q_ans = qa_pack["mc_answer"] if is_mc else qa_pack["yn_answer"]
+                q_choices = qa_pack["mc_choices"] if is_mc else {"Đúng": "Đúng", "Sai": "Sai"}
+                tok_len = len(segment_vietnamese_tokens(q_text))
 
                 mqa_entries.append({
-                    "id": f"mqa_realcrop_{real_crop_qa_count:04d}",
+                    "id": f"vlsp_train_realcrop_{real_crop_qa_count:04d}",
                     "source_type": "real_street_crop",
-                    "task_type": "real_sign_legal_qa",
+                    "task_type": f"subtask2_{q_type}",
+                    "question_type": q_type,
                     "scene_id": img_id,
                     "image": b["crop_path"],
                     "class_id": cid,
@@ -274,88 +439,44 @@ def build_benchmark():
                     "dataset_code": ds_code,
                     "sign_name": name_vi,
                     "category": cat,
-                    "relevant_articles": [art_key],
-                    "grouped_split": g_split,
-                    "random_split": r_split,
+                    "relevant_articles": rel_arts,
+                    "question": q_text,
+                    "choices": q_choices,
+                    "correct_answer": q_ans,
+                    "vlsp_prompt": q_prompt,
+                    "question_token_length": tok_len,
+                    "grouped_split": "train",
+                    "random_split": "train",
+                    "orig_grouped_split": orig_g_split,
+                    "orig_random_split": orig_r_split,
                     "group_id": gid,
                     "messages": [
-                        {
-                            "role": "user",
-                            "content": q_comp,
-                        },
-                        {
-                            "role": "assistant",
-                            "content": (
-                                f"{a_comp}\n\n"
-                                f"- **Trích dẫn quy chuẩn:** {art_title} (QCVN 41:2019/BGTVT).\n"
-                                f"- **Quy định chi tiết:** {summary}"
-                            ),
-                        },
+                        {"role": "user", "content": q_prompt},
+                        {"role": "assistant", "content": f"{q_ans}\n\n{qa_pack['full_explanation']}"},
                     ],
                 })
 
-        # 2b. Tạo mẫu QA Suy luận Đa biển báo trên toàn cảnh đường phố (Multi-Sign Scene Reasoning)
-        unique_cids = sc["classes_present"]
-        if len(unique_cids) >= 2 and multi_sign_scene_qa_count < 600:
-            multi_sign_scene_qa_count += 1
-            sign_descriptions = []
-            art_keys = []
-            for cid in unique_cids:
-                cm = cls_map_by_id[cid]
-                can_code = cm["canonical_qcvn_code"]
-                name_vi = cm["name_vi"]
-                art_k = cm["article_id"]
-                if art_k not in art_keys:
-                    art_keys.append(art_k)
-                sign_descriptions.append(
-                    f"1. **Biển số {can_code} ({name_vi})** [{cm['category']} - {art_k}]: {cm['legal_summary']}"
-                )
+    train_entries = [x for x in mqa_entries if x["grouped_split"] == "train"]
+    test_entries = [x for x in mqa_entries if x["grouped_split"] == "test"]
 
-            joined_desc = "\n".join(sign_descriptions)
-            codes_str = ", ".join(cls_map_by_id[c]["canonical_qcvn_code"] for c in unique_cids)
-            prim_cm = cls_map_by_id[unique_cids[0]]
+    table2_stats = {
+        "train_real_crops": compute_split_statistics(train_entries),
+        "test_pdf_signs": compute_split_statistics(test_entries),
+    }
 
-            mqa_entries.append({
-                "id": f"mqa_scene_{multi_sign_scene_qa_count:04d}",
-                "source_type": "real_multi_sign_scene",
-                "task_type": "multi_sign_scene_reasoning",
-                "scene_id": img_id,
-                "image": sc["image_path"],
-                "classes_present": unique_cids,
-                "sign_code": prim_cm["canonical_qcvn_code"],
-                "all_sign_codes": [cls_map_by_id[c]["canonical_qcvn_code"] for c in unique_cids],
-                "sign_name": prim_cm["name_vi"],
-                "category": prim_cm["category"],
-                "relevant_articles": art_keys,
-                "grouped_split": g_split,
-                "random_split": r_split,
-                "group_id": gid,
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": "Trong khung hình giao thông thực tế này xuất hiện những biển báo nào và người điều khiển phương tiện cần phối hợp chấp hành các quy định pháp lý nào theo QCVN 41:2019/BGTVT?",
-                    },
-                    {
-                        "role": "assistant",
-                        "content": (
-                            f"Trong khung hình giao thông này có sự xuất hiện kết hợp của **{len(unique_cids)} loại biển báo ({codes_str})** theo **QCVN 41:2019/BGTVT**:\n\n"
-                            f"{joined_desc}\n\n"
-                            f"**Tổng hợp quy tắc chấp hành:** Người điều khiển phương tiện khi lưu thông qua đoạn đường này phải đồng thời tuân thủ hiệu lực của tất cả các biển báo nêu trên (nếu có biển phụ nhóm S như S.505a đặt dưới biển chính thì hiệu lực của biển chính được giới hạn theo đối tượng phương tiện trên biển phụ)."
-                        ),
-                    },
-                ],
-            })
-
-    # Lưu toàn bộ dataset MQA và đồng bộ label.json cho server/demo
     split_stats_grouped = Counter(x["grouped_split"] for x in mqa_entries)
     split_stats_source = Counter(x["source_type"] for x in mqa_entries)
+    split_stats_qtype = Counter(x["question_type"] for x in mqa_entries)
 
     with open(DATA_DIR / "mqa_dataset.json", "w", encoding="utf-8") as f:
         json.dump({
-            "benchmark_name": "VN-TrafficLaw-MQA",
+            "benchmark_name": "VLSP 2025 MLQA-TSR (Train: real_crops -> Test: pdf_signs)",
+            "paper_reference": "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation",
             "total_qa_pairs": len(mqa_entries),
             "by_source_type": dict(split_stats_source),
             "by_grouped_split": dict(split_stats_grouped),
+            "by_question_type": dict(split_stats_qtype),
+            "vlsp_table2_statistics": table2_stats,
             "data": mqa_entries,
         }, f, ensure_ascii=False, indent=2)
 
@@ -364,11 +485,9 @@ def build_benchmark():
     with open(BASE_DIR / "label", "w", encoding="utf-8") as f:
         json.dump(compat_labels, f, ensure_ascii=False, indent=2)
 
-    print(f"[✓] Đã xây dựng hoàn tất bộ dữ liệu VN-TrafficLaw-MQA với {len(mqa_entries)} mẫu hội thoại đa phương thức:")
-    print(f"    - Mẫu biển chuẩn từ PDF (pdf_canonical):        {split_stats_source['pdf_canonical']}")
-    print(f"    - Mẫu cắt biển thực tế (real_street_crop):      {split_stats_source['real_street_crop']}")
-    print(f"    - Mẫu toàn cảnh đa biển (real_multi_sign_scene): {split_stats_source['real_multi_sign_scene']}")
-    print(f"    - Phân bố theo Group-Disjoint Split: Train={split_stats_grouped['train']}, Val={split_stats_grouped['val']}, Test={split_stats_grouped['test']}")
+    print(f"[✓] Đã xây dựng hoàn tất bộ dữ liệu theo chuẩn VLSP 2025 MLQA-TSR ({len(mqa_entries)} câu hỏi):")
+    print(f"    - Tập Train (data/real_crops): {table2_stats['train_real_crops']}")
+    print(f"    - Tập Test  (data/pdf_signs) : {table2_stats['test_pdf_signs']}")
 
 
 if __name__ == "__main__":

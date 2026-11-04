@@ -785,13 +785,50 @@ for page_idx in range(79, 157):
                         raw_c = raw_c + m_it.group(1)[0].lower()
                     crop_records.append((page_num, it, resolve_sign_code(raw_c)))
 
-print(f"[*] Tổng số biển báo chuẩn trích xuất từ PDF (trang 80–157): {len(crop_records)}")
+with open(ARCHIVE_DIR / "classes.txt", "r", encoding="utf-8") as f:
+    raw_classes = [l.strip() for l in f if l.strip()]
+with open(ARCHIVE_DIR / "classes_vie.txt", "r", encoding="utf-8") as f:
+    vie_classes = [l.strip() for l in f if l.strip()]
+with open(ARCHIVE_DIR / "classes_en.txt", "r", encoding="utf-8") as f:
+    en_classes = [l.strip() for l in f if l.strip()]
+
+# Bảng ánh xạ chuẩn xác từ nhãn lớp trong dataset thực tế sang mã chuẩn QCVN 41:2019/BGTVT
+ARCHIVE_TO_CANONICAL_CODE = {
+    "W.207": "W.207a",
+    "P.117*": "P.117",
+    "P.124a*": "P.124a",
+    "P.111": "P.111a",
+    "S.505a*Xe máy": "S.505a",
+    "S.505a*Xe tải và công": "S.505a",
+    "S.505a*Xe tải": "S.505a",
+    "P.106a*Xe tải": "P.106a",
+    "B.8a": "P.108a",  # Cấm xe sơ-mi rơ-moóc (P.108a tại Mục B.8 Phụ lục B)
+    "P.127*50": "P.127",
+    "P.127*60": "P.127",
+    "P.127*80": "P.127",
+    "P.127*40": "P.127",
+    "W.239b*": "W.239b",
+    "P.124b1": "P.124b",
+    "Camera": "Camera",
+}
+
+TRAIN_CANONICAL_CODES = {ARCHIVE_TO_CANONICAL_CODE.get(c, c) for c in raw_classes}
+
+# Làm sạch thư mục data/pdf_signs để chỉ chứa đúng các ảnh biển báo có trong tập Train (data/real_crops)
+shutil.rmtree(PDF_SIGNS_DIR, ignore_errors=True)
+PDF_SIGNS_DIR.mkdir(parents=True, exist_ok=True)
+
+crop_records_train_only = [(pg, rct, cd) for (pg, rct, cd) in crop_records if cd in TRAIN_CANONICAL_CODES]
+print(
+    f"[*] Tổng số biển báo quét từ PDF: {len(crop_records)} -> Lọc giữ lại các biển báo có mặt trong tập Train (data/real_crops): "
+    f"{len(crop_records_train_only)} ảnh ({len({cd for _, _, cd in crop_records_train_only})} mã biển)."
+)
 
 saved_pdf_signs = []
 sign_variant_counter = Counter()
 code_to_pdf_images = defaultdict(list)
 
-for idx, (page_num, rect, code) in enumerate(crop_records):
+for idx, (page_num, rect, code) in enumerate(crop_records_train_only):
     p = doc[page_num - 1]
     sign_variant_counter[code] += 1
     var_idx = sign_variant_counter[code]
@@ -848,39 +885,12 @@ for idx, (page_num, rect, code) in enumerate(crop_records):
     saved_pdf_signs.append(entry)
     code_to_pdf_images[code].append(rel_pdf_path)
 
-print(f"[✓] Đã lưu {len(saved_pdf_signs)} ảnh biển báo chuẩn từ PDF ({len(code_to_pdf_images)} mã biển duy nhất).")
+print(f"[✓] Đã lưu {len(saved_pdf_signs)} ảnh biển báo chuẩn từ PDF vào data/pdf_signs ({len(code_to_pdf_images)} mã biển có trong tập Train).")
 
 # ==============================================================================
 # BƯỚC 3: ÁNH XẠ 52 LỚP BIỂN BÁO TRONG ARCHIVE/CLASSES.TXT VỚI MÃ QCVN 41:2019
 # ==============================================================================
 print("\n[3/4] Đang ánh xạ 52 lớp biển báo thực tế trong archive/classes.txt với QCVN 41:2019/BGTVT...")
-
-with open(ARCHIVE_DIR / "classes.txt", "r", encoding="utf-8") as f:
-    raw_classes = [l.strip() for l in f if l.strip()]
-with open(ARCHIVE_DIR / "classes_vie.txt", "r", encoding="utf-8") as f:
-    vie_classes = [l.strip() for l in f if l.strip()]
-with open(ARCHIVE_DIR / "classes_en.txt", "r", encoding="utf-8") as f:
-    en_classes = [l.strip() for l in f if l.strip()]
-
-# Bảng ánh xạ chuẩn xác từ nhãn lớp trong dataset thực tế sang mã chuẩn QCVN 41:2019/BGTVT
-ARCHIVE_TO_CANONICAL_CODE = {
-    "W.207": "W.207a",
-    "P.117*": "P.117",
-    "P.124a*": "P.124a",
-    "P.111": "P.111a",
-    "S.505a*Xe máy": "S.505a",
-    "S.505a*Xe tải và công": "S.505a",
-    "S.505a*Xe tải": "S.505a",
-    "P.106a*Xe tải": "P.106a",
-    "B.8a": "P.108a",  # Cấm xe sơ-mi rơ-moóc (P.108a tại Mục B.8 Phụ lục B)
-    "P.127*50": "P.127",
-    "P.127*60": "P.127",
-    "P.127*80": "P.127",
-    "P.127*40": "P.127",
-    "W.239b*": "W.239b",
-    "P.124b1": "P.124b",
-    "Camera": "Camera",
-}
 
 class_mapping = []
 for cls_id, (raw_c, vie_n, en_n) in enumerate(zip(raw_classes, vie_classes, en_classes)):

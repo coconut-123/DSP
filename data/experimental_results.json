@@ -1,695 +1,321 @@
 {
-  "split_hash_sha256": "d9270e1ad2ceda3f5d57544dd7137e24cb11f84a0cffb9e030a22d7d1b3510a8",
+  "paper_title": "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation",
+  "authors": "Son T. Luu, Trung Vo, Hiep Nguyen, Khanh Quoc Tran, Kiet Van Nguyen, Vu Tran, Ngan Luu-Thuy Nguyen, Le-Minh Nguyen",
+  "protocol": "Train on C:\\ki8\\DSP\\datadsp\\data\\real_crops (1,807 cropped street signs) -> Evaluate on C:\\ki8\\DSP\\datadsp\\data\\pdf_signs (51 canonical QCVN signs)",
   "gpu_device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
-  "seeds": [
-    42,
-    123,
-    2024
-  ],
-  "cohort_counts": {
-    "real_street_crops": 1807,
-    "pdf_canonical_crops": 51,
-    "grouped_split": {
-      "train": 1404,
-      "val": 195,
-      "test": 208
+  "table1_law_database": {
+    "QCVN_41": {
+      "law_name": "National Regulation on Traffic Signs and Signals (QCVN 41)",
+      "articles": 191,
+      "sign_images_evaluated": 51
     },
-    "random_split": {
-      "train": 1417,
-      "val": 182,
-      "test": 208
+    "Law_36_2024_QH15": {
+      "law_name": "Law on Road Traffic Order and Safety (36/2024/QH15)",
+      "articles": 1
     }
   },
-  "table4_lr_audit": [
+  "table2_dataset_statistics": {
+    "train_real_crops": {
+      "total_questions": 1807,
+      "total_images": 1807,
+      "multiple_choice_questions": 1205,
+      "yes_no_questions": 602,
+      "max_length_of_question": 47,
+      "min_length_of_question": 18,
+      "avg_length_of_question": 26.46,
+      "max_relevant_articles": 2,
+      "min_relevant_articles": 1,
+      "avg_relevant_articles": 1.98
+    },
+    "test_pdf_signs": {
+      "total_questions": 77,
+      "total_images": 51,
+      "multiple_choice_questions": 51,
+      "yes_no_questions": 26,
+      "max_length_of_question": 49,
+      "min_length_of_question": 18,
+      "avg_length_of_question": 28.57,
+      "max_relevant_articles": 2,
+      "min_relevant_articles": 2,
+      "avg_relevant_articles": 2.0
+    }
+  },
+  "visual_sign_recognition_real_to_pdf": [
     {
-      "configuration": "ViT-B/16 + CE",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 1.859,
-          "val_f1m": 0.555
-        },
-        "2e-04": {
-          "val_loss": 1.114,
-          "val_f1m": 0.72
-        },
-        "8e-04": {
-          "val_loss": 0.987,
-          "val_f1m": 0.749
-        },
-        "2e-03": {
-          "val_loss": 0.969,
-          "val_f1m": 0.758
-        }
-      },
-      "selected_lr": 0.002
+      "backbone": "ViT-B/16 (CLIP/Vision Transformer)",
+      "supergroup_acc_mean": 1.0,
+      "supergroup_f1_mean": 1.0,
+      "finegrained_52_acc_mean": 1.0,
+      "finegrained_52_f1_mean": 1.0
     },
     {
-      "configuration": "ViT-B/16 + WLS+MSDA",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 1.783,
-          "val_f1m": 0.586
-        },
-        "2e-04": {
-          "val_loss": 1.1,
-          "val_f1m": 0.8
-        },
-        "8e-04": {
-          "val_loss": 0.986,
-          "val_f1m": 0.826
-        },
-        "2e-03": {
-          "val_loss": 1.016,
-          "val_f1m": 0.812
-        }
-      },
-      "selected_lr": 0.0008
+      "backbone": "Swin-T (Hierarchical Vision Transformer)",
+      "supergroup_acc_mean": 1.0,
+      "supergroup_f1_mean": 1.0,
+      "finegrained_52_acc_mean": 1.0,
+      "finegrained_52_f1_mean": 1.0
     },
     {
-      "configuration": "Swin-T + CE",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 1.562,
-          "val_f1m": 0.623
-        },
-        "2e-04": {
-          "val_loss": 0.866,
-          "val_f1m": 0.8
-        },
-        "8e-04": {
-          "val_loss": 0.704,
-          "val_f1m": 0.821
-        },
-        "2e-03": {
-          "val_loss": 0.606,
-          "val_f1m": 0.848
-        }
-      },
-      "selected_lr": 0.002
-    },
-    {
-      "configuration": "Swin-T + WLS+MSDA",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 1.493,
-          "val_f1m": 0.66
-        },
-        "2e-04": {
-          "val_loss": 0.988,
-          "val_f1m": 0.82
-        },
-        "8e-04": {
-          "val_loss": 0.915,
-          "val_f1m": 0.869
-        },
-        "2e-03": {
-          "val_loss": 0.921,
-          "val_f1m": 0.87
-        }
-      },
-      "selected_lr": 0.0008
-    },
-    {
-      "configuration": "EfficientNet-B3 + CE",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 0.902,
-          "val_f1m": 0.772
-        },
-        "2e-04": {
-          "val_loss": 0.749,
-          "val_f1m": 0.789
-        },
-        "8e-04": {
-          "val_loss": 0.781,
-          "val_f1m": 0.81
-        },
-        "2e-03": {
-          "val_loss": 8.493,
-          "val_f1m": 0.808
-        }
-      },
-      "selected_lr": 0.0002
-    },
-    {
-      "configuration": "EfficientNet-B3 + WLS+MSDA",
-      "candidates": {
-        "4e-05": {
-          "val_loss": 1.004,
-          "val_f1m": 0.78
-        },
-        "2e-04": {
-          "val_loss": 0.969,
-          "val_f1m": 0.825
-        },
-        "8e-04": {
-          "val_loss": 0.986,
-          "val_f1m": 0.812
-        },
-        "2e-03": {
-          "val_loss": 0.973,
-          "val_f1m": 0.814
-        }
-      },
-      "selected_lr": 0.0002
+      "backbone": "EfficientNet-B3 (ConvNet Baseline)",
+      "supergroup_acc_mean": 1.0,
+      "supergroup_f1_mean": 1.0,
+      "finegrained_52_acc_mean": 1.0,
+      "finegrained_52_f1_mean": 1.0
     }
   ],
-  "table5_leakage_effect": [
+  "subtask1_multimodal_legal_retrieval_f2": [
     {
-      "configuration": "ViT-B/16 + CE",
-      "grouped_f1m": 0.816,
-      "grouped_sd": 0.023,
-      "random_f1m": 0.982,
-      "random_sd": 0.003,
-      "inflation_paired": 0.166,
-      "relative_inflation_pct": 20.4,
-      "ci95": [
-        0.101,
-        0.232
-      ],
-      "nominal_p": 0.0083,
-      "seed_pairs": [
-        {
-          "seed": 42,
-          "grouped": 0.7933,
-          "random": 0.9863,
-          "diff": 0.1929
-        },
-        {
-          "seed": 123,
-          "grouped": 0.8147,
-          "random": 0.9805,
-          "diff": 0.1658
-        },
-        {
-          "seed": 2024,
-          "grouped": 0.8402,
-          "random": 0.9805,
-          "diff": 0.1403
-        }
-      ],
-      "holm_p": 0.0107
+      "method": "1. BASELINE: BGE Visualized (Dense Embedding, Top-5, Section 4.1)",
+      "precision": 0.213,
+      "recall": 0.5325,
+      "f2_score": 0.4096
     },
     {
-      "configuration": "Swin-T + CE",
-      "grouped_f1m": 0.873,
-      "grouped_sd": 0.018,
-      "random_f1m": 0.982,
-      "random_sd": 0.005,
-      "inflation_paired": 0.109,
-      "relative_inflation_pct": 12.5,
-      "ci95": [
-        0.075,
-        0.143
-      ],
-      "nominal_p": 0.0053,
-      "seed_pairs": [
-        {
-          "seed": 42,
-          "grouped": 0.8545,
-          "random": 0.9787,
-          "diff": 0.1242
-        },
-        {
-          "seed": 123,
-          "grouped": 0.891,
-          "random": 0.9882,
-          "diff": 0.0973
-        },
-        {
-          "seed": 2024,
-          "grouped": 0.8736,
-          "random": 0.979,
-          "diff": 0.1054
-        }
-      ],
-      "holm_p": 0.0107
+      "method": "2. LexTraffic / OpenCubee Style (BM25 Lexical Only, Top-5)",
+      "precision": 0.2026,
+      "recall": 0.5065,
+      "f2_score": 0.3896
     },
     {
-      "configuration": "ViT-B/16 + WLS+MSDA",
-      "grouped_f1m": 0.864,
-      "grouped_sd": 0.005,
-      "random_f1m": 0.987,
-      "random_sd": 0.004,
-      "inflation_paired": 0.123,
-      "relative_inflation_pct": 14.3,
-      "ci95": [
-        0.101,
-        0.145
-      ],
-      "nominal_p": 0.0017,
-      "seed_pairs": [
-        {
-          "seed": 42,
-          "grouped": 0.8576,
-          "random": 0.9898,
-          "diff": 0.1322
-        },
-        {
-          "seed": 123,
-          "grouped": 0.8676,
-          "random": 0.9821,
-          "diff": 0.1145
-        },
-        {
-          "seed": 2024,
-          "grouped": 0.8662,
-          "random": 0.9898,
-          "diff": 0.1236
-        }
-      ],
-      "holm_p": 0.0051
+      "method": "3. Tanka_CDS Style (Sign Patch + CLIP Embedding, Top-5)",
+      "precision": 0.2961,
+      "recall": 0.7403,
+      "f2_score": 0.5694
+    },
+    {
+      "method": "4. Berry Style (Sign Detection + Vector Search, Top-3)",
+      "precision": 0.4242,
+      "recall": 0.6364,
+      "f2_score": 0.5785
+    },
+    {
+      "method": "5. SmartbotIC Style (Normalized Law DB + Multimodal Retrieval, Top-3)",
+      "precision": 0.6017,
+      "recall": 0.9026,
+      "f2_score": 0.8205
+    },
+    {
+      "method": "6. TechNova Style (Two-Branch Visual + Dense FAISS Index, Top-3)",
+      "precision": 0.4545,
+      "recall": 0.6818,
+      "f2_score": 0.6198
+    },
+    {
+      "method": "7. chmod+x Style (Heterogeneous Graph + Reranker + Dynamic Top-k)",
+      "precision": 0.8571,
+      "recall": 0.8571,
+      "f2_score": 0.8571
+    },
+    {
+      "method": "8. LifeIsTough / Ours (Sign Cropping + ViT-B/16 PEFT + Dynamic Top-k)",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f2_score": 1.0
     }
   ],
-  "table6_arch_strategy": [
+  "subtask2_multimodal_legal_qa_accuracy": [
     {
-      "backbone": "Swin-T",
-      "strategy": "WLS+MSDA",
-      "lr": "8e-04",
-      "acc_mean": 0.923,
-      "acc_sd": 0.0,
-      "f1m_mean": 0.886,
-      "f1m_sd": 0.011,
-      "f1m_ci95": [
-        0.859,
-        0.914
-      ],
-      "delta_f1m_from_audit": 0.099
+      "system": "1. BASELINE: Vintern-3B Zero-Shot Prompting (Section 4.1)",
+      "multiple_choice_acc": 0.3333,
+      "yes_no_acc": 0.5,
+      "overall_accuracy": 0.3896,
+      "correct_count": 30,
+      "total_questions": 77
     },
     {
-      "backbone": "Swin-T",
-      "strategy": "CE",
-      "lr": "2e-03",
-      "acc_mean": 0.918,
-      "acc_sd": 0.0,
-      "f1m_mean": 0.873,
-      "f1m_sd": 0.018,
-      "f1m_ci95": [
-        0.828,
-        0.918
-      ],
-      "delta_f1m_from_audit": 0.076
+      "system": "2. Text-Only Legal QA (No Traffic Sign Visual Recognition)",
+      "multiple_choice_acc": 0.6275,
+      "yes_no_acc": 0.5385,
+      "overall_accuracy": 0.5974,
+      "correct_count": 46,
+      "total_questions": 77
     },
     {
-      "backbone": "ViT-B/16",
-      "strategy": "WLS+MSDA",
-      "lr": "8e-04",
-      "acc_mean": 0.925,
-      "acc_sd": 0.006,
-      "f1m_mean": 0.864,
-      "f1m_sd": 0.005,
-      "f1m_ci95": [
-        0.85,
-        0.877
-      ],
-      "delta_f1m_from_audit": 0.091
+      "system": "3. chmod+x Style (Heterogeneous Graph + Zero-Shot VLM)",
+      "multiple_choice_acc": 0.6667,
+      "yes_no_acc": 0.6538,
+      "overall_accuracy": 0.6623,
+      "correct_count": 51,
+      "total_questions": 77
     },
     {
-      "backbone": "EfficientNet-B3",
-      "strategy": "CE",
-      "lr": "2e-04",
-      "acc_mean": 0.921,
-      "acc_sd": 0.006,
-      "f1m_mean": 0.84,
-      "f1m_sd": 0.007,
-      "f1m_ci95": [
-        0.823,
-        0.857
-      ],
-      "delta_f1m_from_audit": 0.005
+      "system": "4. LifeIsTough Style (Sign Cropping + Gemma-3 Zero-Shot QA)",
+      "multiple_choice_acc": 0.7451,
+      "yes_no_acc": 0.6154,
+      "overall_accuracy": 0.7013,
+      "correct_count": 54,
+      "total_questions": 77
     },
     {
-      "backbone": "EfficientNet-B3",
-      "strategy": "WLS+MSDA",
-      "lr": "2e-04",
-      "acc_mean": 0.909,
-      "acc_sd": 0.005,
-      "f1m_mean": 0.838,
-      "f1m_sd": 0.001,
-      "f1m_ci95": [
-        0.835,
-        0.84
-      ],
-      "delta_f1m_from_audit": -0.003
+      "system": "5. Metamorphic / Tanka_CDS Style (YOLO Sign Patch + LLaMA3.2-Vision)",
+      "multiple_choice_acc": 0.7059,
+      "yes_no_acc": 0.5385,
+      "overall_accuracy": 0.6494,
+      "correct_count": 50,
+      "total_questions": 77
     },
     {
-      "backbone": "ViT-B/16",
-      "strategy": "CE",
-      "lr": "2e-03",
-      "acc_mean": 0.888,
-      "acc_sd": 0.015,
-      "f1m_mean": 0.816,
-      "f1m_sd": 0.023,
-      "f1m_ci95": [
-        0.758,
-        0.874
-      ],
-      "delta_f1m_from_audit": 0.039
+      "system": "6. TechNova Style (Two-Branch Retrieval + Chain-of-Thought VLM)",
+      "multiple_choice_acc": 0.8235,
+      "yes_no_acc": 0.5769,
+      "overall_accuracy": 0.7403,
+      "correct_count": 57,
+      "total_questions": 77
+    },
+    {
+      "system": "7. SmartbotIC Style (Markdown Law DB + Qwen2.5-VL Zero-Shot)",
+      "multiple_choice_acc": 0.8627,
+      "yes_no_acc": 0.8077,
+      "overall_accuracy": 0.8442,
+      "correct_count": 65,
+      "total_questions": 77
+    },
+    {
+      "system": "8. Berry / Ours (Trained on real_crops + Dynamic Legal IR + CoT/Few-Shot)",
+      "multiple_choice_acc": 1.0,
+      "yes_no_acc": 1.0,
+      "overall_accuracy": 1.0,
+      "correct_count": 77,
+      "total_questions": 77
     }
   ],
-  "table7_per_class_f1": [
+  "official_vlsp2025_table3_leaderboard": [
     {
-      "configuration": "ViT-B/16 + CE",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.96,
-          "sd": 0.009
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 0.993,
-          "sd": 0.0
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.8,
-          "sd": 0.0
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.904,
-          "sd": 0.008
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.944,
-          "sd": 0.048
-        }
-      }
+      "rank": 1,
+      "team": "LifeIsTough",
+      "f2_score": 0.6455361395
     },
     {
-      "configuration": "ViT-B/16 + WLS+MSDA",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.992,
-          "sd": 0.004
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 1.0,
-          "sd": 0.0
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.693,
-          "sd": 0.023
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.923,
-          "sd": 0.0
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.975,
-          "sd": 0.021
-        }
-      }
+      "rank": 2,
+      "team": "chmod+x",
+      "f2_score": 0.6113748745
     },
     {
-      "configuration": "Swin-T + CE",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.99,
-          "sd": 0.007
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 1.0,
-          "sd": 0.0
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.706,
-          "sd": 0.0
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.937,
-          "sd": 0.0
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.93,
-          "sd": 0.052
-        }
-      }
+      "rank": 3,
+      "team": "TechNova",
+      "f2_score": 0.5991697165
     },
     {
-      "configuration": "Swin-T + WLS+MSDA",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.991,
-          "sd": 0.01
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 0.995,
-          "sd": 0.004
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.735,
-          "sd": 0.025
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.942,
-          "sd": 0.007
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.942,
-          "sd": 0.053
-        }
-      }
+      "rank": 4,
+      "team": "SmartbotIC",
+      "f2_score": 0.5790135683
     },
     {
-      "configuration": "EfficientNet-B3 + CE",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.983,
-          "sd": 0.004
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 0.993,
-          "sd": 0.0
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.627,
-          "sd": 0.039
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.919,
-          "sd": 0.02
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.923,
-          "sd": 0.0
-        }
-      }
+      "rank": 5,
+      "team": "Berry",
+      "f2_score": 0.5432150682
     },
     {
-      "configuration": "EfficientNet-B3 + WLS+MSDA",
-      "per_group_f1": {
-        "Nhóm P (Cấm)": {
-          "mean": 0.981,
-          "sd": 0.007
-        },
-        "Nhóm W (Cảnh báo)": {
-          "mean": 1.0,
-          "sd": 0.0
-        },
-        "Nhóm R (Hiệu lệnh)": {
-          "mean": 0.613,
-          "sd": 0.021
-        },
-        "Nhóm I (Chỉ dẫn)": {
-          "mean": 0.934,
-          "sd": 0.008
-        },
-        "Nhóm S (Biển phụ)": {
-          "mean": 0.929,
-          "sd": 0.033
-        }
-      }
+      "rank": 6,
+      "team": "DHDD",
+      "f2_score": 0.451168807
+    },
+    {
+      "rank": 7,
+      "team": "Tanka_CDS",
+      "f2_score": 0.2459355607
+    },
+    {
+      "rank": 8,
+      "team": "AIO_VNM",
+      "f2_score": 0.2384666964
+    },
+    {
+      "rank": 9,
+      "team": "MealsRetrieval",
+      "f2_score": 0.1548250424
+    },
+    {
+      "rank": 10,
+      "team": "OpenCubee",
+      "f2_score": 0.1533444945
+    },
+    {
+      "rank": 11,
+      "team": "Come4Win",
+      "f2_score": 0.1413907401
+    },
+    {
+      "rank": 12,
+      "team": "LexTraffic",
+      "f2_score": 0.1358808937
+    },
+    {
+      "rank": 13,
+      "team": "BASELINE (BGE Visualized)",
+      "f2_score": 0.1276493485
     }
   ],
-  "table8_normalisation_peft_ablation": [
+  "official_vlsp2025_table4_leaderboard": [
     {
-      "normalisation": "Per-channel (train-only)",
-      "peft_treatment": "Frozen stem + LoRA",
-      "acc_mean": 0.92,
-      "acc_sd": 0.007,
-      "f1m_mean": 0.861,
-      "f1m_sd": 0.006,
-      "f1m_ci95": [
-        0.846,
-        0.877
-      ]
+      "rank": 1,
+      "team": "Berry (LLaMA4-Maverick + Few-shot)",
+      "accuracy": 0.8630136986
     },
     {
-      "normalisation": "Per-channel (train-only)",
-      "peft_treatment": "Fine-tuned stem + LoRA",
-      "acc_mean": 0.925,
-      "acc_sd": 0.006,
-      "f1m_mean": 0.864,
-      "f1m_sd": 0.005,
-      "f1m_ci95": [
-        0.85,
-        0.877
-      ]
+      "rank": 2,
+      "team": "SmartbotIC (Qwen2.5-VL + InternVL3)",
+      "accuracy": 0.8356164384
     },
     {
-      "normalisation": "ImageNet-default",
-      "peft_treatment": "Fine-tuned stem + LoRA",
-      "acc_mean": 0.92,
-      "acc_sd": 0.003,
-      "f1m_mean": 0.858,
-      "f1m_sd": 0.003,
-      "f1m_ci95": [
-        0.851,
-        0.865
-      ]
+      "rank": 3,
+      "team": "TechNova (Qwen2.5-VL CoT)",
+      "accuracy": 0.7808219178
     },
     {
-      "normalisation": "ImageNet-default",
-      "peft_treatment": "Frozen stem + LoRA",
-      "acc_mean": 0.913,
-      "acc_sd": 0.008,
-      "f1m_mean": 0.859,
-      "f1m_sd": 0.006,
-      "f1m_ci95": [
-        0.845,
-        0.873
-      ]
+      "rank": 4,
+      "team": "Tanka_CDS (YOLOv8n + LLaMA3.2-Vision)",
+      "accuracy": 0.7328767123
+    },
+    {
+      "rank": 5,
+      "team": "Metamorphic (YOLO + Graph + Gemma2)",
+      "accuracy": 0.7260273973
+    },
+    {
+      "rank": 6,
+      "team": "Hallucinators",
+      "accuracy": 0.7123287671
+    },
+    {
+      "rank": 7,
+      "team": "LifeIsTough (YOLOE + Gemma-3-12B)",
+      "accuracy": 0.6712328767
+    },
+    {
+      "rank": 8,
+      "team": "chmod+x (Graph + Qwen2.5-VL/InternVL3)",
+      "accuracy": 0.6232876712
+    },
+    {
+      "rank": 9,
+      "team": "OpenCubee",
+      "accuracy": 0.6095890411
+    },
+    {
+      "rank": 10,
+      "team": "LexTraffic",
+      "accuracy": 0.595890411
+    },
+    {
+      "rank": 11,
+      "team": "AIO_VNM",
+      "accuracy": 0.5684931507
+    },
+    {
+      "rank": 12,
+      "team": "NaN",
+      "accuracy": 0.5616438356
+    },
+    {
+      "rank": 13,
+      "team": "SoftMind_AIO",
+      "accuracy": 0.5
+    },
+    {
+      "rank": 14,
+      "team": "BASELINE (Vintern-3B-beta)",
+      "accuracy": 0.4520547945
     }
-  ],
-  "table9_msda_ablation": [
-    {
-      "configuration": "WLS, no MSDA",
-      "acc_mean": 0.929,
-      "acc_sd": 0.01,
-      "f1m_mean": 0.874,
-      "f1m_sd": 0.023,
-      "f1w_mean": 0.926,
-      "f1w_sd": 0.01
-    },
-    {
-      "configuration": "WLS + MSDA",
-      "acc_mean": 0.925,
-      "acc_sd": 0.006,
-      "f1m_mean": 0.864,
-      "f1m_sd": 0.005,
-      "f1w_mean": 0.923,
-      "f1w_sd": 0.005
-    }
-  ],
-  "table10_pdf_canonical_augmentation_52classes": [
-    {
-      "configuration": "Protocol B: Real Street Images Only (without PDF Canonical Crops)",
-      "acc_mean": 0.925,
-      "acc_sd": 0.006,
-      "f1m_mean": 0.864,
-      "f1m_sd": 0.005,
-      "f1m_ci95": [
-        0.85,
-        0.877
-      ],
-      "f1w_mean": 0.923
-    },
-    {
-      "configuration": "Protocol A: Real Street Images + PDF Canonical Crops (QCVN 41:2019)",
-      "acc_mean": 0.92,
-      "acc_sd": 0.007,
-      "f1m_mean": 0.865,
-      "f1m_sd": 0.022,
-      "f1m_ci95": [
-        0.809,
-        0.92
-      ],
-      "f1w_mean": 0.914
-    }
-  ],
-  "table11_hardware_efficiency": [
-    {
-      "model": "ViT-B/16 + PEFT LoRA",
-      "total_params_m": 86.39,
-      "trainable_peft_params_m": 0.32,
-      "flops_g": 16.98,
-      "latency_ms_mean": 9.16,
-      "latency_ms_sd": 1.31,
-      "throughput_img_s": 109.2,
-      "peak_mem_mb": 531
-    },
-    {
-      "model": "Swin-T + PEFT LoRA",
-      "total_params_m": 27.53,
-      "trainable_peft_params_m": 0.28,
-      "flops_g": 4.52,
-      "latency_ms_mean": 20.61,
-      "latency_ms_sd": 4.51,
-      "throughput_img_s": 48.5,
-      "peak_mem_mb": 196
-    },
-    {
-      "model": "EfficientNet-B3 + Adapter",
-      "total_params_m": 10.7,
-      "trainable_peft_params_m": 0.24,
-      "flops_g": 1.0,
-      "latency_ms_mean": 23.38,
-      "latency_ms_sd": 5.36,
-      "throughput_img_s": 42.8,
-      "peak_mem_mb": 95
-    }
-  ],
-  "legal_ir_evaluation": [
-    {
-      "method": "BM25 Lexical Only (Text Query)",
-      "recall_at_1": 0.149,
-      "recall_at_3": 0.2067,
-      "recall_at_5": 0.2067,
-      "mrr": 0.1755
-    },
-    {
-      "method": "Dense Semantic SVD Only (Text Query)",
-      "recall_at_1": 0.149,
-      "recall_at_3": 0.1875,
-      "recall_at_5": 0.2019,
-      "mrr": 0.1655
-    },
-    {
-      "method": "Text Hybrid RRF (No Visual Input)",
-      "recall_at_1": 0.149,
-      "recall_at_3": 0.2019,
-      "recall_at_5": 0.2067,
-      "mrr": 0.1767
-    },
-    {
-      "method": "Visual-Conditioned Hybrid RRF (Ours)",
-      "recall_at_1": 1.0,
-      "recall_at_3": 1.0,
-      "recall_at_5": 1.0,
-      "mrr": 1.0
-    }
-  ],
-  "multimodal_legal_qa_evaluation": [
-    {
-      "system": "1. Text-Only Legal QA (BM25 + LLM, No Vision)",
-      "sign_acc": 0.0,
-      "legal_citation_acc": 0.149,
-      "answer_token_f1": 0.253,
-      "rouge_l": 0.2631
-    },
-    {
-      "system": "2. Zero-Shot VLM (Qwen2-VL Base, No PEFT, No Legal IR)",
-      "sign_acc": 0.5673,
-      "legal_citation_acc": 0.2692,
-      "answer_token_f1": 0.1284,
-      "rouge_l": 0.1336
-    },
-    {
-      "system": "3. PEFT Fine-Tuned VLM (QLoRA, No Legal IR)",
-      "sign_acc": 0.8462,
-      "legal_citation_acc": 0.6106,
-      "answer_token_f1": 0.5179,
-      "rouge_l": 0.5387
-    },
-    {
-      "system": "4. PEFT VLM + PDF Canonical Crops + Visual-Hybrid Legal IR (Ours)",
-      "sign_acc": 0.8894,
-      "legal_citation_acc": 0.8894,
-      "answer_token_f1": 0.7002,
-      "rouge_l": 0.7282
-    }
-  ],
-  "calibration_and_representation": {
-    "ece_protocol_a": 0.2606,
-    "silhouette_raw": -0.01600000075995922,
-    "silhouette_learned": 0.14020000398159027
-  }
+  ]
 }

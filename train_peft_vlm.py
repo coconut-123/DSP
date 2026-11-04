@@ -1,18 +1,22 @@
-"""
+r"""
 train_peft_vlm.py
 -----------------
 Huấn luyện tinh chỉnh tham số hiệu quả (Parameter-Efficient Fine-Tuning - PEFT / QLoRA 4-bit)
-mô hình ngôn ngữ - thị giác mã nguồn mở (Qwen2-VL-2B-Instruct) trên bộ dữ liệu
-VN-TrafficLaw-MQA (Multimodal Legal Question Answering for Traffic Sign Regulations)
-dưới giao thức Kiểm soát Rò rỉ Dữ liệu (Leakage-Controlled Group-Disjoint Partition).
+mô hình ngôn ngữ - thị giác mã nguồn mở (Qwen2-VL-2B-Instruct) theo đúng bài báo:
+"VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation"
+(Luu et al., VLSP 2025 - Mục 2, 3 & 4).
 
-Điểm nổi bật:
-1. Xác thực mã băm phân chia SHA-256 (split_hash_sha256) trước khi huấn luyện (Thuật toán 1 - Bước 6 bài báo).
-2. Chỉ nạp mẫu thuộc tập `grouped_split == 'train'` (bao gồm 346 mẫu biển báo chuẩn cắt từ PDF QCVN 41:2019/BGTVT
-   và các mẫu biển báo thực tế trong tập Train), tuyệt đối không chạm vào tập Test.
-3. Tích hợp 4-bit NormalFloat (NF4) QLoRA + LoRA Adapter trên các lớp Attention & MLP प्रोजेक्शन (`q_proj`, `k_proj`,
-   `v_proj`, `o_proj`, `gate_proj`, `up_proj`, `down_proj`).
-4. Tích hợp ngữ cảnh Truy xuất Thông tin Pháp lý (Legal IR RAG Context) vào câu lệnh huấn luyện và suy luận.
+Đặc điểm kỹ thuật theo bài báo VLSP 2025 MLQA-TSR:
+1. Tập Huấn luyện (Train Set): Toàn bộ 1.807 mẫu biển báo cắt thực tế từ đường phố Việt Nam
+   trong `C:\ki8\DSP\datadsp\data\real_crops`.
+2. Tập Đánh giá (Evaluation / Test Set): Các mẫu câu hỏi trên 51 ảnh biển báo chuẩn trích xuất từ PDF QCVN 41
+   trong `C:\ki8\DSP\datadsp\data\pdf_signs`.
+3. Mẫu câu lệnh (Prompt Templates) chuẩn theo Mục 4.1 của bài báo:
+   - Câu hỏi Multiple-choice (4 lựa chọn A, B, C, D):
+     `<image>\n<question>\nA. ...\nB. ...\nC. ...\nD. ...\n\nTrả lời bằng một trong bốn đáp án: A, B, C hoặc D. Không giải thích thêm`
+   - Câu hỏi Yes/No (2 lựa chọn Đúng hoặc Sai):
+     `<image>\n<question>\n\nTrả lời bằng một trong hai đáp án: Đúng hoặc Sai. Không giải thích thêm.`
+4. Tích hợp ngữ cảnh điều luật truy xuất từ Subtask 1 (Multimodal Legal Retrieval) vào quá trình huấn luyện và suy luận Subtask 2.
 """
 
 import os
@@ -37,6 +41,8 @@ from peft import (
     prepare_model_for_kbit_training,
 )
 
+from legal_ir import HybridLegalRetriever
+
 sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -47,7 +53,7 @@ DATA_DIR = BASE_DIR / "data"
 class ModelArguments:
     model_name_or_path: str = field(
         default="Qwen/Qwen2-VL-2B-Instruct",
-        metadata={"help": "Open-source Vision-Language Model backbone"},
+        metadata={"help": "Open-source Vision-Language Model backbone (Section 4.2 VLSP 2025)"},
     )
     use_qlora: bool = field(
         default=True,
@@ -62,62 +68,71 @@ class ModelArguments:
 class DataArguments:
     mqa_dataset_file: str = field(
         default=str(DATA_DIR / "mqa_dataset.json"),
-        metadata={"help": "Path to VN-TrafficLaw-MQA dataset"},
+        metadata={"help": "Path to VLSP 2025 MLQA-TSR dataset"},
     )
-    split_manifest_file: str = field(
-        default=str(DATA_DIR / "split_manifest.json"),
-        metadata={"help": "Path to Group-Disjoint split manifest for hash verification"},
+    train_crops_dir: str = field(
+        default=str(DATA_DIR / "real_crops"),
+        metadata={"help": "Directory containing real street crops for training (C:\\ki8\\DSP\\datadsp\\data\\real_crops)"},
     )
-    partition_arm: str = field(
-        default="grouped_split",
-        metadata={"help": "'grouped_split' (primary leakage-controlled) or 'random_split' (reference arm)"},
-    )
-    include_pdf_canonical: bool = field(
-        default=True,
-        metadata={"help": "Include 346 PDF canonical sign crops in training"},
+    eval_pdf_dir: str = field(
+        default=str(DATA_DIR / "pdf_signs"),
+        metadata={"help": "Directory containing canonical PDF signs for evaluation (C:\\ki8\\DSP\\datadsp\\data\\pdf_signs)"},
     )
 
 
-class LeakageControlledMQADataset(Dataset):
+class VLSP2025MLQADataset(Dataset):
+    """Dataset nạp dữ liệu theo chuẩn Subtask 1 & Subtask 2 của bài báo VLSP 2025 MLQA-TSR (Mục 4.1)."""
+
     def __init__(
         self,
         mqa_file: str,
-        manifest_file: str,
         base_dir: Path,
         processor: AutoProcessor,
-        split_arm: str = "grouped_split",
-        subset: str = "train",
-        include_pdf_canonical: bool = True,
+        retriever: HybridLegalRetriever,
+        source_filter: str = "real_street_crop",
+        target_dir_prefix: str = "data/real_crops",
     ):
-        # Xác thực SHA-256 split hash trước khi huấn luyện (Algorithm 1)
-        if os.path.exists(manifest_file):
-            with open(manifest_file, "r", encoding="utf-8") as f:
-                manifest = json.load(f)
-            print(f"[✓] Verified Partition Manifest SHA-256 Hash: {manifest['split_hash_sha256'][:16]}...")
-
         with open(mqa_file, "r", encoding="utf-8") as f:
             raw_mqa = json.load(f)
         entries = raw_mqa["data"] if isinstance(raw_mqa, dict) and "data" in raw_mqa else raw_mqa
 
         self.base_dir = base_dir
         self.processor = processor
+        self.retriever = retriever
         self.samples = []
 
         for item in entries:
-            item_split = item.get(split_arm, "train")
-            if item_split != subset:
+            if item.get("source_type") != source_filter:
                 continue
-            if not include_pdf_canonical and item.get("source_type") == "pdf_canonical":
+            img_rel = item.get("image", "").replace("\\", "/")
+            if target_dir_prefix and not img_rel.startswith(target_dir_prefix):
                 continue
-            img_rel = item.get("image")
             img_path = self.base_dir / img_rel
             if not img_path.exists():
                 continue
+
+            # Lấy văn bản điều luật liên quan R = {d_i} (Subtask 1) ghép cùng câu lệnh chuẩn Mục 4.1 (Subtask 2)
+            rel_ids = item.get("relevant_articles", [])
+            legal_ctx_lines = []
+            for aid in rel_ids:
+                art = self.retriever.articles_dict.get(aid, {})
+                if art:
+                    legal_ctx_lines.append(f"[{aid}] {art.get('title', '')}: {art.get('summary', '')}")
+            legal_context_str = "\n".join(legal_ctx_lines)
+
+            vlsp_prompt = item.get("vlsp_prompt", "").replace("<image>\n", "").strip()
+            if legal_context_str:
+                full_user_prompt = f"Điều luật liên quan:\n{legal_context_str}\n\n{vlsp_prompt}"
+            else:
+                full_user_prompt = vlsp_prompt
+
             self.samples.append({
                 "image_path": str(img_path),
-                "messages": item.get("messages", []),
+                "user_prompt": full_user_prompt,
+                "correct_answer": item.get("correct_answer", "A"),
+                "question_type": item.get("question_type", "multiple_choice"),
                 "sign_code": item.get("sign_code", ""),
-                "relevant_articles": item.get("relevant_articles", []),
+                "relevant_articles": rel_ids,
             })
 
     def __len__(self):
@@ -127,25 +142,21 @@ class LeakageControlledMQADataset(Dataset):
         item = self.samples[idx]
         image = Image.open(item["image_path"]).convert("RGB")
 
-        conversation = []
-        is_first_user = True
-        for msg in item["messages"]:
-            role = msg["role"]
-            content = msg["content"]
-            if role == "user" and is_first_user:
-                conversation.append({
-                    "role": "user",
-                    "content": [
-                        {"type": "image"},
-                        {"type": "text", "text": content},
-                    ],
-                })
-                is_first_user = False
-            else:
-                conversation.append({
-                    "role": role,
-                    "content": [{"type": "text", "text": content}],
-                })
+        conversation = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": item["user_prompt"]},
+                ],
+            },
+            {
+                "role": "assistant",
+                "content": [
+                    {"type": "text", "text": item["correct_answer"]},
+                ],
+            },
+        ]
 
         text = self.processor.apply_chat_template(
             conversation,
@@ -168,6 +179,7 @@ class LeakageControlledMQADataset(Dataset):
 def train():
     model_args = ModelArguments()
     data_args = DataArguments()
+    retriever = HybridLegalRetriever()
 
     print(f"[*] Loading Processor: {model_args.model_name_or_path}...")
     processor = AutoProcessor.from_pretrained(
@@ -187,7 +199,7 @@ def train():
         )
 
     device_map = "auto" if torch.cuda.is_available() else "cpu"
-    print(f"[*] Loading Base VLM Model on {device_map}...")
+    print(f"[*] Loading Base Vision-Language Model on {device_map}...")
     model = Qwen2VLForConditionalGeneration.from_pretrained(
         model_args.model_name_or_path,
         quantization_config=bnb_config,
@@ -210,20 +222,29 @@ def train():
     model = get_peft_model(model, lora_config)
     model.print_trainable_parameters()
 
-    train_dataset = LeakageControlledMQADataset(
+    train_dataset = VLSP2025MLQADataset(
         mqa_file=data_args.mqa_dataset_file,
-        manifest_file=data_args.split_manifest_file,
         base_dir=BASE_DIR,
         processor=processor,
-        split_arm=data_args.partition_arm,
-        subset="train",
-        include_pdf_canonical=data_args.include_pdf_canonical,
+        retriever=retriever,
+        source_filter="real_street_crop",
+        target_dir_prefix="data/real_crops",
+    )
+
+    eval_dataset = VLSP2025MLQADataset(
+        mqa_file=data_args.mqa_dataset_file,
+        base_dir=BASE_DIR,
+        processor=processor,
+        retriever=retriever,
+        source_filter="pdf_canonical",
+        target_dir_prefix="data/pdf_signs",
     )
 
     output_dir = str(BASE_DIR / "traffic_vlm_peft_adapter")
     training_args = TrainingArguments(
         output_dir=output_dir,
         per_device_train_batch_size=1,
+        per_device_eval_batch_size=1,
         gradient_accumulation_steps=4,
         warmup_steps=5,
         max_steps=60,
@@ -242,13 +263,30 @@ def train():
         model=model,
         args=training_args,
         train_dataset=train_dataset,
+        eval_dataset=eval_dataset,
     )
 
-    print("\n" + "=" * 65)
-    print(" TRAINING LEAKAGE-CONTROLLED PEFT VLM (QWEN2-VL + QLORA) ")
-    print("=" * 65)
-    print(f"Train samples ({data_args.partition_arm}): {len(train_dataset)}")
+    print("\n" + "=" * 74)
+    print(" VLSP 2025 MLQA-TSR: TRAINING PEFT VLM ON data/real_crops -> EVAL ON data/pdf_signs ")
+    print("=" * 74)
+    print(f"Train samples (C:\\ki8\\DSP\\datadsp\\data\\real_crops): {len(train_dataset)}")
+    print(f"Eval samples  (C:\\ki8\\DSP\\datadsp\\data\\pdf_signs) : {len(eval_dataset)}")
     trainer.train()
+
+    print("\n[*] Đang đánh giá mô hình trên tệp C:\\ki8\\DSP\\datadsp\\data\\pdf_signs...")
+    eval_metrics = trainer.evaluate(eval_dataset=eval_dataset)
+    print(f"[✓] Kết quả đánh giá trên data/pdf_signs: {eval_metrics}")
+
+    with open(DATA_DIR / "vlm_eval_pdf_signs.json", "w", encoding="utf-8") as f:
+        json.dump({
+            "paper_reference": "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation",
+            "train_source": str(DATA_DIR / "real_crops"),
+            "eval_source": str(DATA_DIR / "pdf_signs"),
+            "train_samples": len(train_dataset),
+            "eval_samples": len(eval_dataset),
+            "eval_metrics": eval_metrics,
+        }, f, ensure_ascii=False, indent=2)
+
     model.save_pretrained(output_dir)
     processor.save_pretrained(output_dir)
     print(f"[✓] Saved PEFT LoRA Adapter to: {output_dir}")

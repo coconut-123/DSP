@@ -1280,6 +1280,7 @@ function stageImageFromUrl(url, name, signContext = null) {
   stagedImageData = {
     dataUrl: url,
     fileName: name,
+    isDemoCard: true,
     signContext: signContext
   };
   stagedImageThumb.src = url;
@@ -1294,12 +1295,12 @@ function stageImageFromFile(file) {
   const reader = new FileReader();
   reader.onload = async (e) => {
     const dataUrl = e.target.result;
-    // Perform computer vision analysis on uploaded file
-    const recognizedSign = await analyzeImageVision(dataUrl, file.name);
     stagedImageData = {
       dataUrl: dataUrl,
       fileName: file.name,
-      signContext: recognizedSign
+      rawFile: file,
+      isDemoCard: false,
+      signContext: null
     };
     stagedImageThumb.src = dataUrl;
     stagedImageName.textContent = file.name;
@@ -1884,6 +1885,9 @@ async function sendUserMessage(textQuery) {
 
   const effectiveQuery = query || "Biển báo trong hình là biển gì và có ý nghĩa như thế nào?";
   const currentImage = stagedImageData ? stagedImageData.dataUrl : null;
+  const currentRawFile = stagedImageData ? stagedImageData.rawFile : null;
+  const currentFileName = stagedImageData ? stagedImageData.fileName : null;
+  const isDemoCard = stagedImageData ? !!stagedImageData.isDemoCard : false;
   const currentContextSign = stagedImageData ? stagedImageData.signContext : currentActiveSign;
 
   // Add User Message to Chat
@@ -1905,8 +1909,22 @@ async function sendUserMessage(textQuery) {
   try {
     const formData = new FormData();
     formData.append("query", effectiveQuery);
-    if (currentImage) {
+    if (currentRawFile) {
+      formData.append("file", currentRawFile, currentFileName || currentRawFile.name);
+    } else if (currentImage && currentImage.startsWith("data:image/")) {
+      const resBlob = await fetch(currentImage);
+      const imgBlob = await resBlob.blob();
+      formData.append("file", imgBlob, currentFileName || "uploaded_sign.png");
+    } else if (currentImage) {
       formData.append("image_base64", currentImage);
+    }
+    if (currentFileName) {
+      formData.append("file_name", currentFileName);
+    }
+    // Chỉ gửi sign_code ngữ cảnh khi người dùng hỏi tiếp bằng chữ (!hasImage) hoặc bấm chọn thẻ mẫu (isDemoCard)
+    // Khi tải ảnh / dán ảnh mới (!isDemoCard), để Backend nhận diện trực tiếp từ ảnh
+    if ((!hasImage || isDemoCard) && currentContextSign && currentContextSign.sign_code) {
+      formData.append("sign_code", currentContextSign.sign_code);
     }
 
     const response = await fetch(`${BACKEND_API_BASE}/api/chat`, {
@@ -1917,6 +1935,18 @@ async function sendUserMessage(textQuery) {
     if (response.ok) {
       const data = await response.json();
       removeTypingIndicator();
+
+      if (Array.isArray(data.retrieved_legal_passages)) {
+        data.retrieved_legal_passages.forEach((p) => {
+          if (p && p.article_id) {
+            LEGAL_ARTICLES_DB[p.article_id] = {
+              title: p.title || p.article_id,
+              source: p.source || "QCVN 41:2019/BGTVT",
+              full_text: p.full_text || p.summary || "Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ."
+            };
+          }
+        });
+      }
 
       const detected = data.detected_sign;
       if (detected) {
