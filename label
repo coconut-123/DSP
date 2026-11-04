@@ -6,7 +6,7 @@
     "sign_name": "Cấm đi ngược chiều",
     "relevant_articles": [
       "QCVN41_B.2",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -34,7 +34,7 @@
     "sign_name": "Cấm xe ô tô",
     "relevant_articles": [
       "QCVN41_B.3",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -62,7 +62,7 @@
     "sign_name": "Cấm xe máy",
     "relevant_articles": [
       "QCVN41_B.4",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -90,7 +90,7 @@
     "sign_name": "Cấm xe ô tô tải",
     "relevant_articles": [
       "QCVN41_B.6",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -118,7 +118,7 @@
     "sign_name": "Cấm xe ô tô khách và xe ô tô tải",
     "relevant_articles": [
       "QCVN41_B.7",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -174,7 +174,7 @@
     "sign_name": "Cấm xe gắn máy",
     "relevant_articles": [
       "QCVN41_B.11",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -202,7 +202,7 @@
     "sign_name": "Hạn chế chiều cao",
     "relevant_articles": [
       "QCVN41_B.17",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -230,7 +230,7 @@
     "sign_name": "Cấm rẽ trái",
     "relevant_articles": [
       "QCVN41_B.23",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -258,7 +258,7 @@
     "sign_name": "Cấm rẽ phải",
     "relevant_articles": [
       "QCVN41_B.23",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -286,7 +286,7 @@
     "sign_name": "Cấm quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -314,7 +314,7 @@
     "sign_name": "Cấm quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -342,7 +342,7 @@
     "sign_name": "Cấm ô tô quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -370,7 +370,7 @@
     "sign_name": "Cấm ô tô quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -398,7 +398,7 @@
     "sign_name": "Cấm rẽ trái và quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -426,7 +426,7 @@
     "sign_name": "Cấm rẽ phải và quay đầu xe",
     "relevant_articles": [
       "QCVN41_B.24",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -454,7 +454,7 @@
     "sign_name": "Tốc độ tối đa cho phép",
     "relevant_articles": [
       "QCVN41_B.27",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -482,7 +482,7 @@
     "sign_name": "Kiểm tra",
     "relevant_articles": [
       "QCVN41_B.29",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -510,7 +510,7 @@
     "sign_name": "Cấm dừng xe và đỗ xe",
     "relevant_articles": [
       "QCVN41_B.30",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -538,7 +538,7 @@
     "sign_name": "Cấm đỗ xe",
     "relevant_articles": [
       "QCVN41_B.30",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -566,7 +566,7 @@
     "sign_name": "Cấm rẽ trái, rẽ phải",
     "relevant_articles": [
       "QCVN41_B.37",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -594,7 +594,7 @@
     "sign_name": "Cấm đi thẳng, rẽ phải",
     "relevant_articles": [
       "QCVN41_B.39",
-      "QCVN41_Điều_22"
+      "QCVN41_Điều_21"
     ],
     "messages": [
       {
@@ -622,7 +622,7 @@
     "sign_name": "Chỗ ngoặt nguy hiểm vòng bên trái",
     "relevant_articles": [
       "QCVN41_C.1",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -650,7 +650,7 @@
     "sign_name": "Chỗ ngoặt nguy hiểm vòng bên phải",
     "relevant_articles": [
       "QCVN41_C.1",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -678,7 +678,7 @@
     "sign_name": "Chỗ ngoặt nguy hiểm vòng bên trái",
     "relevant_articles": [
       "QCVN41_C.1",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -706,7 +706,7 @@
     "sign_name": "Chỗ ngoặt nguy hiểm vòng bên trái",
     "relevant_articles": [
       "QCVN41_C.1",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -734,7 +734,7 @@
     "sign_name": "Nhiều chỗ ngoặt nguy hiểm liên tiếp (chỗ đầu tiên sang phải)",
     "relevant_articles": [
       "QCVN41_C.2",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -762,7 +762,7 @@
     "sign_name": "Đường bị thu hẹp về phía trái",
     "relevant_articles": [
       "QCVN41_C.3",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -790,7 +790,7 @@
     "sign_name": "Đường bị thu hẹp về phía phải",
     "relevant_articles": [
       "QCVN41_C.3",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -818,7 +818,7 @@
     "sign_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã tư)",
     "relevant_articles": [
       "QCVN41_C.5",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -846,7 +846,7 @@
     "sign_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã ba bên phải)",
     "relevant_articles": [
       "QCVN41_C.5",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -874,7 +874,7 @@
     "sign_name": "Đường giao nhau cùng mức của các đường đồng cấp (ngã ba bên trái)",
     "relevant_articles": [
       "QCVN41_C.5",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -902,7 +902,7 @@
     "sign_name": "Giao nhau với đường không ưu tiên (ngã tư)",
     "relevant_articles": [
       "QCVN41_C.7",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -930,7 +930,7 @@
     "sign_name": "Giao nhau với đường sắt có rào chắn",
     "relevant_articles": [
       "QCVN41_C.10",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -958,7 +958,7 @@
     "sign_name": "Đường có sóng mấp mô nhân tạo (gồ giảm tốc)",
     "relevant_articles": [
       "QCVN41_C.21",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -986,7 +986,7 @@
     "sign_name": "Đường người đi bộ cắt ngang",
     "relevant_articles": [
       "QCVN41_C.24",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1014,7 +1014,7 @@
     "sign_name": "Trẻ em",
     "relevant_articles": [
       "QCVN41_C.25",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1042,7 +1042,7 @@
     "sign_name": "Nguy hiểm khác",
     "relevant_articles": [
       "QCVN41_C.33",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1098,7 +1098,7 @@
     "sign_name": "Đi chậm",
     "relevant_articles": [
       "QCVN41_C.45",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1126,7 +1126,7 @@
     "sign_name": "Chú ý chướng ngại vật (vòng tránh sang hai bên)",
     "relevant_articles": [
       "QCVN41_C.46",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1154,7 +1154,7 @@
     "sign_name": "Chú ý chướng ngại vật (vòng tránh sang bên trái)",
     "relevant_articles": [
       "QCVN41_C.46",
-      "QCVN41_Điều_28"
+      "QCVN41_Điều_27"
     ],
     "messages": [
       {
@@ -1322,7 +1322,7 @@
     "sign_name": "Đường một chiều (đi thẳng)",
     "relevant_articles": [
       "QCVN41_B.2",
-      "QCVN41_Điều_34"
+      "QCVN41_Điều_35"
     ],
     "messages": [
       {
@@ -1350,7 +1350,7 @@
     "sign_name": "Chỗ quay xe",
     "relevant_articles": [
       "QCVN41_E.9",
-      "QCVN41_Điều_34"
+      "QCVN41_Điều_35"
     ],
     "messages": [
       {
@@ -1378,7 +1378,7 @@
     "sign_name": "Bến xe buýt",
     "relevant_articles": [
       "QCVN41_E.36",
-      "QCVN41_Điều_34"
+      "QCVN41_Điều_35"
     ],
     "messages": [
       {
@@ -1406,7 +1406,7 @@
     "sign_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
     "relevant_articles": [
       "QCVN41_F.5",
-      "QCVN41_Điều_40"
+      "QCVN41_Điều_41"
     ],
     "messages": [
       {

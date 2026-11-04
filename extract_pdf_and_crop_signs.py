@@ -1,11 +1,11 @@
 """
 extract_pdf_and_crop_signs.py
 -----------------------------
-1. Trích xuất & cắt toàn bộ ảnh biển báo chuẩn từ file PDF QCVN 41:2019/BGTVT
+1. Trích xuất & cắt toàn bộ ảnh biển báo chuẩn từ file PDF QCVN 41:2024/BGTVT
    (51-bgtvt-kem.pdf, từ trang 80 đến trang 157: Phụ lục B, C, D, E, F) và gán mã biển chuẩn xác 100%.
 2. Xây dựng Cơ sở dữ liệu Điều luật Pháp lý Giao thông (legal_articles.json) trích xuất 100% nguyên bản
-   từ văn bản QCVN 41:2019/BGTVT (51-bgtvt-kem.pdf).
-3. Ánh xạ 100% 52 lớp biển báo thực tế trong archive/classes.txt với mã biển QCVN 41:2019/BGTVT,
+   từ văn bản QCVN 41:2024/BGTVT (51-bgtvt-kem.pdf).
+3. Ánh xạ 100% 52 lớp biển báo thực tế trong archive/classes.txt với mã biển QCVN 41:2024/BGTVT,
    đồng thời trích xuất các patch biển báo thực tế từ 3,216 ảnh đường phố (8,334 bounding boxes).
 """
 
@@ -67,7 +67,7 @@ def get_category_by_code(code: str) -> str:
     return "Biển báo hiệu đường bộ"
 
 
-# Danh mục tên chuẩn hóa toàn diện QCVN 41:2019/BGTVT (Phụ lục B, C, D, E, F)
+# Danh mục tên chuẩn hóa toàn diện QCVN 41:2024/BGTVT (Phụ lục B, C, D, E, F)
 STANDARD_NAMES = {
     "P.101": "Đường cấm",
     "P.102": "Cấm đi ngược chiều",
@@ -469,7 +469,7 @@ for sec_k, sec_text in sections.items():
         "section": sec_k,
         "appendix": AppendixNames.get(app_letter, f"Phụ lục {app_letter}"),
         "title": f"Phụ lục {app_letter} - Mục {sec_k}: {title}",
-        "source": "QCVN 41:2019/BGTVT",
+        "source": "QCVN 41:2024/BGTVT",
         "summary": summary[:350],
         "full_text": content.strip(),
     }
@@ -481,15 +481,15 @@ for sec_k, sec_text in sections.items():
             if std_code not in sign_to_section:
                 sign_to_section[std_code] = sec_k
 
-# Bổ sung điều khoản cho biển Camera giám sát (nhóm biển chỉ dẫn thông tin theo QCVN 41:2019/BGTVT)
+# Bổ sung điều khoản cho biển Camera giám sát (nhóm biển chỉ dẫn thông tin theo QCVN 41:2024/BGTVT)
 legal_articles_dict["QCVN41_CAMERA"] = {
     "article_id": "QCVN41_CAMERA",
     "section": "Chương IV & Phụ lục E",
     "appendix": "Phụ lục E (Ý nghĩa - Sử dụng Biển chỉ dẫn)",
-    "title": "Quy chuẩn QCVN 41:2019/BGTVT: Biển chỉ dẫn đường có Camera giám sát giao thông",
-    "source": "QCVN 41:2019/BGTVT",
+    "title": "Quy chuẩn QCVN 41:2024/BGTVT: Biển chỉ dẫn đường có Camera giám sát giao thông",
+    "source": "QCVN 41:2024/BGTVT",
     "summary": "Biển chỉ dẫn đoạn đường có hệ thống camera giám sát giao thông để hướng dẫn người điều khiển phương tiện chấp hành đúng quy tắc báo hiệu đường bộ.",
-    "full_text": "Biển báo 'Đường có camera giám sát' thuộc nhóm biển chỉ dẫn trên đường bộ theo QCVN 41:2019/BGTVT, thông báo cho người tham gia giao thông biết khu vực hoặc tuyến đường phía trước có lắp đặt hệ thống camera giám sát giao thông để chủ động tuân thủ đúng tốc độ, làn đường và hiệu lệnh báo hiệu đường bộ.",
+    "full_text": "Biển báo 'Đường có camera giám sát' thuộc nhóm biển chỉ dẫn trên đường bộ theo QCVN 41:2024/BGTVT, thông báo cho người tham gia giao thông biết khu vực hoặc tuyến đường phía trước có lắp đặt hệ thống camera giám sát giao thông để chủ động tuân thủ đúng tốc độ, làn đường và hiệu lệnh báo hiệu đường bộ.",
 }
 
 
@@ -792,7 +792,7 @@ with open(ARCHIVE_DIR / "classes_vie.txt", "r", encoding="utf-8") as f:
 with open(ARCHIVE_DIR / "classes_en.txt", "r", encoding="utf-8") as f:
     en_classes = [l.strip() for l in f if l.strip()]
 
-# Bảng ánh xạ chuẩn xác từ nhãn lớp trong dataset thực tế sang mã chuẩn QCVN 41:2019/BGTVT
+# Bảng ánh xạ chuẩn xác từ nhãn lớp trong dataset thực tế sang mã chuẩn QCVN 41:2024/BGTVT
 ARCHIVE_TO_CANONICAL_CODE = {
     "W.207": "W.207a",
     "P.117*": "P.117",
@@ -879,7 +879,7 @@ for idx, (page_num, rect, code) in enumerate(crop_records_train_only):
         "sign_name": name,
         "category": cat,
         "relevant_articles": [art_key],
-        "description": art_obj.get("summary", f"Biển số {code}: {name} theo QCVN 41:2019/BGTVT."),
+        "description": art_obj.get("summary", f"Biển số {code}: {name} theo QCVN 41:2024/BGTVT."),
         "dimensions": [pix.width, pix.height],
     }
     saved_pdf_signs.append(entry)
@@ -888,9 +888,9 @@ for idx, (page_num, rect, code) in enumerate(crop_records_train_only):
 print(f"[✓] Đã lưu {len(saved_pdf_signs)} ảnh biển báo chuẩn từ PDF vào data/pdf_signs ({len(code_to_pdf_images)} mã biển có trong tập Train).")
 
 # ==============================================================================
-# BƯỚC 3: ÁNH XẠ 52 LỚP BIỂN BÁO TRONG ARCHIVE/CLASSES.TXT VỚI MÃ QCVN 41:2019
+# BƯỚC 3: ÁNH XẠ 52 LỚP BIỂN BÁO TRONG ARCHIVE/CLASSES.TXT VỚI MÃ QCVN 41:2024
 # ==============================================================================
-print("\n[3/4] Đang ánh xạ 52 lớp biển báo thực tế trong archive/classes.txt với QCVN 41:2019/BGTVT...")
+print("\n[3/4] Đang ánh xạ 52 lớp biển báo thực tế trong archive/classes.txt với QCVN 41:2024/BGTVT...")
 
 class_mapping = []
 for cls_id, (raw_c, vie_n, en_n) in enumerate(zip(raw_classes, vie_classes, en_classes)):
@@ -928,7 +928,7 @@ for cls_id, (raw_c, vie_n, en_n) in enumerate(zip(raw_classes, vie_classes, en_c
     })
 
 unmatched_templates = [m for m in class_mapping if not m["pdf_template_images"] and m["canonical_qcvn_code"] != "Camera"]
-print(f"[✓] Đã ánh xạ 52/52 lớp với điều luật QCVN 41:2019/BGTVT. Số lớp có biển mẫu PDF trực tiếp: {52 - len(unmatched_templates) - 1}/51 (+1 lớp biển chỉ dẫn Camera).")
+print(f"[✓] Đã ánh xạ 52/52 lớp với điều luật QCVN 41:2024/BGTVT. Số lớp có biển mẫu PDF trực tiếp: {52 - len(unmatched_templates) - 1}/51 (+1 lớp biển chỉ dẫn Camera).")
 if unmatched_templates:
     print("    Các lớp chưa có mẫu PDF:", [m["canonical_qcvn_code"] for m in unmatched_templates])
 

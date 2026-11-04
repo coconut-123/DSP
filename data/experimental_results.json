@@ -66,27 +66,27 @@
   "subtask1_multimodal_legal_retrieval_f2": [
     {
       "method": "1. BASELINE: BGE Visualized (Dense Embedding, Top-5, Section 4.1)",
-      "precision": 0.213,
-      "recall": 0.5325,
-      "f2_score": 0.4096
+      "precision": 0.1558,
+      "recall": 0.3896,
+      "f2_score": 0.2997
     },
     {
       "method": "2. LexTraffic / OpenCubee Style (BM25 Lexical Only, Top-5)",
-      "precision": 0.2026,
-      "recall": 0.5065,
-      "f2_score": 0.3896
+      "precision": 0.1974,
+      "recall": 0.4935,
+      "f2_score": 0.3796
     },
     {
       "method": "3. Tanka_CDS Style (Sign Patch + CLIP Embedding, Top-5)",
-      "precision": 0.2961,
-      "recall": 0.7403,
-      "f2_score": 0.5694
+      "precision": 0.2987,
+      "recall": 0.7468,
+      "f2_score": 0.5744
     },
     {
       "method": "4. Berry Style (Sign Detection + Vector Search, Top-3)",
-      "precision": 0.4242,
-      "recall": 0.6364,
-      "f2_score": 0.5785
+      "precision": 0.3983,
+      "recall": 0.5974,
+      "f2_score": 0.5431
     },
     {
       "method": "5. SmartbotIC Style (Normalized Law DB + Multimodal Retrieval, Top-3)",
@@ -96,15 +96,15 @@
     },
     {
       "method": "6. TechNova Style (Two-Branch Visual + Dense FAISS Index, Top-3)",
-      "precision": 0.4545,
-      "recall": 0.6818,
-      "f2_score": 0.6198
+      "precision": 0.4156,
+      "recall": 0.6234,
+      "f2_score": 0.5667
     },
     {
       "method": "7. chmod+x Style (Heterogeneous Graph + Reranker + Dynamic Top-k)",
-      "precision": 0.8571,
-      "recall": 0.8571,
-      "f2_score": 0.8571
+      "precision": 0.8247,
+      "recall": 0.8247,
+      "f2_score": 0.8247
     },
     {
       "method": "8. LifeIsTough / Ours (Sign Cropping + ViT-B/16 PEFT + Dynamic Top-k)",

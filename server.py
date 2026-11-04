@@ -9,7 +9,7 @@ FastAPI Backend Server cho Hệ thống Hỏi - Đáp Pháp lý Đa phương th�
 - Cung cấp các API:
   + GET  /api/health       : Trạng thái máy chủ VLM, PEFT Adapter, GPU và kho dữ liệu pháp lý.
   + POST /api/chat         : Suy luận hỏi đáp đa phương thức (Image + Natural Language Question -> Legal Answer + Citations).
-  + GET  /api/legal_ir     : Truy xuất điều khoản QCVN 41:2019/BGTVT theo câu hỏi và mã biển báo thị giác.
+  + GET  /api/legal_ir     : Truy xuất điều khoản QCVN 41:2024/BGTVT theo câu hỏi và mã biển báo thị giác.
   + GET  /api/experiments  : Kết quả thực nghiệm kiểm soát rò rỉ (Leakage Audit & Multi-Seed Evaluation).
 """
 
@@ -87,7 +87,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Multimodal Traffic Sign Legal QA & Legal IR API",
-    description="Vision-Language Model (Qwen2-VL) + PEFT (QLoRA) + Hybrid Legal Information Retrieval (QCVN 41:2019/BGTVT)",
+    description="Vision-Language Model (Qwen2-VL) + PEFT (QLoRA) + Hybrid Legal Information Retrieval (QCVN 41:2024/BGTVT)",
     version="3.1.0",
     lifespan=lifespan,
 )
@@ -344,7 +344,7 @@ def load_knowledge_bases():
                         item["category"] = get_category_by_code(code)
                         signs_catalog[code] = item
 
-        # Bổ sung đầy đủ toàn bộ mã biển báo QCVN 41:2019 từ STANDARD_NAMES để không bao giờ bị thiếu mã (VD: P.101)
+        # Bổ sung đầy đủ toàn bộ mã biển báo QCVN 41:2024 từ STANDARD_NAMES để không bao giờ bị thiếu mã (VD: P.101)
         for code, name in STANDARD_NAMES.items():
             if code not in signs_catalog:
                 img_rel = f"images/{code}/{code}_01.png"
@@ -431,7 +431,7 @@ def load_knowledge_bases():
         legal_retriever = HybridLegalRetriever()
         print(
             f"[✓] Đã nạp {len(legal_db)} điều khoản pháp lý, {len(signs_catalog)} mã biển báo "
-            f"và {len(visual_ref_index)} mẫu đặc trưng thị giác QCVN 41:2019/BGTVT."
+            f"và {len(visual_ref_index)} mẫu đặc trưng thị giác QCVN 41:2024/BGTVT."
         )
     except Exception as e:
         print(f"[!] Lỗi nạp cơ sở tri thức: {e}")
@@ -564,21 +564,21 @@ def build_grounded_legal_answer(
 ) -> str:
     """
     Tổng hợp câu trả lời pháp lý chuẩn xác, trực diện theo đúng câu hỏi của người dùng
-    và neo chặt vào mã biển báo `detected_code` cùng điều khoản truy xuất từ QCVN 41:2019/BGTVT.
+    và neo chặt vào mã biển báo `detected_code` cùng điều khoản truy xuất từ QCVN 41:2024/BGTVT.
     """
     q = query.lower().strip()
     sign_name = sign_info.get("sign_name", STANDARD_NAMES.get(detected_code, "Biển báo giao thông"))
     category = sign_info.get("category", get_category_by_code(detected_code))
     top_art = retrieved_articles[0] if retrieved_articles else {}
-    art_title = top_art.get("title", f"QCVN 41:2019/BGTVT - Biển số {detected_code}")
-    art_summary = top_art.get("summary", f'Biển số {detected_code} "{sign_name}" theo QCVN 41:2019/BGTVT.')
+    art_title = top_art.get("title", f"QCVN 41:2024/BGTVT - Biển số {detected_code}")
+    art_summary = top_art.get("summary", f'Biển số {detected_code} "{sign_name}" theo QCVN 41:2024/BGTVT.')
     full_txt = top_art.get("full_text", "")
     if detected_code and detected_code not in art_summary and detected_code in full_txt:
         clauses = [c.strip() for c in re.split(r"(?=[a-k]\)\s)", full_txt) if detected_code in c]
         if clauses:
             art_summary = clauses[0].split("Hình ")[0].strip()
 
-    header = f"Đối với **Biển số {detected_code}: \"{sign_name}\"** ({category}) theo **QCVN 41:2019/BGTVT**:\n\n"
+    header = f"Đối với **Biển số {detected_code}: \"{sign_name}\"** ({category}) theo **QCVN 41:2024/BGTVT**:\n\n"
 
     # 0A. Hỗ trợ định dạng câu hỏi Trắc nghiệm 4 lựa chọn (Multiple-Choice A, B, C, D) theo Mục 4.1 bài báo VLSP 2025 MLQA-TSR
     mc_matches = re.findall(r"([A-D])\.\s*([^\n]+)", query)
@@ -754,10 +754,10 @@ def build_grounded_legal_answer(
     if any(k in q for k in ["quay đầu", "rẽ trái", "rẽ phải", "chuyển hướng"]):
         if detected_code in ("P.123a", "P.103c"):
             return (
-                f"⚠️ **CẤM RẼ TRÁI — NHƯNG ĐƯỢC PHÉP QUAY ĐẦU XE (theo QCVN 41:2019):**\n\n"
+                f"⚠️ **CẤM RẼ TRÁI — NHƯNG ĐƯỢC PHÉP QUAY ĐẦU XE (theo QCVN 41:2024):**\n\n"
                 f"{header}"
                 f"- ❌ **Rẽ trái:** Bị cấm theo hiệu lực của biển **{detected_code}**.\n"
-                f"- ✅ **Quay đầu xe:** Theo Phụ lục B (Mục B.23) QCVN 41:2019/BGTVT, biển cấm rẽ trái **không có giá trị cấm quay đầu xe**.\n"
+                f"- ✅ **Quay đầu xe:** Theo Phụ lục B (Mục B.23) QCVN 41:2024/BGTVT, biển cấm rẽ trái **không có giá trị cấm quay đầu xe**.\n"
                 f"- **Căn cứ pháp lý:** {art_title}.\n"
                 f"- **Nội dung quy chuẩn:** {art_summary}"
             )
@@ -774,7 +774,7 @@ def build_grounded_legal_answer(
                 f"⚠️ **CẤM QUAY ĐẦU XE — NHƯNG ĐƯỢC PHÉP RẼ TRÁI:**\n\n"
                 f"{header}"
                 f"- ❌ **Quay đầu xe (chữ U):** Bị cấm theo biển **{detected_code}**.\n"
-                f"- ✅ **Rẽ trái:** Theo Phụ lục B (Mục B.24) QCVN 41:2019/BGTVT, biển cấm quay đầu xe **không có giá trị cấm rẽ trái**.\n"
+                f"- ✅ **Rẽ trái:** Theo Phụ lục B (Mục B.24) QCVN 41:2024/BGTVT, biển cấm quay đầu xe **không có giá trị cấm rẽ trái**.\n"
                 f"- **Căn cứ pháp lý:** {art_title}.\n"
                 f"- **Nội dung quy chuẩn:** {art_summary}"
             )
@@ -798,7 +798,7 @@ def build_grounded_legal_answer(
             return (
                 f"✅ **ĐƯỢC PHÉP QUAY ĐẦU XE (NHƯNG KHÔNG ĐƯỢC RẼ TRÁI):**\n\n"
                 f"{header}"
-                f"- **Giải đáp:** Theo Phụ lục E (Mục E.9) QCVN 41:2019/BGTVT, biển **{detected_code} ({sign_name})** chỉ dẫn nơi được phép quay đầu xe, nhưng **không cho phép rẽ trái** (trừ khi có biển báo cho phép rẽ trái).\n"
+                f"- **Giải đáp:** Theo Phụ lục E (Mục E.9) QCVN 41:2024/BGTVT, biển **{detected_code} ({sign_name})** chỉ dẫn nơi được phép quay đầu xe, nhưng **không cho phép rẽ trái** (trừ khi có biển báo cho phép rẽ trái).\n"
                 f"- **Căn cứ pháp lý:** {art_title}.\n"
                 f"- **Nội dung quy chuẩn:** {art_summary}"
             )
@@ -813,10 +813,10 @@ def build_grounded_legal_answer(
 
     # 4. Câu hỏi về CĂN CỨ PHÁP LÝ / PHỤ LỤC
     if any(k in q for k in ["phụ lục", "căn cứ pháp lý", "điều khoản", "nằm ở đâu"]):
-        appendix_name = top_art.get("appendix", "QCVN 41:2019/BGTVT")
+        appendix_name = top_art.get("appendix", "QCVN 41:2024/BGTVT")
         return (
             f"⚖️ **CĂN CỨ PHÁP LÝ CỦA BIỂN SỐ {detected_code} ({sign_name}):**\n\n"
-            f"- **Thuộc văn bản:** Quy chuẩn kỹ thuật quốc gia **QCVN 41:2019/BGTVT** do Bộ Giao thông vận tải ban hành.\n"
+            f"- **Thuộc văn bản:** Quy chuẩn kỹ thuật quốc gia **QCVN 41:2024/BGTVT** do Bộ Giao thông vận tải ban hành.\n"
             f"- **Vị trí Phụ lục:** **{appendix_name}** — **{art_title}**.\n"
             f"- **Phân nhóm biển báo:** {category}.\n"
             f"- **Trích dẫn quy định:** {art_summary}"
@@ -824,7 +824,7 @@ def build_grounded_legal_answer(
 
     # 5. Mặc định: Trả lời tổng quan ý nghĩa, phân loại và quy định pháp lý của đúng biển `detected_code`
     return (
-        f"Biển báo trong hình là **Biển số {detected_code}: \"{sign_name}\"** thuộc nhóm **{category}** theo Quy chuẩn kỹ thuật quốc gia **QCVN 41:2019/BGTVT**.\n\n"
+        f"Biển báo trong hình là **Biển số {detected_code}: \"{sign_name}\"** thuộc nhóm **{category}** theo Quy chuẩn kỹ thuật quốc gia **QCVN 41:2024/BGTVT**.\n\n"
         f"- **Căn cứ pháp lý truy xuất (Legal IR):** {art_title}.\n"
         f"- **Quy định chi tiết:** {art_summary}"
     )
@@ -889,7 +889,7 @@ async def chat_multimodal(
 
     last_active_sign_code = detected_code
 
-    # Bước 3: Truy xuất điều khoản QCVN 41:2019/BGTVT neo theo đúng `detected_code`
+    # Bước 3: Truy xuất điều khoản QCVN 41:2024/BGTVT neo theo đúng `detected_code`
     sign_info = signs_catalog.get(detected_code, {
         "sign_code": detected_code,
         "sign_name": STANDARD_NAMES.get(detected_code, "Biển báo giao thông"),

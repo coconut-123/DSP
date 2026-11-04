@@ -1155,56 +1155,56 @@ const SIGN_DATABASE = [
   }
 ];
 
-// 2. Legal Database (QCVN 41:2019/BGTVT)
+// 2. Legal Database (QCVN 41:2024/BGTVT)
 const LEGAL_ARTICLES_DB = {
   "QCVN41_Điều_15": {
     "title": "Điều 15: Hiệu lực của biển báo",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Hiệu lực của các loại biển báo nguy hiểm và cảnh báo, biển chỉ dẫn, biển hiệu lệnh và biển báo phụ có giá trị trên tất cả các làn đường của một chiều xe chạy, trừ khi có biển chỉ dẫn làn đường hoặc biển phụ đặt kèm quy định cho từng làn đường riêng biệt. Biển có hiệu lực theo thời gian khi có gắn biển phụ chỉ thời gian áp dụng."
   },
   "QCVN41_Điều_25": {
     "title": "Điều 25: Ý nghĩa của biển báo cấm",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Biển báo cấm để biểu thị các điều cấm. Người tham gia giao thông phải chấp hành những điều cấm mà biển đã báo. Các biển báo cấm có mã ký hiệu P (Prohibitive) từ P.101 đến P.140. Ngoại lệ áp dụng đối với các xe ưu tiên theo quy định của pháp luật khi đang làm nhiệm vụ khẩn cấp."
   },
   "QCVN41_B.2": {
     "title": "Phụ lục B - Mục B.2: Biển số P.102 'Cấm đi ngược chiều'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, trừ các xe được ưu tiên theo quy định, đặt biển số P.102 'Cấm đi ngược chiều'. Người đi bộ được phép đi trên vỉa hè hoặc lề đường."
   },
   "QCVN41_B.6a": {
     "title": "Phụ lục B - Mục B.6: Biển số P.106a 'Cấm xe ô tô tải'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Để báo đường cấm các loại xe ô tô tải trừ các xe được ưu tiên theo quy định, đặt biển số P.106a 'Cấm xe ô tô tải'. Biển có hiệu lực cấm đối với cả máy kéo và các xe máy chuyên dùng đi vào đoạn đường đặt biển. Ô tô con, xe bán tải (khối lượng chuyên chở dưới 950 kg) không thuộc đối tượng cấm của biển này."
   },
   "QCVN41_B.27a": {
     "title": "Phụ lục B - Mục B.27a: Biển số P.127a 'Tốc độ tối đa cho phép vào ban đêm'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Biển số P.127a quy định tốc độ tối đa cho phép về ban đêm áp dụng cho một số trường hợp qua khu vực đông dân cư có lưu lượng lớn hoặc điều kiện tầm nhìn hạn chế. Trị số ghi trên biển tính bằng km/h và khung giờ áp dụng được ghi rõ ở biển phụ phía dưới (thường từ 22:00 đến 5:00 sáng hôm sau)."
   },
   "QCVN41_B.27c": {
     "title": "Phụ lục B - Mục B.27c: Biển số P.127c 'Biển ghép tốc độ tối đa cho phép theo làn đường'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Biển số P.127c là biển ghép quy định tốc độ tối đa cho phép trên từng làn đường. Xe chạy trên làn nào phải tuân thủ giới hạn tốc độ và loại phương tiện được phép lưu thông hiển thị trên làn đó."
   },
   "QCVN41_Điều_37": {
     "title": "Điều 37: Ý nghĩa và tác dụng của biển hiệu lệnh",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Biển hiệu lệnh để báo các điều khiển mà người tham gia giao thông bắt buộc phải chấp hành. Các biển hiệu lệnh có mã R (Regulatory) từ R.301 đến R.421."
   },
   "QCVN41_E.12a": {
     "title": "Phụ lục E - Mục E.12: Biển số R.412a 'Làn đường dành riêng cho ô tô khách'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Để chỉ dẫn cho người tham gia giao thông biết có làn đường dành riêng cho ô tô khách (kể cả xe buýt), đặt biển số R.412a. Các loại phương tiện khác không được đi vào làn đường có đặt biển này, trừ các xe được quyền ưu tiên theo quy định."
   },
   "QCVN41_Điều_31": {
     "title": "Điều 31: Ý nghĩa của biển báo nguy hiểm và cảnh báo",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Biển báo nguy hiểm và cảnh báo để báo cho người tham gia giao thông biết trước tính chất của sự nguy hiểm trên tuyến đường để chủ động phòng ngừa và xử lý. Khi gặp biển báo nguy hiểm, người tham gia giao thông phải giảm tốc độ đến mức an toàn và chú ý quan sát."
   },
   "QCVN41_C.1a": {
     "title": "Phụ lục C - Mục C.1: Biển số W.201a 'Chỗ ngoặt nguy hiểm vòng bên trái'",
-    "source": "QCVN 41:2019/BGTVT",
+    "source": "QCVN 41:2024/BGTVT",
     "full_text": "Để báo trước sắp đến một chỗ ngoặt nguy hiểm vòng về phía bên trái, đặt biển số W.201a. Chỗ ngoặt nguy hiểm là đoạn đường cong có góc chuyển hướng lớn hoặc tầm nhìn bị che khuất. Người lái xe phải giảm tốc độ và không được lấn làn, vượt xe."
   }
 };
@@ -1478,13 +1478,13 @@ function generateGroundedVLMResponse(query, sign) {
   // 1. Kiểm tra các câu hỏi về: Giảm tốc độ / chạy chậm / tốc độ an toàn
   if (q.includes("giảm tốc") || q.includes("chạy chậm") || q.includes("hãm tốc") || (q.includes("bắt buộc") && q.includes("tốc độ"))) {
     if (sign.sign_code.startsWith("W.")) {
-      return `✅ **CÓ, BẮT BUỘC PHẢI GIẢM TỐC ĐỘ.**\n\nTheo quy tắc giao thông đường bộ và **Điều 31 QCVN 41:2019/BGTVT**, khi gặp biển báo nguy hiểm (như **${sign.sign_code}: ${sign.sign_name}**), người điều khiển phương tiện **bắt buộc phải giảm tốc độ đến mức an toàn**, chú ý quan sát và làm chủ tay lái để chủ động phòng ngừa và xử lý kịp thời các tình huống bất ngờ.`;
+      return `✅ **CÓ, BẮT BUỘC PHẢI GIẢM TỐC ĐỘ.**\n\nTheo quy tắc giao thông đường bộ và **Điều 31 QCVN 41:2024/BGTVT**, khi gặp biển báo nguy hiểm (như **${sign.sign_code}: ${sign.sign_name}**), người điều khiển phương tiện **bắt buộc phải giảm tốc độ đến mức an toàn**, chú ý quan sát và làm chủ tay lái để chủ động phòng ngừa và xử lý kịp thời các tình huống bất ngờ.`;
     }
     if (sign.sign_code.startsWith("P.127")) {
       return `✅ **CÓ, BẮT BUỘC PHẢI GIẢM TỐC ĐỘ DƯỚI MỨC TỐI ĐA CHO PHÉP.**\n\nBạn phải điều chỉnh tốc độ của phương tiện không được vượt quá trị số tốc độ ghi trên biển **${sign.sign_code}** để tránh bị xử phạt chạy quá tốc độ quy định.`;
     }
     if (sign.sign_code.startsWith("P.")) {
-      return `✅ **CÓ, PHẢI GIẢM TỐC ĐỘ VÀ CHẤP HÀNH ĐIỀU CẤM.**\n\nCăn cứ Điều 25 QCVN 41:2019/BGTVT, người tham gia giao thông phải giảm tốc độ và không được đi vào đoạn đường hoặc thực hiện hành vi mà biển đã cấm.`;
+      return `✅ **CÓ, PHẢI GIẢM TỐC ĐỘ VÀ CHẤP HÀNH ĐIỀU CẤM.**\n\nCăn cứ Điều 25 QCVN 41:2024/BGTVT, người tham gia giao thông phải giảm tốc độ và không được đi vào đoạn đường hoặc thực hiện hành vi mà biển đã cấm.`;
     }
     return `✅ **CÓ, CẦN CHỦ ĐỘNG GIẢM TỐC ĐỘ.**\n\nNgười tham gia giao thông cần làm chủ tốc độ đến mức an toàn và tuân thủ đúng hiệu lệnh chỉ dẫn của biển báo đường bộ.`;
   }
@@ -1492,7 +1492,7 @@ function generateGroundedVLMResponse(query, sign) {
   // 2. Kiểm tra câu hỏi về: Vượt xe khác
   if (q.includes("vượt xe") || q.includes("vượt nhau") || q.includes("được vượt")) {
     if (sign.sign_code === "W.201a" || sign.sign_code.startsWith("W.")) {
-      return `❌ **KHÔNG ĐƯỢC PHÉP VƯỢT XE.**\n\nTheo quy định của Luật Giao thông đường bộ, tuyệt đối cấm vượt xe tại các đoạn đường cong nguy hiểm có bán kính cong nhỏ hoặc tầm nhìn bị che khuất. Người lái xe phải đi đúng phần đường, giữ khoảng cách an toàn và không được lấn làn vượt ẩu.`;
+      return `❌ **KHÔNG ĐƯỢC PHÉP VƯỢT XE.**\n\nTheo quy định tại Điều 27 QCVN 41:2024/BGTVT, tuyệt đối cấm vượt xe tại các đoạn đường cong nguy hiểm có bán kính cong nhỏ hoặc tầm nhìn bị che khuất. Người lái xe phải đi đúng phần đường, giữ khoảng cách an toàn và không được lấn làn vượt ẩu.`;
     }
     if (sign.sign_code.startsWith("P.102") || sign.sign_code.startsWith("P.106a")) {
       return `❌ **KHÔNG ĐƯỢC PHÉP.**\n\nĐoạn đường có biển cấm không đủ điều kiện cho phép vượt xe trái quy định.`;
@@ -1520,27 +1520,27 @@ function generateGroundedVLMResponse(query, sign) {
   // 5. Chạy quá tốc độ (Ví dụ: 75 km/h lúc 23:00 có vi phạm không?)
   if (q.includes("75") || q.includes("vi phạm không") || q.includes("có bị xem là vi phạm")) {
     if (sign.sign_code === "P.127a" || sign.sign_code.startsWith("P.127")) {
-      return `⚠️ **CÓ VI PHẠM QUY CHUẨN QCVN 41:2019/BGTVT.**\n\nTrong khung giờ ban đêm từ 22:00 đến 5:00, tốc độ tối đa cho phép chỉ là **70 km/h**. Việc điều khiển phương tiện chạy 75 km/h đã vượt quá tốc độ quy định trên biển báo P.127a.`;
+      return `⚠️ **CÓ VI PHẠM QUY CHUẨN QCVN 41:2024/BGTVT.**\n\nTrong khung giờ ban đêm từ 22:00 đến 5:00, tốc độ tối đa cho phép chỉ là **70 km/h**. Việc điều khiển phương tiện chạy 75 km/h đã vượt quá tốc độ quy định trên biển báo P.127a.`;
     }
   }
 
   // 6. Quyền ưu tiên (xe cấp cứu, cứu hỏa, công an)
   if (q.includes("xe cấp cứu") || q.includes("ưu tiên") || q.includes("cứu hỏa") || q.includes("công an") || q.includes("quân sự")) {
-    return `✅ **CÓ, ĐƯỢC PHÉP ĐI VÀO (Quyền ưu tiên).**\n\nTheo **Điều 22 Luật Giao thông đường bộ** và **Điều 25 QCVN 41:2019/BGTVT**, các xe ưu tiên (xe chữa cháy, quân sự, công an, cứu thương) khi **đang phát tín hiệu còi, cờ, đèn ưu tiên làm nhiệm vụ khẩn cấp** thì không bị hạn chế bởi các biển báo cấm (kể cả biển P.102, P.106a...) và được quyền ưu tiên lưu thông.`;
+    return `✅ **CÓ, ĐƯỢC PHÉP ĐI VÀO (Quyền ưu tiên).**\n\nTheo quy định tại Điều 21 và Điều 26 QCVN 41:2024/BGTVT, các xe ưu tiên (xe chữa cháy, quân sự, công an, cứu thương) khi **đang phát tín hiệu còi, cờ, đèn ưu tiên làm nhiệm vụ khẩn cấp** thì không bị hạn chế bởi các biển báo cấm (kể cả biển P.102, P.106a...) và được quyền ưu tiên lưu thông.`;
   }
 
   // 7. Người đi bộ
   if (q.includes("người đi bộ") || q.includes("đi bộ")) {
-    return `✅ **CÓ, ĐƯỢC PHÉP.**\n\nTheo Phụ lục B, Mục B.2 của QCVN 41:2019/BGTVT, người đi bộ vẫn được phép di chuyển bình thường trên vỉa hè hoặc lề đường.`;
+    return `✅ **CÓ, ĐƯỢC PHÉP.**\n\nTheo Phụ lục B, Mục B.2 của QCVN 41:2024/BGTVT, người đi bộ vẫn được phép di chuyển bình thường trên vỉa hè hoặc lề đường.`;
   }
 
   // 8. Xe ô tô con / xe 4-7 chỗ có bị cấm không?
   if (q.includes("ô tô con") || q.includes("xe con") || q.includes("4 chỗ") || q.includes("7 chỗ") || (q.includes("ô tô") && !q.includes("tải") && !q.includes("khách"))) {
     if (sign.sign_code === "P.103a" || sign.sign_code === "P.103b" || sign.sign_code === "P.103c" || sign.sign_code === "P.105") {
-      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.3 QCVN 41:2019/BGTVT**, biển **${sign.sign_code}: "${sign.sign_name}"** cấm tất cả các loại xe ô tô con từ 4 đến 9 chỗ ngồi đi qua.`;
+      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.3 QCVN 41:2024/BGTVT**, biển **${sign.sign_code}: "${sign.sign_name}"** cấm tất cả các loại xe ô tô con từ 4 đến 9 chỗ ngồi đi qua.`;
     }
     if (sign.sign_code === "P.106a" || sign.sign_code === "P.106b" || sign.sign_code === "P.107" || sign.sign_code === "P.108" || sign.sign_code === "P.109") {
-      return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP LƯU THÔNG BÌNH THƯỜNG).**\n\nBiển **${sign.sign_code}: "${sign.sign_name}"** chỉ cấm xe ô tô tải, xe khách hoặc máy kéo. Xe ô tô con từ 9 chỗ ngồi trở xuống hoàn toàn không bị cấm và được phép đi vào theo QCVN 41:2019/BGTVT.`;
+      return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP LƯU THÔNG BÌNH THƯỜNG).**\n\nBiển **${sign.sign_code}: "${sign.sign_name}"** chỉ cấm xe ô tô tải, xe khách hoặc máy kéo. Xe ô tô con từ 9 chỗ ngồi trở xuống hoàn toàn không bị cấm và được phép đi vào theo QCVN 41:2024/BGTVT.`;
     }
     if (sign.sign_code === "P.104" || sign.sign_code === "P.110a" || sign.sign_code === "P.111a") {
       return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP LƯU THÔNG BÌNH THƯỜNG).**\n\nBiển **${sign.sign_code}: "${sign.sign_name}"** chỉ áp dụng cấm xe máy hoặc xe đạp. Xe ô tô con được phép lưu thông bình thường.`;
@@ -1556,33 +1556,33 @@ function generateGroundedVLMResponse(query, sign) {
   // 9. Xe bán tải (pickup) có được đi vào không?
   if (q.includes("bán tải") || q.includes("pickup")) {
     if (sign.sign_code === "P.106a") {
-      return `⚠️ **TÙY THUỘC VÀO TẢI TRỌNG CỦA XE BÁN TẢI:**\n\n- **ĐƯỢC PHÉP:** Nếu xe bán tải có khối lượng chuyên chở cho phép **dưới 950 kg** (và từ 5 chỗ ngồi trở xuống), theo Khoản 3.24 Điều 3 QCVN 41:2019/BGTVT xe này được quy định là xe con nên **được phép đi vào**.\n- **KHÔNG ĐƯỢC PHÉP:** Nếu khối lượng chuyên chở cho phép từ 950 kg trở lên thì tính là xe tải và bị cấm đi vào theo biển P.106a.`;
+      return `⚠️ **TÙY THUỘC VÀO TẢI TRỌNG CỦA XE BÁN TẢI:**\n\n- **ĐƯỢC PHÉP:** Nếu xe bán tải có khối lượng chuyên chở cho phép **dưới 950 kg** (và từ 5 chỗ ngồi trở xuống), theo Khoản 3.24 Điều 3 QCVN 41:2024/BGTVT xe này được quy định là xe con nên **được phép đi vào**.\n- **KHÔNG ĐƯỢC PHÉP:** Nếu khối lượng chuyên chở cho phép từ 950 kg trở lên thì tính là xe tải và bị cấm đi vào theo biển P.106a.`;
     }
   }
 
   // 10. Máy kéo có được đi vào không?
   if (q.includes("máy kéo") || q.includes("chuyên dùng")) {
     if (sign.sign_code === "P.106a" || sign.sign_code === "P.102") {
-      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO.**\n\nTheo Phụ lục B, Mục B.6a QCVN 41:2019/BGTVT, biển P.106a có hiệu lực cấm đối với cả **máy kéo** và **xe máy chuyên dùng** đi vào đoạn đường đặt biển.`;
+      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO.**\n\nTheo Phụ lục B, Mục B.6a QCVN 41:2024/BGTVT, biển P.106a có hiệu lực cấm đối với cả **máy kéo** và **xe máy chuyên dùng** đi vào đoạn đường đặt biển.`;
     }
   }
 
   // 11. Xe máy / mô tô / xe gắn máy có được đi vào không?
   if (q.includes("xe máy") || q.includes("mô tô") || q.includes("xe gắn máy") || q.includes("hai bánh") || q.includes("2 bánh")) {
     if (sign.sign_code === "P.103a" || sign.sign_code === "P.103b" || sign.sign_code === "P.103c") {
-      return `✅ **CÓ, XE MÁY ĐƯỢC PHÉP ĐI VÀO BÌNH THƯỜNG.**\n\nTheo **Phụ lục B - Mục B.3 QCVN 41:2019/BGTVT**, biển **${sign.sign_code}: "${sign.sign_name}"** chỉ cấm các loại xe cơ giới từ 3 bánh trở lên (ô tô con, ô tô tải, máy kéo, xe 3 bánh có thùng...). Biển **KHÔNG CẤM xe máy 2 bánh và xe gắn máy**.\n\nVì vậy, người điều khiển xe máy hoàn toàn được phép lưu thông bình thường qua đoạn đường này.`;
+      return `✅ **CÓ, XE MÁY ĐƯỢC PHÉP ĐI VÀO BÌNH THƯỜNG.**\n\nTheo **Phụ lục B - Mục B.3 QCVN 41:2024/BGTVT**, biển **${sign.sign_code}: "${sign.sign_name}"** chỉ cấm các loại xe cơ giới từ 3 bánh trở lên (ô tô con, ô tô tải, máy kéo, xe 3 bánh có thùng...). Biển **KHÔNG CẤM xe máy 2 bánh và xe gắn máy**.\n\nVì vậy, người điều khiển xe máy hoàn toàn được phép lưu thông bình thường qua đoạn đường này.`;
     }
     if (sign.sign_code === "P.106a" || sign.sign_code === "P.106b" || sign.sign_code === "P.107" || sign.sign_code === "P.107a" || sign.sign_code === "P.107b" || sign.sign_code === "P.108" || sign.sign_code === "P.109" || sign.sign_code === "P.110a") {
       return `✅ **CÓ, XE MÁY ĐƯỢC PHÉP ĐI VÀO BÌNH THƯỜNG.**\n\nBiển **${sign.sign_code}: "${sign.sign_name}"** chỉ áp dụng cấm đối với các loại ô tô tải / xe khách / xe đạp theo quy chuẩn. Xe máy 2 bánh hoàn toàn không thuộc đối tượng điều chỉnh của biển này và được phép lưu thông hợp pháp.`;
     }
     if (sign.sign_code === "P.104") {
-      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO (BỊ CẤM).**\n\nTheo quy định tại **Phụ lục B - Mục B.4 QCVN 41:2019/BGTVT**, biển **P.104: "Cấm xe máy"** cấm tất cả các loại xe máy đi vào (trừ xe ưu tiên khẩn cấp). Tuy nhiên, biển này **không có giá trị cấm người dắt xe máy**.`;
+      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO (BỊ CẤM).**\n\nTheo quy định tại **Phụ lục B - Mục B.4 QCVN 41:2024/BGTVT**, biển **P.104: "Cấm xe máy"** cấm tất cả các loại xe máy đi vào (trừ xe ưu tiên khẩn cấp). Tuy nhiên, biển này **không có giá trị cấm người dắt xe máy**.`;
     }
     if (sign.sign_code === "P.105") {
-      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO (BỊ CẤM).**\n\nTheo **Phụ lục B - Mục B.5 QCVN 41:2019/BGTVT**, biển **P.105: "Cấm xe ô tô và xe máy"** cấm cả xe ô tô và xe máy lưu thông qua đoạn đường này.`;
+      return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO (BỊ CẤM).**\n\nTheo **Phụ lục B - Mục B.5 QCVN 41:2024/BGTVT**, biển **P.105: "Cấm xe ô tô và xe máy"** cấm cả xe ô tô và xe máy lưu thông qua đoạn đường này.`;
     }
     if (sign.sign_code === "P.111a") {
-      return `⚠️ **PHÂN BIỆT THEO DUNG TÍCH XI LANH:**\n\nTheo **Phụ lục B - Mục B.11 QCVN 41:2019/BGTVT**, biển **P.111a: "Cấm xe gắn máy"** chỉ cấm xe gắn máy (dưới 50cc hoặc động cơ điện tương đương). Biển **KHÔNG CẤM xe mô tô / xe máy có dung tích từ 50cc trở lên**.`;
+      return `⚠️ **PHÂN BIỆT THEO DUNG TÍCH XI LANH:**\n\nTheo **Phụ lục B - Mục B.11 QCVN 41:2024/BGTVT**, biển **P.111a: "Cấm xe gắn máy"** chỉ cấm xe gắn máy (dưới 50cc hoặc động cơ điện tương đương). Biển **KHÔNG CẤM xe mô tô / xe máy có dung tích từ 50cc trở lên**.`;
     }
     if (sign.sign_code === "P.101" || sign.sign_code === "P.102") {
       return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO.**\n\nBiển **${sign.sign_code}: "${sign.sign_name}"** cấm tất cả các loại phương tiện cơ giới và thô sơ đi vào (bao gồm cả xe máy 2 bánh), trừ các xe được quyền ưu tiên theo quy định.`;
@@ -1597,7 +1597,7 @@ function generateGroundedVLMResponse(query, sign) {
       return `❌ **KHÔNG ĐƯỢC PHÉP ĐI VÀO.**\n\nLàn này dành riêng cho ô tô khách. Xe máy đi vào làn đường có cắm biển R.412a sẽ bị xử phạt lỗi 'Đi không đúng phần đường hoặc làn đường quy định' từ 400.000đ - 600.000đ.`;
     }
     if (sign.sign_code === "R.412d") {
-      return `✅ **CÓ, ĐÂY LÀ LÀN ĐƯỜNG DÀNH RIÊNG CHO XE MÁY.**\n\nTheo **QCVN 41:2019/BGTVT**, biển **R.412d** chỉ dẫn làn đường dành riêng cho xe máy và xe gắn máy lưu thông.`;
+      return `✅ **CÓ, ĐÂY LÀ LÀN ĐƯỜNG DÀNH RIÊNG CHO XE MÁY.**\n\nTheo **QCVN 41:2024/BGTVT**, biển **R.412d** chỉ dẫn làn đường dành riêng cho xe máy và xe gắn máy lưu thông.`;
     }
   }
 
@@ -1605,18 +1605,18 @@ function generateGroundedVLMResponse(query, sign) {
   if (q.includes("xe buýt") || q.includes("xe khách") || q.includes("buýt") || q.includes("bus")) {
     if (sign.sign_code === "P.107a") {
       if (q.includes("buýt") || q.includes("bus")) {
-        return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo quy định tại **Phụ lục B - Mục B.7a QCVN 41:2019/BGTVT**, đối với biển **P.107a: "Cấm xe ô tô khách"**, quy chuẩn ghi rõ: *"Biển này không cấm xe buýt"*.\n\nVì vậy, xe buýt hoàn toàn được phép lưu thông qua đoạn đường có cắm biển P.107a.`;
+        return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo quy định tại **Phụ lục B - Mục B.7a QCVN 41:2024/BGTVT**, đối với biển **P.107a: "Cấm xe ô tô khách"**, quy chuẩn ghi rõ: *"Biển này không cấm xe buýt"*.\n\nVì vậy, xe buýt hoàn toàn được phép lưu thông qua đoạn đường có cắm biển P.107a.`;
       }
-      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.7a QCVN 41:2019/BGTVT**, biển **P.107a** cấm tất cả các loại xe ô tô chở khách (từ 10 chỗ ngồi trở lên), trừ xe buýt và các xe ưu tiên.`;
+      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.7a QCVN 41:2024/BGTVT**, biển **P.107a** cấm tất cả các loại xe ô tô chở khách (từ 10 chỗ ngồi trở lên), trừ xe buýt và các xe ưu tiên.`;
     }
     if (sign.sign_code === "P.107") {
       if (q.includes("buýt") || q.includes("bus")) {
-        return `❌ **CÓ BỊ CẤM (TRỪ TRƯỜNG HỢP TUYẾN BUÝT ĐẶC THÙ ĐƯỢC CẤP PHÉP).**\n\n- Theo **QCVN 41:2019/BGTVT (Mục B.7)**, biển **P.107: "Cấm xe ô tô khách và xe ô tô tải"** cấm tất cả các loại xe ô tô chở khách (từ 10 chỗ trở lên). Xe buýt bản chất là một loại xe ô tô khách và biển P.107 **không có điều khoản loại trừ cho xe buýt** như biển P.107a.\n- Do đó, xe buýt thông thường **bị cấm đi vào** (trừ trường hợp tuyến buýt được Sở GTVT phê duyệt luồng tuyến cố định riêng hoặc có biển phụ cho phép).`;
+        return `❌ **CÓ BỊ CẤM (TRỪ TRƯỜNG HỢP TUYẾN BUÝT ĐẶC THÙ ĐƯỢC CẤP PHÉP).**\n\n- Theo **QCVN 41:2024/BGTVT (Mục B.7)**, biển **P.107: "Cấm xe ô tô khách và xe ô tô tải"** cấm tất cả các loại xe ô tô chở khách (từ 10 chỗ trở lên). Xe buýt bản chất là một loại xe ô tô khách và biển P.107 **không có điều khoản loại trừ cho xe buýt** như biển P.107a.\n- Do đó, xe buýt thông thường **bị cấm đi vào** (trừ trường hợp tuyến buýt được Sở GTVT phê duyệt luồng tuyến cố định riêng hoặc có biển phụ cho phép).`;
       }
-      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.7 QCVN 41:2019/BGTVT**, biển **P.107** cấm tất cả các loại xe ô tô chở khách và xe ô tô tải, máy kéo, xe máy chuyên dùng (trừ xe ưu tiên).`;
+      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.7 QCVN 41:2024/BGTVT**, biển **P.107** cấm tất cả các loại xe ô tô chở khách và xe ô tô tải, máy kéo, xe máy chuyên dùng (trừ xe ưu tiên).`;
     }
     if (sign.sign_code === "P.103a" || sign.sign_code === "P.103b" || sign.sign_code === "P.103c") {
-      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo nguyên tắc biển báo cấm (Điều 27 QCVN 41:2019/BGTVT), biển cấm xe ô tô con (P.103a) có giá trị cấm luôn các loại xe ô tô lớn hơn bao gồm cả xe ô tô khách và xe buýt.`;
+      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo nguyên tắc biển báo cấm (Điều 27 QCVN 41:2024/BGTVT), biển cấm xe ô tô con (P.103a) có giá trị cấm luôn các loại xe ô tô lớn hơn bao gồm cả xe ô tô khách và xe buýt.`;
     }
     if (sign.sign_code === "P.106a" || sign.sign_code === "P.106b") {
       return `✅ **KHÔNG BỊ CẤM (ĐƯỢC PHÉP LƯU THÔNG).**\n\nBiển **${sign.sign_code}** chỉ cấm xe ô tô tải, máy kéo. Xe ô tô khách và xe buýt không bị cấm và được phép lưu thông bình thường.`;
@@ -1632,7 +1632,7 @@ function generateGroundedVLMResponse(query, sign) {
       return `Xe đạp và các loại xe thô sơ bắt buộc phải đi ở **Làn trong cùng bên phải (Làn 3)**, tốc độ tối đa cho phép là **50 km/h**.`;
     }
     if (sign.sign_code === "P.110a") {
-      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.10 QCVN 41:2019/BGTVT**, biển **P.110a: "Cấm xe đạp"** cấm xe đạp đi qua đoạn đường này.`;
+      return `❌ **BỊ CẤM (KHÔNG ĐƯỢC PHÉP ĐI VÀO).**\n\nTheo **Phụ lục B - Mục B.10 QCVN 41:2024/BGTVT**, biển **P.110a: "Cấm xe đạp"** cấm xe đạp đi qua đoạn đường này.`;
     }
   }
 
@@ -1646,13 +1646,13 @@ function generateGroundedVLMResponse(query, sign) {
   // 15. Kiểm tra câu hỏi: Cấm xe nào / cấm những loại xe nào?
   if (q.includes("cấm xe nào") || q.includes("cấm những xe nào") || q.includes("cấm phương tiện nào") || q.includes("cấm những loại xe nào")) {
     if (sign.sign_code === "P.107") {
-      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.107 (Phụ lục B - Mục B.7 QCVN 41:2019/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Cấm các loại xe ô tô chở khách (từ 10 chỗ trở lên, xe hợp đồng, du lịch, xe buýt thông thường) và xe ô tô tải, máy kéo, xe máy chuyên dùng.\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe ô tô con (dưới 9 chỗ), xe máy 2 bánh, xe gắn máy, xe đạp và xe ưu tiên khẩn cấp theo luật định.`;
+      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.107 (Phụ lục B - Mục B.7 QCVN 41:2024/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Cấm các loại xe ô tô chở khách (từ 10 chỗ trở lên, xe hợp đồng, du lịch, xe buýt thông thường) và xe ô tô tải, máy kéo, xe máy chuyên dùng.\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe ô tô con (dưới 9 chỗ), xe máy 2 bánh, xe gắn máy, xe đạp và xe ưu tiên khẩn cấp theo luật định.`;
     }
     if (sign.sign_code === "P.103a") {
-      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.103a (Mục B.3 QCVN 41:2019/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Tất cả các loại xe cơ giới từ 3 bánh trở lên (ô tô con, ô tô tải, xe khách, xe 3 bánh có thùng...).\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe máy 2 bánh, xe gắn máy, xe đạp và xe ưu tiên khẩn cấp.`;
+      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.103a (Mục B.3 QCVN 41:2024/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Tất cả các loại xe cơ giới từ 3 bánh trở lên (ô tô con, ô tô tải, xe khách, xe 3 bánh có thùng...).\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe máy 2 bánh, xe gắn máy, xe đạp và xe ưu tiên khẩn cấp.`;
     }
     if (sign.sign_code === "P.106a") {
-      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.106a (Mục B.6a QCVN 41:2019/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Xe ô tô tải, máy kéo và xe máy chuyên dùng.\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe ô tô con, xe bán tải dưới 950 kg, xe ô tô khách, xe máy 2 bánh.`;
+      return `🚫 **CÁC LOẠI XE BỊ CẤM THEO BIỂN P.106a (Mục B.6a QCVN 41:2024/BGTVT):**\n\n- **1. Phương tiện BỊ CẤM:** Xe ô tô tải, máy kéo và xe máy chuyên dùng.\n- **2. Phương tiện KHÔNG BỊ CẤM:** Xe ô tô con, xe bán tải dưới 950 kg, xe ô tô khách, xe máy 2 bánh.`;
     }
   }
 
@@ -1706,30 +1706,30 @@ function generateGroundedVLMResponse(query, sign) {
     } else if (sign.sign_code === "W.201a") {
       specificDetail = "- **Đặc điểm:** Hình tam giác đều viền đỏ nền vàng, có mũi tên gập khúc màu đen ngoặt sang bên trái.\n- **Ý nghĩa:** Báo trước sắp tới một chỗ ngoặt nguy hiểm vòng về phía bên trái có bán kính cong nhỏ hoặc khuất tầm nhìn, lái xe bắt buộc phải giảm tốc độ.";
     } else {
-      specificDetail = `- **Nhóm biển:** ${sign.category}\n- **Đặc điểm:** ${sign.visual_features || "Biển báo hiệu đường bộ theo QCVN 41:2019/BGTVT"}.`;
+      specificDetail = `- **Nhóm biển:** ${sign.category}\n- **Đặc điểm:** ${sign.visual_features || "Biển báo hiệu đường bộ theo QCVN 41:2024/BGTVT"}.`;
     }
 
-    return `Biển báo trong hình là **Biển số ${sign.sign_code}: "${sign.sign_name}"** thuộc nhóm **${sign.category}** theo Quy chuẩn kỹ thuật quốc gia QCVN 41:2019/BGTVT.\n\n${specificDetail}`;
+    return `Biển báo trong hình là **Biển số ${sign.sign_code}: "${sign.sign_name}"** thuộc nhóm **${sign.category}** theo Quy chuẩn kỹ thuật quốc gia QCVN 41:2024/BGTVT.\n\n${specificDetail}`;
   }
 
   // 17. Quy định hiệu lực và phạm vi áp dụng
   if (q.includes("hiệu lực") || q.includes("phạm vi") || q.includes("quy định")) {
-    return `⚖️ **QUY ĐỊNH HIỆU LỰC BIỂN BÁO THEO QCVN 41:2019/BGTVT:**\n\n- **Căn cứ:** Điều 15, Điều 21 và Phụ lục tương ứng của QCVN 41:2019/BGTVT.\n- **Phạm vi hiệu lực:** Biển báo có giá trị trên tất cả các làn đường của một chiều xe chạy kể từ vị trí đặt biển (trừ khi có biển phụ hoặc biển chỉ dẫn làn đường riêng biệt).\n- **Ngoại lệ:** Các xe ưu tiên đang đi làm nhiệm vụ khẩn cấp theo luật định.`;
+    return `⚖️ **QUY ĐỊNH HIỆU LỰC BIỂN BÁO THEO QCVN 41:2024/BGTVT:**\n\n- **Căn cứ:** Điều 15, Điều 21 và Phụ lục tương ứng của QCVN 41:2024/BGTVT.\n- **Phạm vi hiệu lực:** Biển báo có giá trị trên tất cả các làn đường của một chiều xe chạy kể từ vị trí đặt biển (trừ khi có biển phụ hoặc biển chỉ dẫn làn đường riêng biệt).\n- **Ngoại lệ:** Các xe ưu tiên đang đi làm nhiệm vụ khẩn cấp theo luật định.`;
   }
 
   // 18. Câu hỏi chung dạng "Có ... không?" chưa phân loại cụ thể
   if (q.startsWith("có") || q.endsWith("không?") || q.endsWith("không") || q.includes("đúng không") || q.includes("phải không")) {
     if (sign.sign_code.startsWith("W.")) {
-      return `✅ **CÓ, BẮT BUỘC PHẢI CHẤP HÀNH ĐIỀU KIỆN AN TOÀN.**\n\nKhi gặp biển **${sign.sign_code}: ${sign.sign_name}**, người tham gia giao thông bắt buộc phải giảm tốc độ đến mức an toàn, chú ý quan sát và tuân thủ đúng quy định phòng ngừa tai nạn theo QCVN 41:2019/BGTVT.`;
+      return `✅ **CÓ, BẮT BUỘC PHẢI CHẤP HÀNH ĐIỀU KIỆN AN TOÀN.**\n\nKhi gặp biển **${sign.sign_code}: ${sign.sign_name}**, người tham gia giao thông bắt buộc phải giảm tốc độ đến mức an toàn, chú ý quan sát và tuân thủ đúng quy định phòng ngừa tai nạn theo QCVN 41:2024/BGTVT.`;
     }
     if (sign.sign_code.startsWith("P.")) {
-      return `⚠️ **CHẤP HÀNH THEO ĐÚNG ĐỐI TƯỢNG BỊ CẤM:**\n\nĐây là biển cấm (**${sign.sign_code}: ${sign.sign_name}**). Người điều khiển loại phương tiện thuộc phạm vi cấm của biển bắt buộc phải chấp hành, không được phép đi vào. Các phương tiện không thuộc đối tượng cấm (hoặc xe ưu tiên khẩn cấp) vẫn được phép lưu thông hợp pháp theo QCVN 41:2019/BGTVT.`;
+      return `⚠️ **CHẤP HÀNH THEO ĐÚNG ĐỐI TƯỢNG BỊ CẤM:**\n\nĐây là biển cấm (**${sign.sign_code}: ${sign.sign_name}**). Người điều khiển loại phương tiện thuộc phạm vi cấm của biển bắt buộc phải chấp hành, không được phép đi vào. Các phương tiện không thuộc đối tượng cấm (hoặc xe ưu tiên khẩn cấp) vẫn được phép lưu thông hợp pháp theo QCVN 41:2024/BGTVT.`;
     }
-    return `✅ **CÓ, BẮT BUỘC CHẤP HÀNH HIỆU LỆNH BIỂN BÁO** theo quy chuẩn kỹ thuật quốc gia QCVN 41:2019/BGTVT.`;
+    return `✅ **CÓ, BẮT BUỘC CHẤP HÀNH HIỆU LỆNH BIỂN BÁO** theo quy chuẩn kỹ thuật quốc gia QCVN 41:2024/BGTVT.`;
   }
 
   // 19. Fallback trực tiếp - Không lặp lại câu hỏi
-  return `Theo Quy chuẩn kỹ thuật quốc gia QCVN 41:2019/BGTVT đối với **Biển số ${sign.sign_code}: "${sign.sign_name}"** thuộc nhóm **${sign.category}**:\n\n- **Đặc điểm & Tác dụng:** ${sign.visual_features || 'Báo hiệu các quy định an toàn giao thông đường bộ mà người lái xe phải chấp hành'}.\n- **Yêu cầu khi lưu thông:** Người điều khiển phương tiện phải chú ý quan sát biển báo, điều chỉnh tốc độ phù hợp và tuân thủ các quy tắc phần đường, làn đường theo luật định.\n- Bạn có thể nhấn vào các thẻ căn cứ pháp lý bên dưới để xem toàn văn trích lục điều luật.`;
+  return `Theo Quy chuẩn kỹ thuật quốc gia QCVN 41:2024/BGTVT đối với **Biển số ${sign.sign_code}: "${sign.sign_name}"** thuộc nhóm **${sign.category}**:\n\n- **Đặc điểm & Tác dụng:** ${sign.visual_features || 'Báo hiệu các quy định an toàn giao thông đường bộ mà người lái xe phải chấp hành'}.\n- **Yêu cầu khi lưu thông:** Người điều khiển phương tiện phải chú ý quan sát biển báo, điều chỉnh tốc độ phù hợp và tuân thủ các quy tắc phần đường, làn đường theo luật định.\n- Bạn có thể nhấn vào các thẻ căn cứ pháp lý bên dưới để xem toàn văn trích lục điều luật.`;
 }
 
 // 7. Render Chat Messages
@@ -1941,7 +1941,7 @@ async function sendUserMessage(textQuery) {
           if (p && p.article_id) {
             LEGAL_ARTICLES_DB[p.article_id] = {
               title: p.title || p.article_id,
-              source: p.source || "QCVN 41:2019/BGTVT",
+              source: p.source || "QCVN 41:2024/BGTVT",
               full_text: p.full_text || p.summary || "Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ."
             };
           }
@@ -1961,7 +1961,7 @@ async function sendUserMessage(textQuery) {
         promptSuggestions: data.prompt_suggestions || [
           "Biển này có ý nghĩa gì?",
           "Xe nào được phép đi vào?",
-          "Căn cứ pháp lý trong QCVN 41:2019/BGTVT là gì?"
+          "Căn cứ pháp lý trong QCVN 41:2024/BGTVT là gì?"
         ]
       });
 
@@ -1989,7 +1989,7 @@ async function sendUserMessage(textQuery) {
       promptSuggestions: targetSign.prompt_suggestions || [
         "Biển này có ý nghĩa gì?",
         "Xe nào được phép đi vào?",
-        "Căn cứ pháp lý trong QCVN 41:2019/BGTVT là gì?"
+        "Căn cứ pháp lý trong QCVN 41:2024/BGTVT là gì?"
       ]
     });
 
@@ -2006,7 +2006,7 @@ function showTypingIndicator() {
   indicator.innerHTML = `
     <div class="msg-avatar">🚦</div>
     <div class="typing-indicator">
-      <span>Đang phân tích thị giác & đối soát QCVN 41:2019</span>
+      <span>Đang phân tích thị giác & đối soát QCVN 41:2024</span>
       <div class="typing-dots">
         <div class="typing-dot"></div>
         <div class="typing-dot"></div>
@@ -2027,7 +2027,7 @@ function removeTypingIndicator() {
 function openLegalModal(artId) {
   const artData = LEGAL_ARTICLES_DB[artId] || {
     title: artId,
-    source: "QCVN 41:2019/BGTVT",
+    source: "QCVN 41:2024/BGTVT",
     full_text: "Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ."
   };
 
