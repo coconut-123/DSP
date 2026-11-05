@@ -1,0 +1,1406 @@
+{
+  "description": "Đánh giá thực tế Qwen2-VL-2B trên 51 câu hỏi Yes/No (Đúng / Sai) data/pdf_signs (không nhãn rò rỉ)",
+  "configs": [
+    {
+      "name": "Qwen2-VL-2B (Zero-Shot)",
+      "accuracy": 0.6863,
+      "correct": 35,
+      "total": 51,
+      "predictions": [
+        {
+          "id": "vlsp_test_yn_0001",
+          "image": "data/pdf_signs/P.102/P.102_01.png",
+          "sign_code": "P.102",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0002",
+          "image": "data/pdf_signs/P.103a/P.103a_01.png",
+          "sign_code": "P.103a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0003",
+          "image": "data/pdf_signs/P.104/P.104_01.png",
+          "sign_code": "P.104",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0004",
+          "image": "data/pdf_signs/P.106a/P.106a_01.png",
+          "sign_code": "P.106a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0005",
+          "image": "data/pdf_signs/P.107/P.107_01.png",
+          "sign_code": "P.107",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0006",
+          "image": "data/pdf_signs/P.108a/P.108a_01.png",
+          "sign_code": "P.108a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0007",
+          "image": "data/pdf_signs/P.111a/P.111a_01.png",
+          "sign_code": "P.111a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0008",
+          "image": "data/pdf_signs/P.117/P.117_01.png",
+          "sign_code": "P.117",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0009",
+          "image": "data/pdf_signs/P.123a/P.123a_01.png",
+          "sign_code": "P.123a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0010",
+          "image": "data/pdf_signs/P.123b/P.123b_01.png",
+          "sign_code": "P.123b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0011",
+          "image": "data/pdf_signs/P.124a/P.124a_01.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0012",
+          "image": "data/pdf_signs/P.124a/P.124a_02.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0013",
+          "image": "data/pdf_signs/P.124b/P.124b_01.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0014",
+          "image": "data/pdf_signs/P.124b/P.124b_02.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0015",
+          "image": "data/pdf_signs/P.124c/P.124c_01.png",
+          "sign_code": "P.124c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0016",
+          "image": "data/pdf_signs/P.124d/P.124d_01.png",
+          "sign_code": "P.124d",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0017",
+          "image": "data/pdf_signs/P.127/P.127_01.png",
+          "sign_code": "P.127",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0018",
+          "image": "data/pdf_signs/P.129/P.129_01.png",
+          "sign_code": "P.129",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0019",
+          "image": "data/pdf_signs/P.130/P.130_01.png",
+          "sign_code": "P.130",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0020",
+          "image": "data/pdf_signs/P.131a/P.131a_01.png",
+          "sign_code": "P.131a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0021",
+          "image": "data/pdf_signs/P.137/P.137_01.png",
+          "sign_code": "P.137",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0022",
+          "image": "data/pdf_signs/P.139/P.139_01.png",
+          "sign_code": "P.139",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0023",
+          "image": "data/pdf_signs/W.201a/W.201a_01.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0024",
+          "image": "data/pdf_signs/W.201b/W.201b_01.png",
+          "sign_code": "W.201b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0025",
+          "image": "data/pdf_signs/W.201a/W.201a_02.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0026",
+          "image": "data/pdf_signs/W.201a/W.201a_03.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0027",
+          "image": "data/pdf_signs/W.202b/W.202b_01.png",
+          "sign_code": "W.202b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0028",
+          "image": "data/pdf_signs/W.203b/W.203b_01.png",
+          "sign_code": "W.203b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0029",
+          "image": "data/pdf_signs/W.203c/W.203c_01.png",
+          "sign_code": "W.203c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0030",
+          "image": "data/pdf_signs/W.205a/W.205a_01.png",
+          "sign_code": "W.205a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0031",
+          "image": "data/pdf_signs/W.205b/W.205b_01.png",
+          "sign_code": "W.205b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0032",
+          "image": "data/pdf_signs/W.205c/W.205c_01.png",
+          "sign_code": "W.205c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0033",
+          "image": "data/pdf_signs/W.207a/W.207a_01.png",
+          "sign_code": "W.207a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0034",
+          "image": "data/pdf_signs/W.210/W.210_01.png",
+          "sign_code": "W.210",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0035",
+          "image": "data/pdf_signs/W.221b/W.221b_01.png",
+          "sign_code": "W.221b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0036",
+          "image": "data/pdf_signs/W.224/W.224_01.png",
+          "sign_code": "W.224",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0037",
+          "image": "data/pdf_signs/W.225/W.225_01.png",
+          "sign_code": "W.225",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0038",
+          "image": "data/pdf_signs/W.233/W.233_01.png",
+          "sign_code": "W.233",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0039",
+          "image": "data/pdf_signs/W.239b/W.239b_01.png",
+          "sign_code": "W.239b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0040",
+          "image": "data/pdf_signs/W.245a/W.245a_01.png",
+          "sign_code": "W.245a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0041",
+          "image": "data/pdf_signs/W.246a/W.246a_01.png",
+          "sign_code": "W.246a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0042",
+          "image": "data/pdf_signs/W.246c/W.246c_01.png",
+          "sign_code": "W.246c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0043",
+          "image": "data/pdf_signs/R.301e/R.301e_01.png",
+          "sign_code": "R.301e",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0044",
+          "image": "data/pdf_signs/R.302a/R.302a_01.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0045",
+          "image": "data/pdf_signs/R.302a/R.302a_02.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0046",
+          "image": "data/pdf_signs/R.303/R.303_01.png",
+          "sign_code": "R.303",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0047",
+          "image": "data/pdf_signs/R.415a/R.415a_01.png",
+          "sign_code": "R.415a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0048",
+          "image": "data/pdf_signs/I.407a/I.407a_01.png",
+          "sign_code": "I.407a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0049",
+          "image": "data/pdf_signs/I.409/I.409_01.png",
+          "sign_code": "I.409",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0050",
+          "image": "data/pdf_signs/I.434a/I.434a_01.png",
+          "sign_code": "I.434a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0051",
+          "image": "data/pdf_signs/S.505a/S.505a_01.png",
+          "sign_code": "S.505a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "name": "Qwen2-VL-2B + Text-Hybrid Legal IR",
+      "accuracy": 0.4902,
+      "correct": 25,
+      "total": 51,
+      "predictions": [
+        {
+          "id": "vlsp_test_yn_0001",
+          "image": "data/pdf_signs/P.102/P.102_01.png",
+          "sign_code": "P.102",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0002",
+          "image": "data/pdf_signs/P.103a/P.103a_01.png",
+          "sign_code": "P.103a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0003",
+          "image": "data/pdf_signs/P.104/P.104_01.png",
+          "sign_code": "P.104",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0004",
+          "image": "data/pdf_signs/P.106a/P.106a_01.png",
+          "sign_code": "P.106a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0005",
+          "image": "data/pdf_signs/P.107/P.107_01.png",
+          "sign_code": "P.107",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0006",
+          "image": "data/pdf_signs/P.108a/P.108a_01.png",
+          "sign_code": "P.108a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0007",
+          "image": "data/pdf_signs/P.111a/P.111a_01.png",
+          "sign_code": "P.111a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0008",
+          "image": "data/pdf_signs/P.117/P.117_01.png",
+          "sign_code": "P.117",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0009",
+          "image": "data/pdf_signs/P.123a/P.123a_01.png",
+          "sign_code": "P.123a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0010",
+          "image": "data/pdf_signs/P.123b/P.123b_01.png",
+          "sign_code": "P.123b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0011",
+          "image": "data/pdf_signs/P.124a/P.124a_01.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0012",
+          "image": "data/pdf_signs/P.124a/P.124a_02.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0013",
+          "image": "data/pdf_signs/P.124b/P.124b_01.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0014",
+          "image": "data/pdf_signs/P.124b/P.124b_02.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0015",
+          "image": "data/pdf_signs/P.124c/P.124c_01.png",
+          "sign_code": "P.124c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0016",
+          "image": "data/pdf_signs/P.124d/P.124d_01.png",
+          "sign_code": "P.124d",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0017",
+          "image": "data/pdf_signs/P.127/P.127_01.png",
+          "sign_code": "P.127",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0018",
+          "image": "data/pdf_signs/P.129/P.129_01.png",
+          "sign_code": "P.129",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0019",
+          "image": "data/pdf_signs/P.130/P.130_01.png",
+          "sign_code": "P.130",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0020",
+          "image": "data/pdf_signs/P.131a/P.131a_01.png",
+          "sign_code": "P.131a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0021",
+          "image": "data/pdf_signs/P.137/P.137_01.png",
+          "sign_code": "P.137",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0022",
+          "image": "data/pdf_signs/P.139/P.139_01.png",
+          "sign_code": "P.139",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0023",
+          "image": "data/pdf_signs/W.201a/W.201a_01.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0024",
+          "image": "data/pdf_signs/W.201b/W.201b_01.png",
+          "sign_code": "W.201b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0025",
+          "image": "data/pdf_signs/W.201a/W.201a_02.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0026",
+          "image": "data/pdf_signs/W.201a/W.201a_03.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0027",
+          "image": "data/pdf_signs/W.202b/W.202b_01.png",
+          "sign_code": "W.202b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0028",
+          "image": "data/pdf_signs/W.203b/W.203b_01.png",
+          "sign_code": "W.203b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0029",
+          "image": "data/pdf_signs/W.203c/W.203c_01.png",
+          "sign_code": "W.203c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0030",
+          "image": "data/pdf_signs/W.205a/W.205a_01.png",
+          "sign_code": "W.205a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0031",
+          "image": "data/pdf_signs/W.205b/W.205b_01.png",
+          "sign_code": "W.205b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0032",
+          "image": "data/pdf_signs/W.205c/W.205c_01.png",
+          "sign_code": "W.205c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0033",
+          "image": "data/pdf_signs/W.207a/W.207a_01.png",
+          "sign_code": "W.207a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0034",
+          "image": "data/pdf_signs/W.210/W.210_01.png",
+          "sign_code": "W.210",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0035",
+          "image": "data/pdf_signs/W.221b/W.221b_01.png",
+          "sign_code": "W.221b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0036",
+          "image": "data/pdf_signs/W.224/W.224_01.png",
+          "sign_code": "W.224",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0037",
+          "image": "data/pdf_signs/W.225/W.225_01.png",
+          "sign_code": "W.225",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0038",
+          "image": "data/pdf_signs/W.233/W.233_01.png",
+          "sign_code": "W.233",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0039",
+          "image": "data/pdf_signs/W.239b/W.239b_01.png",
+          "sign_code": "W.239b",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0040",
+          "image": "data/pdf_signs/W.245a/W.245a_01.png",
+          "sign_code": "W.245a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0041",
+          "image": "data/pdf_signs/W.246a/W.246a_01.png",
+          "sign_code": "W.246a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0042",
+          "image": "data/pdf_signs/W.246c/W.246c_01.png",
+          "sign_code": "W.246c",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0043",
+          "image": "data/pdf_signs/R.301e/R.301e_01.png",
+          "sign_code": "R.301e",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0044",
+          "image": "data/pdf_signs/R.302a/R.302a_01.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0045",
+          "image": "data/pdf_signs/R.302a/R.302a_02.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0046",
+          "image": "data/pdf_signs/R.303/R.303_01.png",
+          "sign_code": "R.303",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0047",
+          "image": "data/pdf_signs/R.415a/R.415a_01.png",
+          "sign_code": "R.415a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0048",
+          "image": "data/pdf_signs/I.407a/I.407a_01.png",
+          "sign_code": "I.407a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0049",
+          "image": "data/pdf_signs/I.409/I.409_01.png",
+          "sign_code": "I.409",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0050",
+          "image": "data/pdf_signs/I.434a/I.434a_01.png",
+          "sign_code": "I.434a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0051",
+          "image": "data/pdf_signs/S.505a/S.505a_01.png",
+          "sign_code": "S.505a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        }
+      ]
+    },
+    {
+      "name": "Qwen2-VL-2B + PEFT LoRA + Legal IR",
+      "accuracy": 0.5882,
+      "correct": 30,
+      "total": 51,
+      "predictions": [
+        {
+          "id": "vlsp_test_yn_0001",
+          "image": "data/pdf_signs/P.102/P.102_01.png",
+          "sign_code": "P.102",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0002",
+          "image": "data/pdf_signs/P.103a/P.103a_01.png",
+          "sign_code": "P.103a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0003",
+          "image": "data/pdf_signs/P.104/P.104_01.png",
+          "sign_code": "P.104",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0004",
+          "image": "data/pdf_signs/P.106a/P.106a_01.png",
+          "sign_code": "P.106a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0005",
+          "image": "data/pdf_signs/P.107/P.107_01.png",
+          "sign_code": "P.107",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0006",
+          "image": "data/pdf_signs/P.108a/P.108a_01.png",
+          "sign_code": "P.108a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0007",
+          "image": "data/pdf_signs/P.111a/P.111a_01.png",
+          "sign_code": "P.111a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0008",
+          "image": "data/pdf_signs/P.117/P.117_01.png",
+          "sign_code": "P.117",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0009",
+          "image": "data/pdf_signs/P.123a/P.123a_01.png",
+          "sign_code": "P.123a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0010",
+          "image": "data/pdf_signs/P.123b/P.123b_01.png",
+          "sign_code": "P.123b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0011",
+          "image": "data/pdf_signs/P.124a/P.124a_01.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0012",
+          "image": "data/pdf_signs/P.124a/P.124a_02.png",
+          "sign_code": "P.124a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0013",
+          "image": "data/pdf_signs/P.124b/P.124b_01.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0014",
+          "image": "data/pdf_signs/P.124b/P.124b_02.png",
+          "sign_code": "P.124b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0015",
+          "image": "data/pdf_signs/P.124c/P.124c_01.png",
+          "sign_code": "P.124c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0016",
+          "image": "data/pdf_signs/P.124d/P.124d_01.png",
+          "sign_code": "P.124d",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0017",
+          "image": "data/pdf_signs/P.127/P.127_01.png",
+          "sign_code": "P.127",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0018",
+          "image": "data/pdf_signs/P.129/P.129_01.png",
+          "sign_code": "P.129",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0019",
+          "image": "data/pdf_signs/P.130/P.130_01.png",
+          "sign_code": "P.130",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0020",
+          "image": "data/pdf_signs/P.131a/P.131a_01.png",
+          "sign_code": "P.131a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0021",
+          "image": "data/pdf_signs/P.137/P.137_01.png",
+          "sign_code": "P.137",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0022",
+          "image": "data/pdf_signs/P.139/P.139_01.png",
+          "sign_code": "P.139",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0023",
+          "image": "data/pdf_signs/W.201a/W.201a_01.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0024",
+          "image": "data/pdf_signs/W.201b/W.201b_01.png",
+          "sign_code": "W.201b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0025",
+          "image": "data/pdf_signs/W.201a/W.201a_02.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0026",
+          "image": "data/pdf_signs/W.201a/W.201a_03.png",
+          "sign_code": "W.201a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0027",
+          "image": "data/pdf_signs/W.202b/W.202b_01.png",
+          "sign_code": "W.202b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0028",
+          "image": "data/pdf_signs/W.203b/W.203b_01.png",
+          "sign_code": "W.203b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0029",
+          "image": "data/pdf_signs/W.203c/W.203c_01.png",
+          "sign_code": "W.203c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0030",
+          "image": "data/pdf_signs/W.205a/W.205a_01.png",
+          "sign_code": "W.205a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0031",
+          "image": "data/pdf_signs/W.205b/W.205b_01.png",
+          "sign_code": "W.205b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0032",
+          "image": "data/pdf_signs/W.205c/W.205c_01.png",
+          "sign_code": "W.205c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0033",
+          "image": "data/pdf_signs/W.207a/W.207a_01.png",
+          "sign_code": "W.207a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0034",
+          "image": "data/pdf_signs/W.210/W.210_01.png",
+          "sign_code": "W.210",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0035",
+          "image": "data/pdf_signs/W.221b/W.221b_01.png",
+          "sign_code": "W.221b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0036",
+          "image": "data/pdf_signs/W.224/W.224_01.png",
+          "sign_code": "W.224",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0037",
+          "image": "data/pdf_signs/W.225/W.225_01.png",
+          "sign_code": "W.225",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0038",
+          "image": "data/pdf_signs/W.233/W.233_01.png",
+          "sign_code": "W.233",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0039",
+          "image": "data/pdf_signs/W.239b/W.239b_01.png",
+          "sign_code": "W.239b",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0040",
+          "image": "data/pdf_signs/W.245a/W.245a_01.png",
+          "sign_code": "W.245a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0041",
+          "image": "data/pdf_signs/W.246a/W.246a_01.png",
+          "sign_code": "W.246a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0042",
+          "image": "data/pdf_signs/W.246c/W.246c_01.png",
+          "sign_code": "W.246c",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0043",
+          "image": "data/pdf_signs/R.301e/R.301e_01.png",
+          "sign_code": "R.301e",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0044",
+          "image": "data/pdf_signs/R.302a/R.302a_01.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Sai",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0045",
+          "image": "data/pdf_signs/R.302a/R.302a_02.png",
+          "sign_code": "R.302a",
+          "generated_raw": "Đúng",
+          "predicted_answer": "Đúng",
+          "gold_answer": "Đúng",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0046",
+          "image": "data/pdf_signs/R.303/R.303_01.png",
+          "sign_code": "R.303",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0047",
+          "image": "data/pdf_signs/R.415a/R.415a_01.png",
+          "sign_code": "R.415a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0048",
+          "image": "data/pdf_signs/I.407a/I.407a_01.png",
+          "sign_code": "I.407a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0049",
+          "image": "data/pdf_signs/I.409/I.409_01.png",
+          "sign_code": "I.409",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        },
+        {
+          "id": "vlsp_test_yn_0050",
+          "image": "data/pdf_signs/I.434a/I.434a_01.png",
+          "sign_code": "I.434a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Sai",
+          "is_correct": true
+        },
+        {
+          "id": "vlsp_test_yn_0051",
+          "image": "data/pdf_signs/S.505a/S.505a_01.png",
+          "sign_code": "S.505a",
+          "generated_raw": "Sai",
+          "predicted_answer": "Sai",
+          "gold_answer": "Đúng",
+          "is_correct": false
+        }
+      ]
+    }
+  ]
+}

@@ -14,8 +14,7 @@ mô hình ngôn ngữ - thị giác mã nguồn mở (Qwen2-VL-2B-Instruct) theo
 3. Mẫu câu lệnh (Prompt Templates) chuẩn theo Mục 4.1 của bài báo:
    - Câu hỏi Multiple-choice (4 lựa chọn A, B, C, D):
      `<image>\n<question>\nA. ...\nB. ...\nC. ...\nD. ...\n\nTrả lời bằng một trong bốn đáp án: A, B, C hoặc D. Không giải thích thêm`
-   - Câu hỏi Yes/No (2 lựa chọn Đúng hoặc Sai):
-     `<image>\n<question>\n\nTrả lời bằng một trong hai đáp án: Đúng hoặc Sai. Không giải thích thêm.`
+   (Dạng câu hỏi Yes/No Đúng/Sai đã được loại bỏ khỏi bộ dữ liệu).
 4. Tích hợp ngữ cảnh điều luật truy xuất từ Subtask 1 (Multimodal Legal Retrieval) vào quá trình huấn luyện và suy luận Subtask 2.
 """
 

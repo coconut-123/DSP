@@ -375,8 +375,9 @@ def load_knowledge_bases():
                 except Exception:
                     pass
 
-        # Nạp cache đặc trưng ViT-B/16 (1.807 ảnh thực tế data/real_crops + 51 ảnh PDF) và tính Class Prototypes
-        cache_pt = DATA_DIR / "backbone_features_cache.pt"
+        # Nạp cache đặc trưng sạch ViT-B/16 (1.807 ảnh thực tế data/real_crops + 51 ảnh PDF) và tính Class Prototypes
+        clean_cache_pt = DATA_DIR / "backbone_features_clean.pt"
+        cache_pt = clean_cache_pt if clean_cache_pt.exists() else (DATA_DIR / "backbone_features_cache.pt")
         scenes_path = DATA_DIR / "scene_annotations.json"
         if cache_pt.exists() and scenes_path.exists():
             try:
@@ -610,34 +611,6 @@ def build_grounded_legal_answer(
             f"{header}"
             f"- **Căn cứ pháp lý (Subtask 1):** {art_title}.\n"
             f"- **Quy định chi tiết:** {art_summary}"
-        )
-
-    # 0B. Hỗ trợ định dạng câu hỏi Đúng/Sai (Yes/No: "Đúng" hoặc "Sai") theo Mục 4.1 bài báo VLSP 2025 MLQA-TSR
-    if "đúng hay sai" in q or "trả lời bằng một trong hai đáp án: đúng hoặc sai" in q:
-        is_true = True
-        if ("p.123a" in detected_code.lower() or "cấm rẽ trái" in sign_name.lower()) and "cấm cả rẽ trái lẫn quay đầu" in q:
-            is_true = False
-        elif ("p.124a" in detected_code.lower() or "p.124b" in detected_code.lower()) and "bị cấm rẽ trái" in q:
-            is_true = False
-        elif "p.102" in detected_code.lower() and "được phép đi vào bình thường" in q:
-            is_true = False
-        elif "p.130" in detected_code.lower() and "được phép bật đèn cảnh báo để dừng xe" in q:
-            is_true = False
-        elif "p.131" in detected_code.lower() and "cấm tuyệt đối cả việc dừng xe tạm thời" in q:
-            is_true = False
-        elif "tốc độ tối thiểu" in q and detected_code.startswith("P.127"):
-            is_true = False
-        elif "không bắt buộc phải chấp hành" in q and detected_code.startswith("R."):
-            is_true = False
-        elif "cấm mọi phương tiện" in q and (detected_code.startswith("W.") or detected_code.startswith("I.")):
-            is_true = False
-        verdict = "Đúng" if is_true else "Sai"
-        icon = "✅" if is_true else "❌"
-        return (
-            f"{icon} **ĐÁP ÁN SUBTASK 2 (VLSP 2025 MLQA-TSR): `{verdict}`**\n\n"
-            f"{header}"
-            f"- **Căn cứ pháp lý (Subtask 1):** {art_title}.\n"
-            f"- **Giải thích theo quy chuẩn:** {art_summary}"
         )
 
     # 1. Câu hỏi về XE MÁY / MÔ TÔ / XE GẮN MÁY

@@ -6997,16 +6997,17 @@
       ],
       "boxes": [
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.471875,
             0.408333,
             0.070833,
             0.116667
           ],
-          "crop_path": "data/real_crops/10_P.130/0197_b0_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0197_b0_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         }
       ]
     },
@@ -7197,16 +7198,17 @@
       ],
       "boxes": [
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.317188,
             0.198148,
             0.132292,
             0.259259
           ],
-          "crop_path": "data/real_crops/10_P.130/0205_b0_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0205_b0_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         }
       ]
     },
@@ -14165,16 +14167,17 @@
       ],
       "boxes": [
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.349479,
             0.357407,
             0.026042,
             0.044444
           ],
-          "crop_path": "data/real_crops/10_P.130/0414_b0_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0414_b0_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 34,
@@ -14204,16 +14207,17 @@
       ],
       "boxes": [
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.35625,
             0.35463,
             0.029167,
             0.046296
           ],
-          "crop_path": "data/real_crops/10_P.130/0415_b0_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0415_b0_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 34,
@@ -14243,16 +14247,17 @@
       ],
       "boxes": [
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.364583,
             0.340741,
             0.027083,
             0.048148
           ],
-          "crop_path": "data/real_crops/10_P.130/0416_b0_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0416_b0_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 34,
@@ -21104,16 +21109,17 @@
           "crop_path": "data/real_crops/18_P.107/0563_b2_P.107.jpg"
         },
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.395833,
             0.437963,
             0.016667,
             0.027778
           ],
-          "crop_path": "data/real_crops/10_P.130/0563_b3_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0563_b3_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 18,
@@ -21194,16 +21200,17 @@
           "crop_path": "data/real_crops/18_P.107/0564_b2_P.107.jpg"
         },
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.390625,
             0.427778,
             0.016667,
             0.02963
           ],
-          "crop_path": "data/real_crops/10_P.130/0564_b3_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0564_b3_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 18,
@@ -21284,16 +21291,17 @@
           "crop_path": "data/real_crops/18_P.107/0565_b2_P.107.jpg"
         },
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.393229,
             0.424074,
             0.017708,
             0.02963
           ],
-          "crop_path": "data/real_crops/10_P.130/0565_b3_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0565_b3_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         },
         {
           "class_id": 18,
@@ -21308,16 +21316,17 @@
           "crop_path": "data/real_crops/18_P.107/0565_b4_P.107.jpg"
         },
         {
-          "class_id": 10,
-          "dataset_code": "P.130",
-          "canonical_code": "P.130",
+          "class_id": 46,
+          "dataset_code": "P.131a",
+          "canonical_code": "P.131a",
           "bbox_yolo": [
             0.5,
             0.42963,
             0.01875,
             0.02963
           ],
-          "crop_path": "data/real_crops/10_P.130/0565_b5_P.130.jpg"
+          "crop_path": "data/real_crops/46_P.131a/0565_b5_P.130.jpg",
+          "canonical_name": "Cấm đỗ xe"
         }
       ]
     },

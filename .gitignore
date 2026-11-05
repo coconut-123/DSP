@@ -13,3 +13,7 @@ traffic_vlm_peft_adapter/checkpoint-*/
 traffic_vlm_peft_adapter/*.safetensors
 *.pt
 *.pth
+
+# Local folder junctions
+data/real_crops/23_P.111a/
+data/real_crops/34_P.108a/

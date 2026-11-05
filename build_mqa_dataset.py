@@ -15,10 +15,13 @@ Question Answering on Traffic Sign Regulation" (Luu et al., VLSP 2025 - Mục 2,
    - Subtask 1 (Multimodal Legal Retrieval): Truy xuất danh sách các điều luật liên quan R = {d_i}
      từ cơ sở dữ liệu luật D (mỗi câu hỏi có từ 1 đến 3 điều luật liên quan, trung bình ~2.0 điều luật
      như Hình 1, Bảng 2 & Hình 3 của bài báo), đánh giá bằng Precision, Recall và F2-score (Công thức 1, 2, 3).
-   - Subtask 2 (Multimodal Legal Question Answering): Gồm 2 dạng câu hỏi chuẩn (Mục 3.1 & 4.1):
-     + Câu hỏi Trắc nghiệm 4 lựa chọn (Multiple-Choice: A, B, C, D).
-     + Câu hỏi Đúng/Sai (Yes/No: "Đúng" hoặc "Sai").
-     Đánh giá bằng Accuracy (Công thức 4).
+   - Subtask 2 (Multimodal Legal Question Answering): CHỈ dùng câu hỏi Đúng/Sai
+     (Yes/No: "Đúng" hoặc "Sai"). Dạng câu hỏi Trắc nghiệm 4 lựa chọn (Multiple-Choice A, B, C, D)
+     đã được loại bỏ hoàn toàn khỏi bộ dữ liệu. Đánh giá bằng Accuracy (Công thức 4).
+
+LƯU Ý TRUNG THỰC: Câu hỏi và nhãn `relevant_articles` được SINH TỰ ĐỘNG từ bảng ánh xạ
+mã biển -> điều khoản (HybridLegalRetriever.get_relevant_articles_for_sign). Đây không phải nhãn do người gán,
+nên kết quả Subtask 1 khi retriever dùng cùng bảng ánh xạ này chỉ phản ánh độ chính xác nhận diện mã biển.
 """
 
 import os
@@ -308,7 +311,7 @@ def build_benchmark():
     compat_labels = []
 
     # 1. TẬP ĐÁNH GIÁ / KIỂM THỬ (TEST SET): 51 ảnh chuẩn từ PDF QCVN 41 (data/pdf_signs)
-    # Mỗi ảnh trong data/pdf_signs sinh câu hỏi Multiple-Choice và Yes/No theo đúng chuẩn Subtask 1 & Subtask 2 VLSP 2025
+    # Mỗi ảnh trong data/pdf_signs sinh ĐÚNG 1 câu hỏi Yes/No ("Đúng" hoặc "Sai")
     test_q_idx = 0
     for idx, item in enumerate(pdf_catalog):
         code = item["sign_code"]
@@ -322,21 +325,13 @@ def build_benchmark():
 
         qa_pack = build_vlsp_questions_for_sign(code, code, name, cat, art_title, summary, idx)
 
-        messages = [
-            {"role": "user", "content": qa_pack["mc_prompt"]},
-            {"role": "assistant", "content": qa_pack["mc_answer"]},
-            {"role": "user", "content": qa_pack["yn_question"]},
-            {"role": "assistant", "content": f"**{qa_pack['yn_answer']}.**\n\n{qa_pack['full_explanation']}"},
-        ]
-
-        # Tạo mẫu Multiple-Choice cho Test Set
+        yn_tok_len = len(segment_vietnamese_tokens(qa_pack["yn_question"]))
         test_q_idx += 1
-        mc_tok_len = len(segment_vietnamese_tokens(qa_pack["mc_question"]))
         mqa_entries.append({
-            "id": f"vlsp_test_mc_{idx+1:04d}",
+            "id": f"vlsp_test_yn_{test_q_idx:04d}",
             "source_type": "pdf_canonical",
-            "task_type": "subtask2_multiple_choice",
-            "question_type": "multiple_choice",
+            "task_type": "subtask2_yes_no",
+            "question_type": "yes_no",
             "image": item["image"],
             "compat_image": item["compat_image"],
             "sign_code": code,
@@ -344,45 +339,19 @@ def build_benchmark():
             "sign_name": name,
             "category": cat,
             "relevant_articles": rel_arts,
-            "question": qa_pack["mc_question"],
-            "choices": qa_pack["mc_choices"],
-            "correct_answer": qa_pack["mc_answer"],
-            "vlsp_prompt": qa_pack["mc_prompt"],
-            "question_token_length": mc_tok_len,
+            "question": qa_pack["yn_question"],
+            "choices": {"Đúng": "Đúng", "Sai": "Sai"},
+            "correct_answer": qa_pack["yn_answer"],
+            "vlsp_prompt": qa_pack["yn_prompt"],
+            "question_token_length": yn_tok_len,
             "grouped_split": "test",
             "random_split": "test",
             "group_id": -1,
-            "messages": messages,
+            "messages": [
+                {"role": "user", "content": qa_pack["yn_prompt"]},
+                {"role": "assistant", "content": f"**{qa_pack['yn_answer']}.**\n\n{qa_pack['full_explanation']}"},
+            ],
         })
-
-        # Tạo mẫu Yes/No ("Đúng" / "Sai") cho Test Set (tỷ lệ ~2:1 như Public Test hoặc 1:1 như Private Test Bảng 2)
-        if idx % 2 == 0:
-            yn_tok_len = len(segment_vietnamese_tokens(qa_pack["yn_question"]))
-            mqa_entries.append({
-                "id": f"vlsp_test_yn_{idx+1:04d}",
-                "source_type": "pdf_canonical",
-                "task_type": "subtask2_yes_no",
-                "question_type": "yes_no",
-                "image": item["image"],
-                "compat_image": item["compat_image"],
-                "sign_code": code,
-                "dataset_code": code,
-                "sign_name": name,
-                "category": cat,
-                "relevant_articles": rel_arts,
-                "question": qa_pack["yn_question"],
-                "choices": {"Đúng": "Đúng", "Sai": "Sai"},
-                "correct_answer": qa_pack["yn_answer"],
-                "vlsp_prompt": qa_pack["yn_prompt"],
-                "question_token_length": yn_tok_len,
-                "grouped_split": "test",
-                "random_split": "test",
-                "group_id": -1,
-                "messages": [
-                    {"role": "user", "content": qa_pack["yn_prompt"]},
-                    {"role": "assistant", "content": qa_pack["yn_answer"]},
-                ],
-            })
 
         compat_labels.append({
             "id": f"conv_{idx+1:03d}",
@@ -390,11 +359,14 @@ def build_benchmark():
             "sign_code": code,
             "sign_name": name,
             "relevant_articles": rel_arts,
-            "messages": messages,
+            "messages": [
+                {"role": "user", "content": qa_pack["yn_prompt"]},
+                {"role": "assistant", "content": f"**{qa_pack['yn_answer']}.**\n\n{qa_pack['full_explanation']}"},
+            ],
         })
 
     # 2. TẬP HUẤN LUYỆN (TRAIN SET): 1.807 ảnh cắt biển báo thực tế (data/real_crops)
-    # Tỷ lệ Multiple-Choice / Yes-No = 2 / 1 (6/3) theo đúng Bảng 2 bài báo VLSP 2025 MLQA-TSR
+    # Mỗi ảnh sinh ĐÚNG 1 câu hỏi Yes/No ("Đúng" hoặc "Sai")
     real_crop_qa_count = 0
     for sc in scene_data:
         img_id = sc["image_id"]
@@ -418,20 +390,13 @@ def build_benchmark():
                     can_code, ds_code, name_vi, cat, art_title, summary, real_crop_qa_count
                 )
 
-                # Tỷ lệ 2 câu Multiple-Choice : 1 câu Yes/No (đúng tỷ lệ 6/3 trong Bảng 2 bài báo)
-                is_mc = (real_crop_qa_count % 3 != 0)
-                q_type = "multiple_choice" if is_mc else "yes_no"
-                q_text = qa_pack["mc_question"] if is_mc else qa_pack["yn_question"]
-                q_prompt = qa_pack["mc_prompt"] if is_mc else qa_pack["yn_prompt"]
-                q_ans = qa_pack["mc_answer"] if is_mc else qa_pack["yn_answer"]
-                q_choices = qa_pack["mc_choices"] if is_mc else {"Đúng": "Đúng", "Sai": "Sai"}
-                tok_len = len(segment_vietnamese_tokens(q_text))
+                tok_len = len(segment_vietnamese_tokens(qa_pack["yn_question"]))
 
                 mqa_entries.append({
                     "id": f"vlsp_train_realcrop_{real_crop_qa_count:04d}",
                     "source_type": "real_street_crop",
-                    "task_type": f"subtask2_{q_type}",
-                    "question_type": q_type,
+                    "task_type": "subtask2_yes_no",
+                    "question_type": "yes_no",
                     "scene_id": img_id,
                     "image": b["crop_path"],
                     "class_id": cid,
@@ -440,10 +405,10 @@ def build_benchmark():
                     "sign_name": name_vi,
                     "category": cat,
                     "relevant_articles": rel_arts,
-                    "question": q_text,
-                    "choices": q_choices,
-                    "correct_answer": q_ans,
-                    "vlsp_prompt": q_prompt,
+                    "question": qa_pack["yn_question"],
+                    "choices": {"Đúng": "Đúng", "Sai": "Sai"},
+                    "correct_answer": qa_pack["yn_answer"],
+                    "vlsp_prompt": qa_pack["yn_prompt"],
                     "question_token_length": tok_len,
                     "grouped_split": "train",
                     "random_split": "train",
@@ -451,8 +416,8 @@ def build_benchmark():
                     "orig_random_split": orig_r_split,
                     "group_id": gid,
                     "messages": [
-                        {"role": "user", "content": q_prompt},
-                        {"role": "assistant", "content": f"{q_ans}\n\n{qa_pack['full_explanation']}"},
+                        {"role": "user", "content": qa_pack["yn_prompt"]},
+                        {"role": "assistant", "content": f"**{qa_pack['yn_answer']}.**\n\n{qa_pack['full_explanation']}"},
                     ],
                 })
 

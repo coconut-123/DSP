@@ -58,9 +58,9 @@
     "official_qcvn_name": "Hướng phải đi vòng chướng ngại vật (sang bên phải)",
     "name_en": "Right Turn Only",
     "category": "Biển hiệu lệnh (Nhóm R)",
-    "article_id": "QCVN41_B.2",
-    "article_title": "Phụ lục B - Mục B.2: Biển số P.102 \"Cấm đi ngược chiều\"",
-    "legal_summary": "Biển số P.102 \"Cấm đi ngược chiều\" a) Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt Biển, trừ các xe được ưu tiên theo quy định, đặt Biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.",
+    "article_id": "QCVN41_D.2",
+    "article_title": "Phụ lục D - Mục D.2: Biển số R.302 (a,b,c) \"Hướng phải đi vòng chướng ngại vật\"",
+    "legal_summary": "Biển số R.302 (a,b,c) \"Hướng phải đi vòng chướng ngại vật\" a) Để báo các loại xe (cơ giới và thô sơ) hướng đi để qua một chướng ngại vật, đặt Biển số R.302(a,b,c) \"Hướng phải đi vòng chướng ngại vật\". Biển số R.302(a,b) còn dùng kết hợp với Biển P.102 tại dải phân cách để báo hiệu chiều đi của phần đường một chiều.",
     "pdf_template_images": [
       "data/pdf_signs/R.302a/R.302a_01.png",
       "data/pdf_signs/R.302a/R.302a_02.png"
@@ -181,13 +181,13 @@
     "name_en": "No Stopping and No Parking",
     "category": "Biển báo cấm (Nhóm P)",
     "article_id": "QCVN41_B.30",
-    "article_title": "Phụ lục B - Mục B.30: c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe",
-    "legal_summary": "c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe quay đầu thì cần đặt thêm Biển nhắc lại. a) Biển số P.131a b) Biển số P.131b c) Biển số P.131c Hình B.31 - Biển số P.131.",
+    "article_title": "Phụ lục B - Mục B.30: Biển số P.130 \"Cấm dừng xe và đỗ xe\"",
+    "legal_summary": "a) Để báo nơi cấm dừng xe và đỗ xe, đặt biển số P.130 \"Cấm dừng xe và đỗ xe\". Biển có hiệu lực cấm các loại xe cơ giới dừng và đỗ ở phía đường có đặt biển trừ các xe được ưu tiên theo quy định. Đối với các loại xe ô tô buýt chạy theo hành trình quy định được hướng dẫn vị trí dừng thích hợp.",
     "pdf_template_images": [
       "data/pdf_signs/P.130/P.130_01.png"
     ],
     "total_real_instances": 1071,
-    "saved_real_crops": 40
+    "saved_real_crops": 31
   },
   {
     "class_id": 11,
@@ -303,8 +303,7 @@
     "article_title": "Phụ lục B - Mục B.24: quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô",
     "legal_summary": "quay đầu xe”, Biển số P.124d \"Cấm rẽ phải và quay đầu xe”, Biển số P.124e \"Cấm ô tô rẽ trái và quay đầu xe” và Biển số P.124f \"Cấm ô tô rẽ phải và quay đầu xe” a) Để báo cấm các loại xe quay đầu (theo kiểu chữ U), đặt Biển số P.124a \"Cấm quay đầu xe\". Chiều mũi tên phù hợp với chiều cấm quay đầu xe.",
     "pdf_template_images": [
-      "data/pdf_signs/P.124a/P.124a_01.png",
-      "data/pdf_signs/P.124a/P.124a_02.png"
+      "data/pdf_signs/P.124a/P.124a_01.png"
     ],
     "total_real_instances": 105,
     "saved_real_crops": 40
@@ -398,7 +397,7 @@
     "class_id": 23,
     "dataset_code": "P.111",
     "canonical_qcvn_code": "P.111a",
-    "name_vi": "Cấm xe hai và ba bánh",
+    "name_vi": "Cấm xe gắn máy",
     "official_qcvn_name": "Cấm xe gắn máy",
     "name_en": "No Two or Three-wheeled Vehicles",
     "category": "Biển báo cấm (Nhóm P)",
@@ -433,14 +432,14 @@
     "dataset_code": "S.505a*Xe máy",
     "canonical_qcvn_code": "S.505a",
     "name_vi": "Chỉ dành cho xe máy*",
-    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "official_qcvn_name": "Biển phụ loại xe - Chỉ dành cho xe máy",
     "name_en": "Motorcycles Only",
     "category": "Biển phụ (Nhóm S)",
     "article_id": "QCVN41_F.5",
     "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
     "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
     "pdf_template_images": [
-      "data/pdf_signs/S.505a/S.505a_01.png"
+      "data/pdf_signs/S.505a_Xe_may/S.505a_xemay_01.png"
     ],
     "total_real_instances": 25,
     "saved_real_crops": 25
@@ -484,14 +483,14 @@
     "dataset_code": "S.505a*Xe tải và công",
     "canonical_qcvn_code": "S.505a",
     "name_vi": "Xe tải và xe công*",
-    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "official_qcvn_name": "Biển phụ loại xe - Xe tải và xe container",
     "name_en": "Trucks and Containers",
     "category": "Biển phụ (Nhóm S)",
     "article_id": "QCVN41_F.5",
     "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
     "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
     "pdf_template_images": [
-      "data/pdf_signs/S.505a/S.505a_01.png"
+      "data/pdf_signs/S.505a_Xe_tai_va_cong/S.505a_xetai_cong_01.png"
     ],
     "total_real_instances": 27,
     "saved_real_crops": 27
@@ -518,14 +517,14 @@
     "dataset_code": "S.505a*Xe tải",
     "canonical_qcvn_code": "S.505a",
     "name_vi": "Chỉ dành cho xe tải*",
-    "official_qcvn_name": "Loại xe (Biển phụ chỉ loại phương tiện chịu hiệu lực của biển chính)",
+    "official_qcvn_name": "Biển phụ loại xe - Chỉ dành cho xe tải",
     "name_en": "Trucks Only",
     "category": "Biển phụ (Nhóm S)",
     "article_id": "QCVN41_F.5",
     "article_title": "Phụ lục F - Mục F.5: Biển số S.505a \"Loại xe\"",
     "legal_summary": "Biển số S.505a \"Loại xe\" Biển số S.505a được đặt bên dưới các Biển báo cấm và Biển hiệu lệnh hay Biển chỉ dẫn để chỉ loại xe chịu hiệu lực của Biển báo cấm, Biển hiệu lệnh hay Biển chỉ dẫn. Tùy theo loại xe chịu hiệu lực mà bố trí Hình vẽ cho phù hợp.",
     "pdf_template_images": [
-      "data/pdf_signs/S.505a/S.505a_01.png"
+      "data/pdf_signs/S.505a_Xe_tai/S.505a_xetai_01.png"
     ],
     "total_real_instances": 138,
     "saved_real_crops": 40
@@ -587,9 +586,9 @@
     "official_qcvn_name": "Cấm xe sơ-mi rơ-moóc",
     "name_en": "No Containers Allowed",
     "category": "Biển báo cấm (Nhóm P)",
-    "article_id": "QCVN41_B.8",
-    "article_title": "Phụ lục B - Mục B.8: Biển số P.108 \" Cấm xe kéo rơ-moóc\"",
-    "legal_summary": "Biển số P.108 \" Cấm xe kéo rơ-moóc\" Để báo đường cấm các loại xe cơ giới kéo theo rơ-moóc kể cả xe máy, máy kéo, ô tô khách kéo theo rơ-moóc đi lại, trừ loại ô tô sơ-mi rơ-moóc và các xe được ưu tiên (có kéo theo rơ-moóc) theo quy định, đặt Biển số P.108 \"Cấm xe ô tô, máy kéo kéo rơ-moóc\". .\u0001 \u0001\u0001 Hình B.8 - Biển số P.108.",
+    "article_id": "QCVN41_B.8A",
+    "article_title": "Phụ lục B - Mục B.8A: Biển số P.108a \"Cấm xe sơ-mi rơ-moóc\"",
+    "legal_summary": "Biển số P.108a \"Cấm xe sơ-mi rơ-moóc\" Để báo đường cấm các loại xe sơ-mi rơ-moóc và các xe kéo rơ- moóc trừ các xe được ưu tiên (có dạng xe sơ-mi rơ-moóc hoặc có kéo theo rơ-moóc) theo quy định, đặt Biển số P.108a \"Cấm xe sơ-mi rơ-moóc\".",
     "pdf_template_images": [
       "data/pdf_signs/P.108a/P.108a_01.png"
     ],
@@ -659,7 +658,7 @@
     "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
     "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
     "pdf_template_images": [
-      "data/pdf_signs/P.127/P.127_01.png"
+      "data/pdf_signs/P.127_50/P.127_50_01.png"
     ],
     "total_real_instances": 189,
     "saved_real_crops": 40
@@ -676,7 +675,7 @@
     "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
     "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
     "pdf_template_images": [
-      "data/pdf_signs/P.127/P.127_01.png"
+      "data/pdf_signs/P.127_60/P.127_60_01.png"
     ],
     "total_real_instances": 459,
     "saved_real_crops": 40
@@ -693,7 +692,7 @@
     "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
     "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
     "pdf_template_images": [
-      "data/pdf_signs/P.127/P.127_01.png"
+      "data/pdf_signs/P.127_80/P.127_80_01.png"
     ],
     "total_real_instances": 210,
     "saved_real_crops": 40
@@ -710,7 +709,7 @@
     "article_title": "Phụ lục B - Mục B.27: a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối",
     "legal_summary": "a) Để báo tốc độ tối đa cho phép các xe cơ giới chạy, đặt Biển số P.127 \"Tốc độ tối đa cho phép\". b) Biển có hiệu lực cấm các loại xe cơ giới chạy với tốc độ tối đa vượt quá trị số ghi trên Biển trừ các xe được ưu tiên theo quy định.",
     "pdf_template_images": [
-      "data/pdf_signs/P.127/P.127_01.png"
+      "data/pdf_signs/P.127_40/P.127_40_01.png"
     ],
     "total_real_instances": 275,
     "saved_real_crops": 40
@@ -740,9 +739,9 @@
     "official_qcvn_name": "Chiều cao tĩnh không thực tế",
     "name_en": "Low Clearance",
     "category": "Biển báo nguy hiểm và cảnh báo (Nhóm W)",
-    "article_id": "QCVN41_B.17",
-    "article_title": "Phụ lục B - Mục B.17: a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\".",
-    "legal_summary": "a) Để báo hạn chế chiều cao của xe, đặt Biển số P.117 \"Hạn chế chiều cao\". b) Biển số P.117 có hiệu lực cấm các xe (cơ giới và thô sơ) có chiều cao vượt quá trị số ghi trên Biển đi qua, kể cả các xe được ưu tiên theo quy định (chiều cao tính từ mặt đường, mặt cầu đến điểm cao nhất của xe hoặc hàng).",
+    "article_id": "QCVN41_C.39",
+    "article_title": "Phụ lục C - Mục C.39: Biển số W.239b \"Chiều cao tĩnh không thực tế\"",
+    "legal_summary": "Ở những nơi có đường dây điện cắt ngang phía trên tuyến đường hoặc hạn chế không gian trên cao, đặt Biển số W.239b \"Chiều cao tĩnh không thực tế\" để báo hiệu cho phương tiện tuân thủ an toàn tĩnh không.",
     "pdf_template_images": [
       "data/pdf_signs/W.239b/W.239b_01.png"
     ],
@@ -774,9 +773,9 @@
     "official_qcvn_name": "Đường một chiều (đi thẳng)",
     "name_en": "One-way street",
     "category": "Biển chỉ dẫn (Nhóm I)",
-    "article_id": "QCVN41_B.2",
-    "article_title": "Phụ lục B - Mục B.2: Biển số P.102 \"Cấm đi ngược chiều\"",
-    "legal_summary": "Biển số P.102 \"Cấm đi ngược chiều\" a) Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt Biển, trừ các xe được ưu tiên theo quy định, đặt Biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.",
+    "article_id": "QCVN41_E.7",
+    "article_title": "Phụ lục E - Mục E.7: Biển số I.407(a,b,c) \"Đường một chiều\"",
+    "legal_summary": "Biển số I.407(a,b,c) \"Đường một chiều\" a) Để chỉ dẫn những đoạn đường chạy một chiều, đặt Biển số I.407(a,b,c) \"Đường một chiều\". Biển số I.407a đặt sau nơi đường giao nhau, khi đã có Biển số R.302 tại các đầu dải phân cách thì không nhất thiết đặt Biển số I.407a. Biển số I.407b,c đặt trước nơi đường giao nhau và đặt trên đường chuẩn bị đi vào đường một chiều.",
     "pdf_template_images": [
       "data/pdf_signs/I.407a/I.407a_01.png"
     ],
@@ -791,14 +790,14 @@
     "official_qcvn_name": "Cấm đỗ xe",
     "name_en": "No Parking",
     "category": "Biển báo cấm (Nhóm P)",
-    "article_id": "QCVN41_B.30",
-    "article_title": "Phụ lục B - Mục B.30: c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe",
-    "legal_summary": "c) Trong phạm vi có hiệu lực của Biển, nếu có chỗ mở dải phân cách cho phép xe quay đầu thì cần đặt thêm Biển nhắc lại. a) Biển số P.131a b) Biển số P.131b c) Biển số P.131c Hình B.31 - Biển số P.131.",
+    "article_id": "QCVN41_B.31",
+    "article_title": "Phụ lục B - Mục B.31: Biển số P.131 (a,b,c) \"Cấm đỗ xe\"",
+    "legal_summary": "a) Để báo nơi cấm đỗ xe trừ các xe được ưu tiên theo quy định, đặt Biển số P.131 (a,b,c) \"Cấm đỗ xe\". Biển số P.131a có hiệu lực cấm các loại xe cơ giới đỗ ở phía đường có đặt Biển. Biển số P.131b cấm đỗ ngày lẻ và Biển số P.131c cấm đỗ ngày chẵn.",
     "pdf_template_images": [
       "data/pdf_signs/P.131a/P.131a_01.png"
     ],
     "total_real_instances": 435,
-    "saved_real_crops": 40
+    "saved_real_crops": 49
   },
   {
     "class_id": 47,

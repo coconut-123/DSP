@@ -1,321 +1,222 @@
 {
-  "paper_title": "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation",
-  "authors": "Son T. Luu, Trung Vo, Hiep Nguyen, Khanh Quoc Tran, Kiet Van Nguyen, Vu Tran, Ngan Luu-Thuy Nguyen, Le-Minh Nguyen",
-  "protocol": "Train on C:\\ki8\\DSP\\datadsp\\data\\real_crops (1,807 cropped street signs) -> Evaluate on C:\\ki8\\DSP\\datadsp\\data\\pdf_signs (51 canonical QCVN signs)",
+  "protocol": "Train data/real_crops (grouped split) -> Test data/pdf_signs. Không dùng nhãn test trước khi dự đoán.",
+  "feature_cache": "backbone_features_clean.pt",
   "gpu_device": "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
-  "table1_law_database": {
-    "QCVN_41": {
-      "law_name": "National Regulation on Traffic Signs and Signals (QCVN 41)",
-      "articles": 191,
-      "sign_images_evaluated": 51
-    },
-    "Law_36_2024_QH15": {
-      "law_name": "Law on Road Traffic Order and Safety (36/2024/QH15)",
-      "articles": 1
-    }
+  "seeds": [
+    42,
+    123,
+    2024
+  ],
+  "zero_shot_no_training": {
+    "pdf_52_nearest_real_prototype_no_training": 0.08620689655172414,
+    "real_val_52_nearest_pdf_template_one_shot": 0.09844559585492228
   },
-  "table2_dataset_statistics": {
-    "train_real_crops": {
-      "total_questions": 1807,
-      "total_images": 1807,
-      "multiple_choice_questions": 1205,
-      "yes_no_questions": 602,
-      "max_length_of_question": 47,
-      "min_length_of_question": 18,
-      "avg_length_of_question": 26.46,
-      "max_relevant_articles": 2,
-      "min_relevant_articles": 1,
-      "avg_relevant_articles": 1.98
-    },
-    "test_pdf_signs": {
-      "total_questions": 77,
-      "total_images": 51,
-      "multiple_choice_questions": 51,
-      "yes_no_questions": 26,
-      "max_length_of_question": 49,
-      "min_length_of_question": 18,
-      "avg_length_of_question": 28.57,
-      "max_relevant_articles": 2,
-      "min_relevant_articles": 2,
-      "avg_relevant_articles": 2.0
-    }
-  },
-  "visual_sign_recognition_real_to_pdf": [
+  "sign_recognition": [
     {
-      "backbone": "ViT-B/16 (CLIP/Vision Transformer)",
-      "supergroup_acc_mean": 1.0,
-      "supergroup_f1_mean": 1.0,
-      "finegrained_52_acc_mean": 1.0,
-      "finegrained_52_f1_mean": 1.0
+      "backbone": "ViT-B/16",
+      "adaptation": "Không DA",
+      "real_val_acc_mean": 0.9145,
+      "pdf_52_acc_mean": 0.1437,
+      "pdf_52_acc_std": 0.0163,
+      "pdf_52_macro_f1_mean": 0.0899,
+      "pdf_5group_acc_mean": 0.9167
     },
     {
-      "backbone": "Swin-T (Hierarchical Vision Transformer)",
-      "supergroup_acc_mean": 1.0,
-      "supergroup_f1_mean": 1.0,
-      "finegrained_52_acc_mean": 1.0,
-      "finegrained_52_f1_mean": 1.0
+      "backbone": "ViT-B/16",
+      "adaptation": "DA không nhãn (mean/std)",
+      "real_val_acc_mean": 0.9145,
+      "pdf_52_acc_mean": 0.2069,
+      "pdf_52_acc_std": 0.0244,
+      "pdf_52_macro_f1_mean": 0.1379,
+      "pdf_5group_acc_mean": 0.8778
     },
     {
-      "backbone": "EfficientNet-B3 (ConvNet Baseline)",
-      "supergroup_acc_mean": 1.0,
-      "supergroup_f1_mean": 1.0,
-      "finegrained_52_acc_mean": 1.0,
-      "finegrained_52_f1_mean": 1.0
+      "backbone": "Swin-T",
+      "adaptation": "Không DA",
+      "real_val_acc_mean": 0.8957,
+      "pdf_52_acc_mean": 0.1494,
+      "pdf_52_acc_std": 0.0215,
+      "pdf_52_macro_f1_mean": 0.0972,
+      "pdf_5group_acc_mean": 0.8722
+    },
+    {
+      "backbone": "Swin-T",
+      "adaptation": "DA không nhãn (mean/std)",
+      "real_val_acc_mean": 0.8957,
+      "pdf_52_acc_mean": 0.2299,
+      "pdf_52_acc_std": 0.0081,
+      "pdf_52_macro_f1_mean": 0.136,
+      "pdf_5group_acc_mean": 0.8444
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "adaptation": "Không DA",
+      "real_val_acc_mean": 0.8855,
+      "pdf_52_acc_mean": 0.1437,
+      "pdf_52_acc_std": 0.0325,
+      "pdf_52_macro_f1_mean": 0.0744,
+      "pdf_5group_acc_mean": 0.8556
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "adaptation": "DA không nhãn (mean/std)",
+      "real_val_acc_mean": 0.8855,
+      "pdf_52_acc_mean": 0.1552,
+      "pdf_52_acc_std": 0.0,
+      "pdf_52_macro_f1_mean": 0.0969,
+      "pdf_5group_acc_mean": 0.8278
     }
   ],
-  "subtask1_multimodal_legal_retrieval_f2": [
+  "subtask1_retrieval": [
     {
-      "method": "1. BASELINE: BGE Visualized (Dense Embedding, Top-5, Section 4.1)",
-      "precision": 0.1558,
-      "recall": 0.3896,
-      "f2_score": 0.2997
+      "method": "Text-only BM25 (top-5)",
+      "precision": 0.2733,
+      "recall": 0.6833,
+      "f2_score": 0.5256
     },
     {
-      "method": "2. LexTraffic / OpenCubee Style (BM25 Lexical Only, Top-5)",
-      "precision": 0.1974,
-      "recall": 0.4935,
-      "f2_score": 0.3796
+      "method": "Text-only Dense TF-IDF/LSA (top-5)",
+      "precision": 0.2733,
+      "recall": 0.6833,
+      "f2_score": 0.5256
     },
     {
-      "method": "3. Tanka_CDS Style (Sign Patch + CLIP Embedding, Top-5)",
-      "precision": 0.2987,
-      "recall": 0.7468,
-      "f2_score": 0.5744
+      "method": "Text-only Hybrid RRF (top-5)",
+      "precision": 0.2767,
+      "recall": 0.6917,
+      "f2_score": 0.5321
     },
     {
-      "method": "4. Berry Style (Sign Detection + Vector Search, Top-3)",
-      "precision": 0.3983,
-      "recall": 0.5974,
-      "f2_score": 0.5431
+      "method": "Visual-conditioned RRF + dynamic-k [mã biển dự đoán: ViT-B/16, Không DA]",
+      "precision": 0.5833,
+      "recall": 0.5833,
+      "f2_score": 0.5833
     },
     {
-      "method": "5. SmartbotIC Style (Normalized Law DB + Multimodal Retrieval, Top-3)",
-      "precision": 0.6017,
-      "recall": 0.9026,
-      "f2_score": 0.8205
-    },
-    {
-      "method": "6. TechNova Style (Two-Branch Visual + Dense FAISS Index, Top-3)",
-      "precision": 0.4156,
-      "recall": 0.6234,
+      "method": "Visual-conditioned RRF + dynamic-k [mã biển dự đoán: ViT-B/16, DA không nhãn (mean/std)]",
+      "precision": 0.5667,
+      "recall": 0.5667,
       "f2_score": 0.5667
     },
     {
-      "method": "7. chmod+x Style (Heterogeneous Graph + Reranker + Dynamic Top-k)",
-      "precision": 0.8247,
-      "recall": 0.8247,
-      "f2_score": 0.8247
-    },
-    {
-      "method": "8. LifeIsTough / Ours (Sign Cropping + ViT-B/16 PEFT + Dynamic Top-k)",
+      "method": "Visual-conditioned RRF + dynamic-k [mã biển ĐÚNG — upper bound]",
       "precision": 1.0,
       "recall": 1.0,
       "f2_score": 1.0
     }
   ],
-  "subtask2_multimodal_legal_qa_accuracy": [
+  "subtask1_caveat": "relevant_articles được sinh từ cùng bảng ánh xạ mã biển->điều khoản mà retriever dùng; F2 visual = độ chính xác mã biển.",
+  "subtask2_yes_no": [
     {
-      "system": "1. BASELINE: Vintern-3B Zero-Shot Prompting (Section 4.1)",
-      "multiple_choice_acc": 0.3333,
-      "yes_no_acc": 0.5,
-      "overall_accuracy": 0.3896,
-      "correct_count": 30,
-      "total_questions": 77
+      "system": "Random guess (kỳ vọng 50.0%)",
+      "accuracy": 0.5667,
+      "correct": 34,
+      "total": 60,
+      "note": ""
     },
     {
-      "system": "2. Text-Only Legal QA (No Traffic Sign Visual Recognition)",
-      "multiple_choice_acc": 0.6275,
-      "yes_no_acc": 0.5385,
-      "overall_accuracy": 0.5974,
-      "correct_count": 46,
-      "total_questions": 77
+      "system": "Majority class: Luôn đoán 'Đúng'",
+      "accuracy": 0.5,
+      "correct": 30,
+      "total": 60,
+      "note": "26/51 mẫu là Đúng (51.0%)"
     },
     {
-      "system": "3. chmod+x Style (Heterogeneous Graph + Zero-Shot VLM)",
-      "multiple_choice_acc": 0.6667,
-      "yes_no_acc": 0.6538,
-      "overall_accuracy": 0.6623,
-      "correct_count": 51,
-      "total_questions": 77
+      "system": "Majority class: Luôn đoán 'Sai'",
+      "accuracy": 0.5,
+      "correct": 30,
+      "total": 60,
+      "note": "25/51 mẫu là Sai (49.0%)"
     },
     {
-      "system": "4. LifeIsTough Style (Sign Cropping + Gemma-3 Zero-Shot QA)",
-      "multiple_choice_acc": 0.7451,
-      "yes_no_acc": 0.6154,
-      "overall_accuracy": 0.7013,
-      "correct_count": 54,
-      "total_questions": 77
+      "system": "Lexical overlap, text-only retrieval (không dùng ảnh)",
+      "accuracy": 0.5,
+      "correct": 30,
+      "total": 60,
+      "note": ""
     },
     {
-      "system": "5. Metamorphic / Tanka_CDS Style (YOLO Sign Patch + LLaMA3.2-Vision)",
-      "multiple_choice_acc": 0.7059,
-      "yes_no_acc": 0.5385,
-      "overall_accuracy": 0.6494,
-      "correct_count": 50,
-      "total_questions": 77
+      "system": "Logic đối chiếu luật + mã biển dự đoán [ViT-B/16, Không DA]",
+      "accuracy": 0.6,
+      "correct": 36,
+      "total": 60,
+      "note": ""
     },
     {
-      "system": "6. TechNova Style (Two-Branch Retrieval + Chain-of-Thought VLM)",
-      "multiple_choice_acc": 0.8235,
-      "yes_no_acc": 0.5769,
-      "overall_accuracy": 0.7403,
-      "correct_count": 57,
-      "total_questions": 77
+      "system": "Logic đối chiếu luật + mã biển dự đoán [ViT-B/16, DA không nhãn (mean/std)]",
+      "accuracy": 0.6333,
+      "correct": 38,
+      "total": 60,
+      "note": ""
     },
     {
-      "system": "7. SmartbotIC Style (Markdown Law DB + Qwen2.5-VL Zero-Shot)",
-      "multiple_choice_acc": 0.8627,
-      "yes_no_acc": 0.8077,
-      "overall_accuracy": 0.8442,
-      "correct_count": 65,
-      "total_questions": 77
+      "system": "Logic đối chiếu luật + mã biển ĐÚNG (upper bound)",
+      "accuracy": 0.95,
+      "correct": 57,
+      "total": 60,
+      "note": ""
     },
     {
-      "system": "8. Berry / Ours (Trained on real_crops + Dynamic Legal IR + CoT/Few-Shot)",
-      "multiple_choice_acc": 1.0,
-      "yes_no_acc": 1.0,
-      "overall_accuracy": 1.0,
-      "correct_count": 77,
-      "total_questions": 77
+      "system": "VLM: Qwen2-VL-2B (Zero-Shot)",
+      "accuracy": 0.6863,
+      "correct": 35,
+      "total": 51,
+      "note": "đo thật bằng eval_vlm_qa.py"
+    },
+    {
+      "system": "VLM: Qwen2-VL-2B + Text-Hybrid Legal IR",
+      "accuracy": 0.4902,
+      "correct": 25,
+      "total": 51,
+      "note": "đo thật bằng eval_vlm_qa.py"
+    },
+    {
+      "system": "VLM: Qwen2-VL-2B + PEFT LoRA + Legal IR",
+      "accuracy": 0.5882,
+      "correct": 30,
+      "total": 51,
+      "note": "đo thật bằng eval_vlm_qa.py"
     }
   ],
-  "official_vlsp2025_table3_leaderboard": [
-    {
-      "rank": 1,
-      "team": "LifeIsTough",
-      "f2_score": 0.6455361395
-    },
-    {
-      "rank": 2,
-      "team": "chmod+x",
-      "f2_score": 0.6113748745
-    },
-    {
-      "rank": 3,
-      "team": "TechNova",
-      "f2_score": 0.5991697165
-    },
-    {
-      "rank": 4,
-      "team": "SmartbotIC",
-      "f2_score": 0.5790135683
-    },
-    {
-      "rank": 5,
-      "team": "Berry",
-      "f2_score": 0.5432150682
-    },
-    {
-      "rank": 6,
-      "team": "DHDD",
-      "f2_score": 0.451168807
-    },
-    {
-      "rank": 7,
-      "team": "Tanka_CDS",
-      "f2_score": 0.2459355607
-    },
-    {
-      "rank": 8,
-      "team": "AIO_VNM",
-      "f2_score": 0.2384666964
-    },
-    {
-      "rank": 9,
-      "team": "MealsRetrieval",
-      "f2_score": 0.1548250424
-    },
-    {
-      "rank": 10,
-      "team": "OpenCubee",
-      "f2_score": 0.1533444945
-    },
-    {
-      "rank": 11,
-      "team": "Come4Win",
-      "f2_score": 0.1413907401
-    },
-    {
-      "rank": 12,
-      "team": "LexTraffic",
-      "f2_score": 0.1358808937
-    },
-    {
-      "rank": 13,
-      "team": "BASELINE (BGE Visualized)",
-      "f2_score": 0.1276493485
-    }
-  ],
-  "official_vlsp2025_table4_leaderboard": [
-    {
-      "rank": 1,
-      "team": "Berry (LLaMA4-Maverick + Few-shot)",
-      "accuracy": 0.8630136986
-    },
-    {
-      "rank": 2,
-      "team": "SmartbotIC (Qwen2.5-VL + InternVL3)",
-      "accuracy": 0.8356164384
-    },
-    {
-      "rank": 3,
-      "team": "TechNova (Qwen2.5-VL CoT)",
-      "accuracy": 0.7808219178
-    },
-    {
-      "rank": 4,
-      "team": "Tanka_CDS (YOLOv8n + LLaMA3.2-Vision)",
-      "accuracy": 0.7328767123
-    },
-    {
-      "rank": 5,
-      "team": "Metamorphic (YOLO + Graph + Gemma2)",
-      "accuracy": 0.7260273973
-    },
-    {
-      "rank": 6,
-      "team": "Hallucinators",
-      "accuracy": 0.7123287671
-    },
-    {
-      "rank": 7,
-      "team": "LifeIsTough (YOLOE + Gemma-3-12B)",
-      "accuracy": 0.6712328767
-    },
-    {
-      "rank": 8,
-      "team": "chmod+x (Graph + Qwen2.5-VL/InternVL3)",
-      "accuracy": 0.6232876712
-    },
-    {
-      "rank": 9,
-      "team": "OpenCubee",
-      "accuracy": 0.6095890411
-    },
-    {
-      "rank": 10,
-      "team": "LexTraffic",
-      "accuracy": 0.595890411
-    },
-    {
-      "rank": 11,
-      "team": "AIO_VNM",
-      "accuracy": 0.5684931507
-    },
-    {
-      "rank": 12,
-      "team": "NaN",
-      "accuracy": 0.5616438356
-    },
-    {
-      "rank": 13,
-      "team": "SoftMind_AIO",
-      "accuracy": 0.5
-    },
-    {
-      "rank": 14,
-      "team": "BASELINE (Vintern-3B-beta)",
-      "accuracy": 0.4520547945
-    }
-  ]
+  "official_vlsp2025_reference_only_not_comparable": {
+    "table3_subtask1": [
+      {
+        "rank": 1,
+        "team": "LifeIsTough",
+        "f2_score": 0.6455361395
+      },
+      {
+        "rank": 2,
+        "team": "chmod+x",
+        "f2_score": 0.6113748745
+      },
+      {
+        "rank": 3,
+        "team": "TechNova",
+        "f2_score": 0.5991697165
+      },
+      {
+        "rank": 13,
+        "team": "BASELINE (BGE Visualized)",
+        "f2_score": 0.1276493485
+      }
+    ],
+    "table4_subtask2": [
+      {
+        "rank": 1,
+        "team": "Berry (LLaMA4-Maverick + Few-shot)",
+        "accuracy": 0.8630136986
+      },
+      {
+        "rank": 2,
+        "team": "SmartbotIC (Qwen2.5-VL + InternVL3)",
+        "accuracy": 0.8356164384
+      },
+      {
+        "rank": 14,
+        "team": "BASELINE (Vintern-3B-beta)",
+        "accuracy": 0.4520547945
+      }
+    ]
+  }
 }
