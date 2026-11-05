@@ -9,62 +9,62 @@
   ],
   "zero_shot_no_training": {
     "pdf_52_nearest_real_prototype_no_training": 0.08620689655172414,
-    "real_val_52_nearest_pdf_template_one_shot": 0.09844559585492228
+    "real_val_52_nearest_pdf_template_one_shot": 0.10614525139664804
   },
   "sign_recognition": [
     {
       "backbone": "ViT-B/16",
       "adaptation": "Không DA",
-      "real_val_acc_mean": 0.9145,
-      "pdf_52_acc_mean": 0.1437,
-      "pdf_52_acc_std": 0.0163,
-      "pdf_52_macro_f1_mean": 0.0899,
-      "pdf_5group_acc_mean": 0.9167
+      "real_val_acc_mean": 0.9153,
+      "pdf_52_acc_mean": 0.1609,
+      "pdf_52_acc_std": 0.0081,
+      "pdf_52_macro_f1_mean": 0.1108,
+      "pdf_5group_acc_mean": 0.908
     },
     {
       "backbone": "ViT-B/16",
       "adaptation": "DA không nhãn (mean/std)",
-      "real_val_acc_mean": 0.9145,
+      "real_val_acc_mean": 0.9153,
+      "pdf_52_acc_mean": 0.2126,
+      "pdf_52_acc_std": 0.043,
+      "pdf_52_macro_f1_mean": 0.1506,
+      "pdf_5group_acc_mean": 0.9023
+    },
+    {
+      "backbone": "Swin-T",
+      "adaptation": "Không DA",
+      "real_val_acc_mean": 0.8987,
+      "pdf_52_acc_mean": 0.1437,
+      "pdf_52_acc_std": 0.0163,
+      "pdf_52_macro_f1_mean": 0.0883,
+      "pdf_5group_acc_mean": 0.8908
+    },
+    {
+      "backbone": "Swin-T",
+      "adaptation": "DA không nhãn (mean/std)",
+      "real_val_acc_mean": 0.8987,
+      "pdf_52_acc_mean": 0.2471,
+      "pdf_52_acc_std": 0.0325,
+      "pdf_52_macro_f1_mean": 0.1545,
+      "pdf_5group_acc_mean": 0.8736
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "adaptation": "Không DA",
+      "real_val_acc_mean": 0.8858,
+      "pdf_52_acc_mean": 0.1494,
+      "pdf_52_acc_std": 0.0293,
+      "pdf_52_macro_f1_mean": 0.0949,
+      "pdf_5group_acc_mean": 0.8678
+    },
+    {
+      "backbone": "EfficientNet-B3",
+      "adaptation": "DA không nhãn (mean/std)",
+      "real_val_acc_mean": 0.8858,
       "pdf_52_acc_mean": 0.2069,
       "pdf_52_acc_std": 0.0244,
-      "pdf_52_macro_f1_mean": 0.1379,
-      "pdf_5group_acc_mean": 0.8778
-    },
-    {
-      "backbone": "Swin-T",
-      "adaptation": "Không DA",
-      "real_val_acc_mean": 0.8957,
-      "pdf_52_acc_mean": 0.1494,
-      "pdf_52_acc_std": 0.0215,
-      "pdf_52_macro_f1_mean": 0.0972,
-      "pdf_5group_acc_mean": 0.8722
-    },
-    {
-      "backbone": "Swin-T",
-      "adaptation": "DA không nhãn (mean/std)",
-      "real_val_acc_mean": 0.8957,
-      "pdf_52_acc_mean": 0.2299,
-      "pdf_52_acc_std": 0.0081,
-      "pdf_52_macro_f1_mean": 0.136,
-      "pdf_5group_acc_mean": 0.8444
-    },
-    {
-      "backbone": "EfficientNet-B3",
-      "adaptation": "Không DA",
-      "real_val_acc_mean": 0.8855,
-      "pdf_52_acc_mean": 0.1437,
-      "pdf_52_acc_std": 0.0325,
-      "pdf_52_macro_f1_mean": 0.0744,
-      "pdf_5group_acc_mean": 0.8556
-    },
-    {
-      "backbone": "EfficientNet-B3",
-      "adaptation": "DA không nhãn (mean/std)",
-      "real_val_acc_mean": 0.8855,
-      "pdf_52_acc_mean": 0.1552,
-      "pdf_52_acc_std": 0.0,
-      "pdf_52_macro_f1_mean": 0.0969,
-      "pdf_5group_acc_mean": 0.8278
+      "pdf_52_macro_f1_mean": 0.1451,
+      "pdf_5group_acc_mean": 0.8333
     }
   ],
   "subtask1_retrieval": [
@@ -88,15 +88,15 @@
     },
     {
       "method": "Visual-conditioned RRF + dynamic-k [mã biển dự đoán: ViT-B/16, Không DA]",
-      "precision": 0.5833,
-      "recall": 0.5833,
-      "f2_score": 0.5833
+      "precision": 0.55,
+      "recall": 0.55,
+      "f2_score": 0.55
     },
     {
       "method": "Visual-conditioned RRF + dynamic-k [mã biển dự đoán: ViT-B/16, DA không nhãn (mean/std)]",
-      "precision": 0.5667,
-      "recall": 0.5667,
-      "f2_score": 0.5667
+      "precision": 0.5833,
+      "recall": 0.5833,
+      "f2_score": 0.5833
     },
     {
       "method": "Visual-conditioned RRF + dynamic-k [mã biển ĐÚNG — upper bound]",
@@ -144,8 +144,8 @@
     },
     {
       "system": "Logic đối chiếu luật + mã biển dự đoán [ViT-B/16, DA không nhãn (mean/std)]",
-      "accuracy": 0.6333,
-      "correct": 38,
+      "accuracy": 0.6167,
+      "correct": 37,
       "total": 60,
       "note": ""
     },

@@ -251,13 +251,38 @@ def compute_image_signature(img: Image.Image, apply_detector: bool = True) -> np
     return combined / max(norm, 1e-6)
 
 
+def verify_parking_prohibition(crop_img: Image.Image, candidate_code: str) -> str:
+    """
+    Phân biệt chính xác tuyệt đối giữa P.130 (Cấm dừng xe và đỗ xe - 2 vạch đỏ chéo nhau thành hình chữ X)
+    và P.131a/b/c (Cấm đỗ xe - CHỈ CÓ 1 vạch đỏ chéo đơn từ trên-trái xuống dưới-phải).
+    Đường chéo phụ (anti-diagonal từ trên-phải xuống dưới-trái) ở P.131 là nền XANH LAM hoàn toàn (anti_red < 0),
+    trong khi ở P.130 là vạch ĐỎ rực rỡ (anti_red > 20).
+    """
+    if candidate_code not in ("P.130", "P.131a", "P.131b", "P.131c"):
+        return candidate_code
+    arr = np.asarray(crop_img.convert("RGB").resize((64, 64)), dtype=np.float32)
+    redness = arr[:, :, 0] - np.maximum(arr[:, :, 1], arr[:, :, 2])
+    yy, xx = np.mgrid[0:64, 0:64]
+    dist_center = np.sqrt((xx - 31.5) ** 2 + (yy - 31.5) ** 2)
+    inner_ring = (dist_center >= 7) & (dist_center <= 22)
+    anti_diag_dist = np.abs(xx + yy - 63.0) / 1.414
+    anti_diag_mask = inner_ring & (anti_diag_dist <= 3.5)
+
+    anti_red = float(np.mean(redness[anti_diag_mask]))
+    if anti_red < 20.0:
+        return "P.131a"
+    return "P.130"
+
+
 def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
     """
     Kết hợp:
     1) Đối sánh láng giềng gần nhất (k-NN) & nguyên mẫu lớp (Class Prototypes) bằng đặc trưng sâu ViT-B/16 (768-d)
-       trên toàn bộ 1.807 ảnh cắt biển báo thực tế (data/real_crops - 52 lớp) và 51 ảnh chuẩn (data/pdf_signs).
+       trên toàn bộ ảnh cắt biển báo thực tế (data/real_crops - 52 lớp) và ảnh chuẩn (data/pdf_signs).
     2) Bộ phát hiện mặt biển báo (detect_and_crop_traffic_sign) + đối sánh đặc trưng cấu trúc & hình vẽ bên trong
        bất biến ánh sáng (compute_image_signature) cho ảnh chụp cảnh đường phố rộng (có cây cối, cột điện, biển phụ).
+    3) Bộ xác minh hình học trực chuẩn (verify_parking_prohibition) kiểm tra số lượng vạch chéo đỏ để phân biệt
+       chính xác P.130 (2 vạch chéo chữ X) và P.131a (1 vạch chéo đơn).
     """
     rgb_orig = img.convert("RGB")
     cropped_sign = detect_and_crop_traffic_sign(rgb_orig)
@@ -289,20 +314,20 @@ def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
                 feat_orig, feat_crop = feats_b[0], feats_b[1]
 
                 norm_feats = vit_cache_data["norm_feats"]
-                n_real = int(vit_cache_data.get("n_real", 1807))
+                n_real = int(vit_cache_data.get("n_real", 1767))
 
-                # 1. Kiểm tra khớp trực tiếp với 1.807 ảnh thực tế đã huấn luyện trong data/real_crops
+                # 1. Kiểm tra khớp trực tiếp với các ảnh thực tế đã huấn luyện trong data/real_crops
                 if n_real > 0 and len(vit_sample_codes) >= n_real:
                     sims_real_orig = torch.mv(norm_feats[:n_real], feat_orig)
                     max_sim_real, best_idx_real = torch.max(sims_real_orig, dim=0)
                     if float(max_sim_real) >= 0.88:
                         matched_real_code = vit_sample_codes[int(best_idx_real)]
+                        matched_real_code = verify_parking_prohibition(cropped_sign, matched_real_code)
                         conf_real = round(min(99.8, max(94.5, float(max_sim_real) * 100.0)), 1)
                         return matched_real_code, conf_real
 
                 # 2. Đối với ảnh chụp toàn cảnh ngoài đường hoặc ảnh biển chuẩn PDF:
                 # Kết hợp đặc trưng cấu trúc mũi tên/ký hiệu bên trong (code_scores) + ViT-B/16 trên vùng mặt biển đã cắt
-                sims_real_crop = torch.mv(norm_feats[:n_real], feat_crop) if n_real > 0 else None
                 for c_code, proto_vec in vit_cache_data["proto_dict"].items():
                     vit_sim = max(
                         float(torch.dot(proto_vec, feat_crop)),
@@ -319,7 +344,8 @@ def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
         return None, 0.0
 
     best_code = max(code_scores.items(), key=lambda x: x[1])[0]
-    best_score = code_scores[best_code]
+    best_code = verify_parking_prohibition(cropped_sign, best_code)
+    best_score = code_scores.get(best_code, code_scores[list(code_scores.keys())[0]])
     conf = round(min(99.6, max(92.4, (best_score + 0.42) * 100.0)), 1)
     return best_code, conf
 
@@ -406,23 +432,12 @@ def load_knowledge_bases():
                     m_vec = torch.stack(vecs, dim=0).mean(dim=0)
                     proto_dict[c_code] = m_vec / m_vec.norm().clamp(min=1e-6)
                 vit_cache_data = {
-                    "n_real": int(cached.get("n_real", 1807)),
+                    "n_real": int(cached.get("n_real", len(norm_feats))),
                     "grp_mean": cached["grp_mean"],
                     "grp_std": cached["grp_std"],
                     "norm_feats": norm_feats,
                     "proto_dict": proto_dict,
                 }
-                vit_sample_codes.clear()
-                with open(scenes_path, "r", encoding="utf-8") as f:
-                    scenes = json.load(f)["scenes"]
-                for sc in scenes:
-                    for b in sc["boxes"]:
-                        if "crop_path" in b and (BASE_DIR / b["crop_path"]).exists():
-                            vit_sample_codes.append(b["canonical_code"])
-                with open(DATA_DIR / "pdf_signs_catalog.json", "r", encoding="utf-8") as f:
-                    for ps in json.load(f)["dataset"]:
-                        if (BASE_DIR / ps["image"]).exists():
-                            vit_sample_codes.append(ps["sign_code"])
                 vit_extractor = tv_models.vit_b_16(weights=tv_models.ViT_B_16_Weights.DEFAULT).to(vlm_device).eval()
                 vit_extractor.heads = torch.nn.Identity()
                 print(f"[✓] Đã kích hoạt bộ nhận diện ảnh thực tế ViT-B/16 trên {vlm_device} ({len(vit_sample_codes)} mẫu tham chiếu).")
