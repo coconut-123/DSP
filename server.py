@@ -908,13 +908,6 @@ async def chat_multimodal(
         if retrieved_articles
         else sign_info.get("relevant_articles", ["QCVN41_B.1"])
     )
-    prompt_suggestions = [
-        f"Ý nghĩa và phạm vi tác dụng của biển {detected_code}?",
-        "Xe máy có được đi vào không?",
-        "Tôi lái xe ô tô con / xe tải gặp biển này có được đi tiếp không?",
-        "Có được phép quay đầu xe hoặc rẽ trái tại biển này không?",
-    ]
-
     return JSONResponse(
         content={
             "status": "success",
@@ -924,12 +917,11 @@ async def chat_multimodal(
                 "sign_name": sign_info.get("sign_name", STANDARD_NAMES.get(detected_code, "Biển báo giao thông")),
                 "category": sign_info.get("category", get_category_by_code(detected_code)),
                 "image": sign_info.get("image", f"images/{detected_code}/{detected_code}_01.png"),
-                "confidence": confidence,
             },
             "answer": ai_response_text,
             "relevant_articles": relevant_articles,
             "retrieved_legal_passages": retrieved_articles,
-            "prompt_suggestions": prompt_suggestions,
+            "prompt_suggestions": [],
         }
     )
 

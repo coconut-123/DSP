@@ -1788,7 +1788,6 @@ function renderChatMessages() {
             <span class="sign-title-text">${s.sign_name}</span>
           </div>
           <div class="detected-meta-line">
-            <span class="confidence-chip">Độ tin cậy: ${s.confidence || 99.4}%</span>
             <span class="category-chip">${s.category || "Biển báo hiệu đường bộ"}</span>
           </div>
         </div>
@@ -1822,23 +1821,6 @@ function renderChatMessages() {
     }
 
     bodyWrapper.appendChild(bubble);
-
-    // Follow-up Prompt Chips for the last assistant message
-    if (msg.role === "assistant" && idx === chatMessages.length - 1 && msg.promptSuggestions && msg.promptSuggestions.length > 0) {
-      const inlineChips = document.createElement("div");
-      inlineChips.className = "msg-inline-chips";
-      msg.promptSuggestions.forEach(chipText => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "inline-chip-btn";
-        btn.textContent = chipText;
-        btn.addEventListener("click", () => {
-          sendUserMessage(chipText);
-        });
-        inlineChips.appendChild(btn);
-      });
-      bodyWrapper.appendChild(inlineChips);
-    }
 
     msgDiv.appendChild(avatar);
     msgDiv.appendChild(bodyWrapper);
