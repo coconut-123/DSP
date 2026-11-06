@@ -37,6 +37,8 @@ The empirical dataset integrates real-world road environments with regulatory le
 ### 2.2. Legal Regulatory Corpus
 We parsed and indexed **193 statutory articles and appendix provisions** from QCVN 41:2024/BGTVT into structured JSON documents containing article identifiers, titles, official text descriptions, applicable vehicle categories, and legal penalty cross-references (Decree 100/2019/NĐ-CP & Decree 123/2021/NĐ-CP).
 
+![Figure 1: Distribution of relevant legal articles across traffic sign categories in QCVN 41:2024](figures/fig3_relevant_articles_distribution.png)
+
 ```
 +-----------------------------------------------------------------------------+
 |                            DATA PIPELINE OVERVIEW                           |
@@ -59,6 +61,8 @@ We benchmark three frozen backbone architectures for zero-shot and linear-probe 
 - **Vision Transformer (ViT-B/16):** 768-dimensional patch representations pre-trained on ImageNet-1k ($224 \times 224$ input resolution, $16 \times 16$ patch size).
 - **Swin Transformer (Swin-T):** 768-dimensional hierarchical shifted-window representations.
 - **EfficientNet-B3:** 1,536-dimensional inverted residual convolutional feature maps.
+
+![Figure 2: Attention activation maps across spatial patches in ViT-B/16](figures/fig4_patch_activations.png)
 
 ### 3.2. Adaptive Spatial Sign Localization
 Street photographs frequently contain background noise (trees, sky, light poles). We implement a geometric-chromatic spatial localizer that detects sign boundaries via HSV color segmentation (red prohibitory borders $H \in [0, 10] \cup [170, 180]$, blue mandatory disks $H \in [100, 130]$, yellow warning diamonds $H \in [20, 35]$), fits bounding bounding contours, and crops the active sign face prior to representation extraction.
@@ -203,6 +207,10 @@ Table 1 reports the classification accuracy across the real validation set (181 
 | **ViT-B/16 + Unsupervised Norm**| 91.16% | 91.29% | **24.84 ± 2.45%** | **88.24%** |
 | *Previous Project (with $\alpha=0.56$ Leakage)* | *91.16%* | *91.29%* | *100.00% (Artificial)* | *100.00% (Artificial)* |
 
+![Figure 3: Recognition accuracy benchmark comparing architectures across real validation and cross-domain PDF testbed](figures/fig_recognition_clean.png)
+
+![Figure 4: Confusion matrix across 5 traffic sign categories (P, W, R, I, S)](figures/fig5_confusion_matrices.png)
+
 *Key finding:* Within the same domain (real-to-real), ViT-B/16 achieves an outstanding **91.29% Macro-F1**. When evaluated zero-shot across domains (real-to-PDF), coarse group classification remains strong (**94.77%**), but fine-grained 52-class accuracy drops to **13.07%** (improving to **24.84%** with unsupervised normalization), empirically validating the substantial domain gap between noisy street photographs and clean graphic illustrations.
 
 ---
@@ -216,6 +224,8 @@ We benchmark the hybrid retriever against ungrounded lexical baselines across 10
 | **TF-IDF Only (Lexical Text)** | 34.62% | 25.64% | 38.46% | 34.97% |
 | **BM25 + TF-IDF (Reciprocal Rank Fusion)** | 42.31% | 30.77% | 46.15% | 42.31% |
 | **Hybrid Legal IR (Ours: RRF + Visual Sign Prior)** | **61.54%** | **43.59%** | **65.38%** | **58.33%** |
+
+![Figure 5: Legal article retrieval F2-score benchmark across IR strategies](figures/fig4_subtask1_retrieval_f2.png)
 
 *Key finding:* Conditioning legal search on the predicted traffic sign code boosts Retrieval $F_2$-score from **42.31% to 58.33%** (+16.02% absolute gain), ensuring that the relevant statutory appendix is reliably surfaced in the top-3 candidate passages.
 
@@ -231,11 +241,19 @@ We evaluate binary Yes/No regulatory compliance queries on the test set:
 | **Qwen2-VL-2B (Zero-Shot Multimodal)** | 60.78% | 49.02% | 510 ms |
 | **Ours: Qwen2-VL-2B LoRA + Grounded Legal RAG** | **68.63%** | **68.63%** | 580 ms |
 
+![Figure 6: Multimodal legal question answering accuracy across model configurations](figures/fig5_subtask2_qa_accuracy.png)
+
 ---
 
 ## 2. Discussion
 1. **The Reality of the Real-to-PDF Domain Gap:** Real-world traffic sign crops exhibit motion blur, occlusions, weathered paint, and dynamic lighting. In contrast, legal gazette images are idealized, zero-noise digital illustrations. Expecting a model trained only on street crops to classify vector illustrations with 100% accuracy without domain adaptation is scientifically unrealistic. Documenting the drop from 91.29% to 13.07% (and its recovery to 24.84%) provides genuine academic value.
+
+![Figure 7: t-SNE 2D projection and silhouette analysis showing the street vs. gazette domain separation](figures/fig9_tsne_silhouette.png)
+
 2. **Elimination of Artificial Leakage:** In previous project iterations, test samples were blended with ground-truth class prototypes ($\alpha = 0.56$), producing artificial 100% scores. Removing this shortcut restores scientific validity.
+
+![Figure 8: Empirical demonstration of artificial score inflation as test-label leakage blending parameter alpha increases](figures/fig2_leakage_inflation.png)
+
 3. **Synergy of Vision and Legal IR:** The retrieval experiments demonstrate that computer vision and NLP are mutually reinforcing: visual identification resolves ambiguous textual queries (e.g., *"Can I turn here?"*), while structured legal retrieval prevents language model hallucination.
 
 ---
@@ -314,3 +332,13 @@ Summary of the indexed legal documents from **QCVN 41:2024/BGTVT**:
 - **Primary Branches:** `main`
 - **Verification Script:** `python run_paper_experiments.py`
 - **Web Application Entrypoint:** `python server.py`
+
+### Appendix D: Model Diagnostics and Sensitivity Curves
+
+![Figure 9: Reliability and confidence calibration diagram](figures/fig8_reliability_diagram.png)
+
+![Figure 10: Spatial sensitivity analysis under varying crop bounding scales](figures/fig7_spatial_sensitivity.png)
+
+![Figure 11: Posterior class probability distributions across top-5 predictions](figures/fig6_posterior_probability.png)
+
+
