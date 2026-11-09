@@ -17,3 +17,14 @@ traffic_vlm_peft_adapter/*.safetensors
 # Local folder junctions
 data/real_crops/23_P.111a/
 data/real_crops/34_P.108a/
+
+# Report generation & verification tools (kept locally only)
+build_*.py
+convert_to_pdf.py
+generate_report_charts.py
+sync_reports.*
+test_page*.py
+test_appendices*.py
+inspect_*.py
+figures/
+*.pdf

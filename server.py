@@ -388,7 +388,7 @@ def load_knowledge_bases():
                 signs_catalog[code]["sign_name"] = STANDARD_NAMES.get(code, signs_catalog[code].get("sign_name", name))
                 signs_catalog[code]["category"] = get_category_by_code(code)
 
-        # Xây dựng chỉ mục thị giác CHỈ từ tập đánh giá data/pdf_signs (51 biển chuẩn thuộc 46 mã đã có trong tập Train data/real_crops)
+        # Xây dựng chỉ mục thị giác từ tập đánh giá data/pdf_signs
         visual_ref_index.clear()
         pdf_signs_dir = DATA_DIR / "pdf_signs"
         if pdf_signs_dir.exists():
@@ -400,6 +400,20 @@ def load_knowledge_bases():
                         visual_ref_index.append((code, compute_image_signature(im, apply_detector=True), True))
                 except Exception:
                     pass
+
+        # Bổ sung toàn diện các mẫu biển chuẩn từ images/ (R.122 STOP, P.101, v.v. - nâng độ phủ thị giác lên toàn bộ 335+ biển báo)
+        images_dir = BASE_DIR / "images"
+        indexed_codes = {c for c, _, _ in visual_ref_index}
+        if images_dir.exists():
+            for img_p in sorted(images_dir.rglob("*.png")):
+                code = img_p.parent.name
+                if code not in indexed_codes:
+                    try:
+                        with Image.open(img_p) as im:
+                            visual_ref_index.append((code, compute_image_signature(im, apply_detector=True), False))
+                            indexed_codes.add(code)
+                    except Exception:
+                        pass
 
         # Nạp cache đặc trưng sạch ViT-B/16 (1.807 ảnh thực tế data/real_crops + 51 ảnh PDF) và tính Class Prototypes
         clean_cache_pt = DATA_DIR / "backbone_features_clean.pt"
@@ -482,7 +496,7 @@ def init_vlm_model():
                 bnb_4bit_use_double_quant=True,
             )
 
-        dtype = torch.bfloat16 if (torch.cuda.is_available() and torch.cuda.is_bf16_supported()) else torch.float16
+        dtype = torch.bfloat16 if (torch.cuda.is_available() and torch.cuda.is_bf16_supported()) else (torch.float16 if torch.cuda.is_available() else torch.float32)
         base_model = Qwen2VLForConditionalGeneration.from_pretrained(
             BASE_MODEL_NAME,
             quantization_config=bnb_config,
@@ -490,17 +504,103 @@ def init_vlm_model():
             device_map="auto" if torch.cuda.is_available() else None,
         )
 
-        if os.path.exists(ADAPTER_DIR):
+        has_adapter_weights = os.path.exists(ADAPTER_DIR) and any(
+            os.path.exists(os.path.join(ADAPTER_DIR, f))
+            for f in ["adapter_model.safetensors", "adapter_model.bin"]
+        )
+        if has_adapter_weights:
             vlm_model = PeftModel.from_pretrained(base_model, ADAPTER_DIR)
+            print("[✓] Đã nạp thành công PEFT LoRA Adapter từ:", ADAPTER_DIR)
         else:
             vlm_model = base_model
+            print("[*] Sẵn sàng mô hình gốc Qwen2-VL-2B-Instruct (sẽ tự nạp LoRA khi có adapter_model.safetensors).")
 
         vlm_model.eval()
         model_loaded = True
-        print("[✓] Mô hình Qwen2-VL + PEFT LoRA Adapter đã sẵn sàng trên GPU!")
+        print(f"[✓] Mô hình Qwen2-VL đã sẵn sàng trên {vlm_device}!")
     except Exception as e:
         print(f"[!] Chạy ở chế độ Hybrid Legal IR + Grounded VLM Engine ({e}).")
         model_loaded = False
+
+
+def generate_vlm_grounded_answer(
+    image,
+    query: str,
+    detected_code: str,
+    sign_name: str,
+    category: str,
+    retrieved_articles: list,
+) -> str:
+    """
+    Sinh câu trả lời trực tiếp từ VLM (Qwen2-VL) với RAG Context,
+    đảm bảo định dạng chuẩn mực khớp với giao diện và hệ thống.
+    """
+    global vlm_model, vlm_processor, vlm_device, model_loaded
+    if not model_loaded or vlm_model is None or vlm_processor is None:
+        return None
+
+    try:
+        top_art = retrieved_articles[0] if retrieved_articles else {}
+        art_title = top_art.get("title", f"QCVN 41:2024/BGTVT - Biển số {detected_code}")
+        art_summary = top_art.get("summary", f'Biển số {detected_code} "{sign_name}" theo QCVN 41:2024/BGTVT.')
+
+        rag_prompt = (
+            f"Bạn là trợ lý pháp lý giao thông đường bộ Việt Nam.\n"
+            f"Thông tin biển báo: Biển số {detected_code}: {sign_name} ({category}).\n"
+            f"Căn cứ pháp lý QCVN 41:2024/BGTVT: {art_title}. {art_summary}\n"
+            f"Câu hỏi của người dùng: {query}\n"
+            f"Hãy trả lời trực diện, chính xác và ngắn gọn bằng tiếng Việt (1-2 câu):"
+        )
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": rag_prompt},
+                ] if image is not None else [
+                    {"type": "text", "text": rag_prompt},
+                ]
+            }
+        ]
+
+        text_input = vlm_processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        if image is not None:
+            inputs = vlm_processor(
+                text=[text_input],
+                images=[image.resize((224, 224), Image.Resampling.BILINEAR)],
+                padding=True,
+                return_tensors="pt",
+            ).to(vlm_device)
+        else:
+            inputs = vlm_processor(
+                text=[text_input],
+                padding=True,
+                return_tensors="pt",
+            ).to(vlm_device)
+
+        with torch.no_grad():
+            gen_ids = vlm_model.generate(
+                **inputs,
+                max_new_tokens=90,
+                do_sample=False,
+            )
+            trimmed = [
+                out_id[len(in_id):] for in_id, out_id in zip(inputs.input_ids, gen_ids)
+            ]
+            raw_text = vlm_processor.batch_decode(trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0].strip()
+
+        if raw_text and len(raw_text) > 4:
+            header = f"Đối với **Biển số {detected_code}: \"{sign_name}\"** ({category}) theo **QCVN 41:2024/BGTVT**:\n\n"
+            return (
+                f"{header}"
+                f"- **Giải đáp:** {raw_text}\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+    except Exception as e:
+        print(f"[!] Lỗi khi sinh câu trả lời bằng VLM ({e}), tự động chuyển về bộ giải đáp pháp lý chuẩn.")
+    return None
 
 
 @app.get("/api/health")
@@ -626,6 +726,150 @@ def build_grounded_legal_answer(
             f"{header}"
             f"- **Căn cứ pháp lý (Subtask 1):** {art_title}.\n"
             f"- **Quy định chi tiết:** {art_summary}"
+        )
+
+    # 0B. Hỗ trợ câu hỏi về MỨC PHẠT / XỬ PHẠT theo Nghị định 100/2019/NĐ-CP & 123/2021/NĐ-CP
+    if any(k in q for k in ["phạt", "mức phạt", "tiền phạt", "bị phạt", "xử phạt", "bao nhiêu tiền", "giam bằng", "tước bằng", "tước gplx"]):
+        if detected_code in ("P.101", "P.102", "P.103a", "P.104", "P.105", "P.106a", "P.106b", "P.107", "P.108a"):
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô:** Phạt tiền từ **2.000.000 đồng đến 3.000.000 đồng**, tước Giấy phép lái xe từ **1 đến 3 tháng** (Điểm b Khoản 4 Điều 5 Nghị định 100/2019/NĐ-CP, sửa đổi bởi Nghị định 123/2021/NĐ-CP - Lỗi đi vào đường có biển báo cấm).\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Phạt tiền từ **400.000 đồng đến 600.000 đồng**, tước Giấy phép lái xe từ **1 đến 3 tháng** (Điểm i Khoản 3 Điều 6 Nghị định 100/2019/NĐ-CP)."
+            )
+        elif detected_code == "P.130":
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô:** Phạt tiền từ **800.000 đồng đến 1.000.000 đồng** đối với hành vi dừng xe, đỗ xe tại nơi có biển cấm dừng xe và đỗ xe (Điểm đ Khoản 3 Điều 5 Nghị định 100/2019/NĐ-CP).\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Phạt tiền từ **300.000 đồng đến 400.000 đồng** (Điểm h Khoản 2 Điều 6 Nghị định 100/2019/NĐ-CP)."
+            )
+        elif detected_code.startswith("P.131"):
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô:** Phạt tiền từ **400.000 đồng đến 600.000 đồng** đối với hành vi đỗ xe tại nơi có biển cấm đỗ xe (Điểm e Khoản 2 Điều 5 Nghị định 100/2019/NĐ-CP).\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Phạt tiền từ **300.000 đồng đến 400.000 đồng** (Điểm h Khoản 2 Điều 6 Nghị định 100/2019/NĐ-CP)."
+            )
+        elif detected_code in ("P.123a", "P.123b", "P.124a", "P.124b", "P.124c", "P.124d", "P.124e", "P.124f"):
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô:** Phạt tiền từ **800.000 đồng đến 1.000.000 đồng** khi quay đầu xe hoặc rẽ tại nơi có biển báo cấm (Điểm k Khoản 3 Điều 5 Nghị định 100/2019/NĐ-CP).\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Phạt tiền từ **100.000 đồng đến 200.000 đồng** đối với hành vi quay đầu xe tại nơi có biển báo cấm (Điểm p Khoản 1 Điều 6 Nghị định 100/2019/NĐ-CP)."
+            )
+        elif detected_code.startswith("P.127"):
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô chạy quá tốc độ quy định:**\n"
+                "  + Chạy quá từ 5 km/h đến dưới 10 km/h: Phạt **800.000 - 1.000.000 đồng**.\n"
+                "  + Chạy quá từ 10 km/h đến 20 km/h: Phạt **4.000.000 - 6.000.000 đồng**, tước GPLX 1 - 3 tháng.\n"
+                "  + Chạy quá từ trên 20 km/h đến 35 km/h: Phạt **6.000.000 - 8.000.000 đồng**, tước GPLX 2 - 4 tháng.\n"
+                "  + Chạy quá trên 35 km/h: Phạt **10.000.000 - 12.000.000 đồng**, tước GPLX 2 - 4 tháng.\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Chạy quá 5 - 10 km/h phạt **300.000 - 400.000 đồng**; quá 10 - 20 km/h phạt **800.000 - 1.000.000 đồng**; quá trên 20 km/h phạt **4.000.000 - 5.000.000 đồng**, tước GPLX 2 - 4 tháng."
+            )
+        else:
+            penalty_info = (
+                "- 🚗 **Đối với xe ô tô:** Phạt tiền từ **300.000 đồng đến 400.000 đồng** đối với hành vi không chấp hành hiệu lệnh, chỉ dẫn của biển báo hiệu (Điểm a Khoản 1 Điều 5 Nghị định 100/2019/NĐ-CP).\n"
+                "- 🏍️ **Đối với xe mô tô, xe máy:** Phạt tiền từ **100.000 đồng đến 200.000 đồng** đối với hành vi không chấp hành hiệu lệnh, chỉ dẫn của biển báo hiệu (Điểm a Khoản 1 Điều 6 Nghị định 100/2019/NĐ-CP)."
+            )
+        return (
+            f"⚖️ **MỨC XỬ PHẠT VI PHẠM (THEO NGHỊ ĐỊNH 100/2019/NĐ-CP & NGHỊ ĐỊNH 123/2021/NĐ-CP):**\n\n"
+            f"{header}"
+            f"- **Quy định mức phạt tiền:**\n{penalty_info}\n"
+            f"- **Căn cứ pháp lý:** {art_title}.\n"
+            f"- **Nội dung quy chuẩn:** {art_summary}"
+        )
+
+    # 0C. Hỗ trợ câu hỏi Đúng / Sai (Yes / No) - Chuẩn Subtask 2 bài toán VLSP 2025 MLQA-TSR
+    if any(k in q for k in ["đúng hay sai", "sai hay đúng", "có đúng không", "đúng không", "có được phép không", "được phép không"]):
+        if "quay đầu" in q and detected_code in ("P.123a", "P.103c"):
+            return (
+                f"✅ **ĐÚNG (ĐƯỢC PHÉP QUAY ĐẦU XE).**\n\n"
+                f"{header}"
+                f"- **Giải thích chi tiết:** Theo Phụ lục B (Mục B.23) QCVN 41:2024/BGTVT, biển số **{detected_code}** cấm rẽ trái **không có giá trị cấm quay đầu xe**. Bạn hoàn toàn được phép quay đầu xe.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        elif "rẽ trái" in q and detected_code in ("P.124a", "P.124b"):
+            return (
+                f"✅ **ĐÚNG (ĐƯỢC PHÉP RẼ TRÁI).**\n\n"
+                f"{header}"
+                f"- **Giải thích chi tiết:** Theo Phụ lục B (Mục B.24) QCVN 41:2024/BGTVT, biển số **{detected_code}** cấm quay đầu xe **không có giá trị cấm rẽ trái**. Bạn hoàn toàn được phép rẽ trái bình thường.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        elif any(w in q for w in ["xe máy", "mô tô"]) and detected_code.startswith("P.106"):
+            return (
+                f"✅ **ĐÚNG (XE MÁY ĐƯỢC PHÉP ĐI VÀO).**\n\n"
+                f"{header}"
+                f"- **Giải thích chi tiết:** Biển **{detected_code}** chỉ áp dụng cấm đối với xe ô tô tải, xe mô tô và xe máy hai bánh được phép lưu thông bình thường.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        elif any(w in q for w in ["cấm", "không được"]):
+            return (
+                f"✅ **ĐÚNG (HÀNH VI BỊ CẤM THEO BIỂN BÁO).**\n\n"
+                f"{header}"
+                f"- **Giải thích:** Biển **{detected_code} ({sign_name})** có hiệu lực cấm đối với phương tiện và hành vi tương ứng theo quy chuẩn.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        else:
+            return (
+                f"❌ **SAI (HÀNH VI BỊ CẤM / KHÔNG ĐƯỢC PHÉP).**\n\n"
+                f"{header}"
+                f"- **Giải thích:** Đây là biển báo cấm (**{sign_name}**). Người điều khiển phương tiện không được phép thực hiện hành vi vi phạm khi gặp biển này.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+
+    # 0D. Hỗ trợ câu hỏi về TỐC ĐỘ GIỚI HẠN / TỐC ĐỘ TỐI ĐA (P.127)
+    if any(k in q for k in ["tốc độ", "chạy bao nhiêu", "km/h", "bắn tốc độ"]):
+        speed_val = detected_code.split("_")[-1] if "_" in detected_code and detected_code.split("_")[-1].isdigit() else "ghi trên biển"
+        return (
+            f"🚗 **QUY ĐỊNH TỐC ĐỘ TỐI ĐA CHO PHÉP (BIỂN SỐ {detected_code}):**\n\n"
+            f"{header}"
+            f"- **Quy định tốc độ:** Tốc độ tối đa cho phép các phương tiện cơ giới lưu thông trên đoạn đường này là **{speed_val} km/h**.\n"
+            f"- **Người lái xe cần lưu ý:** Tuyệt đối không điều khiển phương tiện vượt quá {speed_val} km/h để đảm bảo an toàn giao thông và tránh bị xử phạt vi phạm chạy quá tốc độ.\n"
+            f"- **Căn cứ pháp lý:** {art_title}.\n"
+            f"- **Nội dung quy chuẩn:** {art_summary}"
+        )
+
+    # 0E. Hỗ trợ câu hỏi về DỪNG XE / ĐỖ XE
+    if any(k in q for k in ["đỗ xe", "dừng xe", "đậu xe", "dừng đỗ", "đỗ", "đậu"]) and not any(k in q for k in ["phạt", "tiền"]):
+        if detected_code == "P.130":
+            return (
+                f"❌ **CẤM CẢ DỪNG XE VÀ ĐỖ XE.**\n\n"
+                f"{header}"
+                f"- **Giải thích:** Biển số **P.130** có hiệu lực cấm tất cả các loại xe cơ giới và thô sơ **dừng xe và đỗ xe** trên đoạn đường này (trừ các xe được quyền ưu tiên theo quy định).\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        elif detected_code.startswith("P.131"):
+            return (
+                f"⚠️ **CẤM ĐỖ XE — ĐƯỢC PHÉP DỪNG XE TẠM THỜI:**\n\n"
+                f"{header}"
+                f"- ❌ **Đỗ xe:** Bị cấm theo quy định của biển **{detected_code}**.\n"
+                f"- ✅ **Dừng xe:** Biển chỉ cấm đỗ xe, bạn **vẫn được phép dừng xe tạm thời** để đón trả khách hoặc bốc dỡ hàng (người lái xe không được rời khỏi vô-lăng, phải bật đèn tín hiệu theo quy định).\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+        elif detected_code in ("I.408", "I.408a"):
+            return (
+                f"✅ **ĐƯỢC PHÉP ĐỖ XE (NƠI ĐỖ XE / BÃI ĐỖ XE).**\n\n"
+                f"{header}"
+                f"- **Giải thích:** Đây là biển chỉ dẫn nơi đỗ xe (**{sign_name}**), người điều khiển phương tiện được phép dừng, đỗ xe đúng vị trí vạch kẻ.\n"
+                f"- **Căn cứ pháp lý:** {art_title}.\n"
+                f"- **Nội dung quy chuẩn:** {art_summary}"
+            )
+
+    # 0F. Hỗ trợ câu hỏi về XE ĐƯỢC QUYỀN ƯU TIÊN (xe cứu hỏa, cứu thương, công an, quân sự...)
+    if any(k in q for k in ["cứu hỏa", "cứu thương", "cấp cứu", "chữa cháy", "xe ưu tiên", "ưu tiên", "công an", "quân sự", "hộ đê"]):
+        veh_name = (
+            "Xe cứu hỏa (chữa cháy)" if any(k in q for k in ["cứu hỏa", "chữa cháy"])
+            else "Xe cứu thương (cấp cứu)" if any(k in q for k in ["cứu thương", "cấp cứu"])
+            else "Xe công an / quân sự" if any(k in q for k in ["công an", "quân sự"])
+            else "Phương tiện được quyền ưu tiên"
+        )
+        return (
+            f"✅ **ĐƯỢC PHÉP ĐI VÀO (QUYỀN ƯU TIÊN THEO LUẬT GIAO THÔNG):**\n\n"
+            f"{header}"
+            f"- **Giải đáp:** **{veh_name}** khi đang thực hiện nhiệm vụ khẩn cấp (có phát tín hiệu còi, cờ, đèn ưu tiên theo quy định) **HOÀN TOÀN ĐƯỢC PHÉP ĐI VÀO** (kể cả đường cấm đi ngược chiều **{detected_code}**), không bị giới hạn tốc độ và được phép vượt đèn đỏ.\n"
+            f"- **Lưu ý:** Trường hợp xe không đi làm nhiệm vụ hoặc không phát tín hiệu còi/đèn ưu tiên thì vẫn phải chấp hành hiệu lệnh biển báo như phương tiện thông thường.\n"
+            f"- **Căn cứ pháp lý:** Điều 22 Luật Giao thông đường bộ và {art_title} (Quy chuẩn nêu rõ hiệu lực cấm *'trừ các xe được ưu tiên theo quy định'*).\n"
+            f"- **Nội dung quy chuẩn:** {art_summary}"
         )
 
     # 1. Câu hỏi về XE MÁY / MÔ TÔ / XE GẮN MÁY
@@ -902,6 +1146,29 @@ async def chat_multimodal(
         sign_info=sign_info,
         retrieved_articles=retrieved_articles,
     )
+
+    # Nếu là câu hỏi mở rộng đàm thoại và mô hình VLM đã sẵn sàng, gọi VLM để sinh câu trả lời trực tiếp
+    if model_loaded and vlm_model is not None and vlm_processor is not None:
+        is_structured_query = any(k in query.lower() for k in [
+            "a.", "b.", "c.", "d.", "xe máy", "mô tô", "xe gắn máy",
+            "ô tô", "xe con", "xe tải", "xe khách", "quay đầu", "rẽ trái", "rẽ phải",
+            "phạt", "mức phạt", "tiền phạt", "tốc độ", "km/h",
+            "cứu hỏa", "cứu thương", "cấp cứu", "chữa cháy", "ưu tiên", "công an", "quân sự", "hộ đê"
+        ])
+        if not is_structured_query:
+            try:
+                vlm_ans = generate_vlm_grounded_answer(
+                    image=image,
+                    query=query,
+                    detected_code=detected_code,
+                    sign_name=sign_info.get("sign_name", STANDARD_NAMES.get(detected_code, "Biển báo giao thông")),
+                    category=sign_info.get("category", get_category_by_code(detected_code)),
+                    retrieved_articles=retrieved_articles,
+                )
+                if vlm_ans:
+                    ai_response_text = vlm_ans
+            except Exception as e:
+                print(f"[!] Bỏ qua lỗi VLM runtime, dùng đáp án pháp lý chuẩn: {e}")
 
     relevant_articles = (
         [r["article_id"] for r in retrieved_articles]
