@@ -563,86 +563,6 @@ def extract_sign_code_from_text(text: str) -> Optional[str]:
     return None
 
 
-def generate_vlm_grounded_answer(
-    image,
-    query: str,
-    detected_code: str,
-    sign_name: str,
-    category: str,
-    retrieved_articles: list,
-) -> str:
-    """
-    Sinh câu trả lời trực tiếp từ VLM (Qwen2-VL) với RAG Context,
-    đảm bảo định dạng chuẩn mực khớp với giao diện và hệ thống.
-    """
-    global vlm_model, vlm_processor, vlm_device, model_loaded
-    if not model_loaded or vlm_model is None or vlm_processor is None:
-        return None
-
-    try:
-        top_art = retrieved_articles[0] if retrieved_articles else {}
-        art_title = top_art.get("title", f"QCVN 41:2024/BGTVT - Biển số {detected_code}")
-        art_summary = top_art.get("summary", f'Biển số {detected_code} "{sign_name}" theo QCVN 41:2024/BGTVT.')
-
-        rag_prompt = (
-            f"Bạn là trợ lý pháp lý giao thông đường bộ Việt Nam.\n"
-            f"Thông tin biển báo: Biển số {detected_code}: {sign_name} ({category}).\n"
-            f"Căn cứ pháp lý QCVN 41:2024/BGTVT: {art_title}. {art_summary}\n"
-            f"Câu hỏi của người dùng: {query}\n"
-            f"Hãy trả lời trực diện, chính xác và ngắn gọn bằng tiếng Việt (1-2 câu):"
-        )
-
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image"},
-                    {"type": "text", "text": rag_prompt},
-                ] if image is not None else [
-                    {"type": "text", "text": rag_prompt},
-                ]
-            }
-        ]
-
-        text_input = vlm_processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-        if image is not None:
-            inputs = vlm_processor(
-                text=[text_input],
-                images=[image.resize((224, 224), Image.Resampling.BILINEAR)],
-                padding=True,
-                return_tensors="pt",
-            ).to(vlm_device)
-        else:
-            inputs = vlm_processor(
-                text=[text_input],
-                padding=True,
-                return_tensors="pt",
-            ).to(vlm_device)
-
-        with torch.no_grad():
-            gen_ids = vlm_model.generate(
-                **inputs,
-                max_new_tokens=90,
-                do_sample=False,
-            )
-            trimmed = [
-                out_id[len(in_id):] for in_id, out_id in zip(inputs.input_ids, gen_ids)
-            ]
-            raw_text = vlm_processor.batch_decode(trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0].strip()
-
-        if raw_text and len(raw_text) > 4:
-            header = f"Đối với **Biển số {detected_code}: \"{sign_name}\"** ({category}) theo **QCVN 41:2024/BGTVT**:\n\n"
-            return (
-                f"{header}"
-                f"- **Giải đáp:** {raw_text}\n"
-                f"- **Căn cứ pháp lý:** {art_title}.\n"
-                f"- **Nội dung quy chuẩn:** {art_summary}"
-            )
-    except Exception as e:
-        print(f"[!] Lỗi khi sinh câu trả lời bằng VLM ({e}), tự động chuyển về bộ giải đáp pháp lý chuẩn.")
-    return None
-
-
 @app.get("/api/health")
 async def health_check():
     return {
@@ -864,29 +784,6 @@ async def chat_multimodal(
             f"- **Căn cứ pháp lý:** {art_title}.\n"
             f"- **Nội dung quy chuẩn:** {art_summary}"
         )
-
-    # Nếu là câu hỏi mở rộng đàm thoại và mô hình VLM đã sẵn sàng, gọi VLM để sinh câu trả lời trực tiếp
-    if model_loaded and vlm_model is not None and vlm_processor is not None:
-        is_structured_query = any(k in query.lower() for k in [
-            "a.", "b.", "c.", "d.", "xe máy", "mô tô", "xe gắn máy",
-            "ô tô", "xe con", "xe tải", "xe khách", "quay đầu", "rẽ trái", "rẽ phải",
-            "phạt", "mức phạt", "tiền phạt", "tốc độ", "km/h",
-            "cứu hỏa", "cứu thương", "cấp cứu", "chữa cháy", "ưu tiên", "công an", "quân sự", "hộ đê"
-        ])
-        if not is_structured_query:
-            try:
-                vlm_ans = generate_vlm_grounded_answer(
-                    image=image,
-                    query=query,
-                    detected_code=detected_code,
-                    sign_name=sign_info.get("sign_name", STANDARD_NAMES.get(detected_code, "Biển báo giao thông")),
-                    category=sign_info.get("category", get_category_by_code(detected_code)),
-                    retrieved_articles=retrieved_articles,
-                )
-                if vlm_ans:
-                    ai_response_text = vlm_ans
-            except Exception as e:
-                print(f"[!] Bỏ qua lỗi VLM runtime, dùng đáp án pháp lý chuẩn: {e}")
 
     relevant_articles = (
         [r["article_id"] for r in retrieved_articles]
