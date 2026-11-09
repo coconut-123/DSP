@@ -3,7 +3,9 @@ server.py
 ---------
 FastAPI Backend Server cho Hệ thống Hỏi - Đáp Pháp lý Đa phương thức về Biển báo Giao thông
 (Multimodal Legal Question Answering for Traffic Sign Regulations):
-- Nạp mô hình Qwen2-VL-2B-Instruct + PEFT QLoRA Adapter (`./traffic_vlm_peft_adapter`) trên GPU.
+- Nạp mô hình Qwen2-VL-2B-Instruct + PEFT QLoRA Adapter (`./traffic_vlm_peft_adapter`) trên GPU và
+  THỰC SỰ dùng nó khi suy luận: (a) chấm Đúng/Sai cho các mã biển ứng viên (xếp hạng lại kết quả của bộ đối sánh
+  thị giác), (b) trả lời câu hỏi Đúng/Sai. Trả lời tự do vẫn do luật + Legal IR sinh ra.
 - Tích hợp động cơ Truy xuất Thông tin Pháp lý Lai ghép (`HybridLegalRetriever` trong `legal_ir.py`:
   Okapi BM25 + Dense Semantic Embeddings + Visual-Conditioned Reciprocal Rank Fusion).
 - Cung cấp các API:
@@ -31,6 +33,7 @@ from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
+from starlette.concurrency import run_in_threadpool
 
 import ast
 from legal_ir import HybridLegalRetriever, compute_f2_metrics, tokenize_vn
@@ -39,6 +42,12 @@ BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
 ADAPTER_DIR = str(BASE_DIR / "traffic_vlm_peft_adapter")
 BASE_MODEL_NAME = "Qwen/Qwen2-VL-2B-Instruct"
+
+# --- Cờ cấu hình (biến môi trường) ---
+USE_VLM = os.environ.get("USE_VLM", "1") != "0"                       # USE_VLM=0: tắt hẳn VLM (không nạp model)
+ALLOW_BASE_VLM = os.environ.get("ALLOW_BASE_VLM", "0") == "1"         # 1: cho phép dùng model gốc khi thiếu adapter
+VLM_RERANK_TOPK = max(1, int(os.environ.get("VLM_RERANK_TOPK", "3")))  # số mã ứng viên đưa cho VLM chấm
+VLM_OVERRIDE_MARGIN = float(os.environ.get("VLM_OVERRIDE_MARGIN", "0.15"))
 
 
 def get_category_by_code(code: str) -> str:
@@ -112,6 +121,8 @@ vlm_model = None
 vlm_processor = None
 vlm_device = "cuda" if torch.cuda.is_available() else "cpu"
 model_loaded = False
+adapter_loaded = False  # True chỉ khi trọng số adapter LoRA thực sự được nạp (không chỉ là thư mục tồn tại)
+_vlm_lock = threading.Lock()
 
 legal_db: Dict[str, Any] = {}
 signs_catalog: Dict[str, Any] = {}
@@ -274,15 +285,13 @@ def verify_parking_prohibition(crop_img: Image.Image, candidate_code: str) -> st
     return "P.130"
 
 
-def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
+def rank_visual_candidates(img: Image.Image, topk: int = 5) -> Dict[str, Any]:
     """
-    Kết hợp:
-    1) Đối sánh láng giềng gần nhất (k-NN) & nguyên mẫu lớp (Class Prototypes) bằng đặc trưng sâu ViT-B/16 (768-d)
-       trên toàn bộ ảnh cắt biển báo thực tế (data/real_crops - 52 lớp) và ảnh chuẩn (data/pdf_signs).
-    2) Bộ phát hiện mặt biển báo (detect_and_crop_traffic_sign) + đối sánh đặc trưng cấu trúc & hình vẽ bên trong
-       bất biến ánh sáng (compute_image_signature) cho ảnh chụp cảnh đường phố rộng (có cây cối, cột điện, biển phụ).
-    3) Bộ xác minh hình học trực chuẩn (verify_parking_prohibition) kiểm tra số lượng vạch chéo đỏ để phân biệt
-       chính xác P.130 (2 vạch chéo chữ X) và P.131a (1 vạch chéo đơn).
+    Xếp hạng các mã biển ứng viên bằng bộ đối sánh thị giác (KHÔNG phải model Qwen2-VL):
+    1) k-NN ViT-B/16 (ImageNet) trên ảnh data/real_crops: nếu cosine >= 0.88 -> `direct` (gần như trùng ảnh train).
+    2) Đặc trưng cấu trúc tự viết (compute_image_signature) + nguyên mẫu lớp ViT-B/16.
+    3) verify_parking_prohibition phân biệt P.130 / P.131a.
+    Trả về {"direct": (code, cosine) | None, "ranked": [(code, score), ...]} với điểm số THÔ (không ép khoảng).
     """
     rgb_orig = img.convert("RGB")
     cropped_sign = detect_and_crop_traffic_sign(rgb_orig)
@@ -296,7 +305,7 @@ def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
         if score > code_scores.get(code, -1.0):
             code_scores[code] = score
 
-    # Trích xuất đặc trưng sâu ViT-B/16 (768-d) trên cả ảnh gốc (cho ảnh cắt thực tế real_crops) và ảnh đã localize mặt biển
+    direct: Optional[Tuple[str, float]] = None
     if vit_extractor is not None and vit_cache_data is not None and "norm_feats" in vit_cache_data:
         try:
             mean_t = torch.tensor(vit_cache_data["grp_mean"], dtype=torch.float32, device=vlm_device).view(1, 3, 1, 1)
@@ -316,38 +325,47 @@ def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
                 norm_feats = vit_cache_data["norm_feats"]
                 n_real = int(vit_cache_data.get("n_real", 1767))
 
-                # 1. Kiểm tra khớp trực tiếp với các ảnh thực tế đã huấn luyện trong data/real_crops
                 if n_real > 0 and len(vit_sample_codes) >= n_real:
                     sims_real_orig = torch.mv(norm_feats[:n_real], feat_orig)
                     max_sim_real, best_idx_real = torch.max(sims_real_orig, dim=0)
                     if float(max_sim_real) >= 0.88:
-                        matched_real_code = vit_sample_codes[int(best_idx_real)]
-                        matched_real_code = verify_parking_prohibition(cropped_sign, matched_real_code)
-                        conf_real = round(min(99.8, max(94.5, float(max_sim_real) * 100.0)), 1)
-                        return matched_real_code, conf_real
+                        matched_real_code = verify_parking_prohibition(cropped_sign, vit_sample_codes[int(best_idx_real)])
+                        direct = (matched_real_code, round(float(max_sim_real), 4))
 
-                # 2. Đối với ảnh chụp toàn cảnh ngoài đường hoặc ảnh biển chuẩn PDF:
-                # Kết hợp đặc trưng cấu trúc mũi tên/ký hiệu bên trong (code_scores) + ViT-B/16 trên vùng mặt biển đã cắt
-                for c_code, proto_vec in vit_cache_data["proto_dict"].items():
-                    vit_sim = max(
-                        float(torch.dot(proto_vec, feat_crop)),
-                        float(torch.dot(proto_vec, feat_orig)) * 0.97,
-                    )
-                    if c_code in code_scores:
-                        code_scores[c_code] = 0.82 * code_scores[c_code] + 0.18 * vit_sim
-                    else:
-                        code_scores[c_code] = vit_sim * 0.88
+                if direct is None:
+                    for c_code, proto_vec in vit_cache_data["proto_dict"].items():
+                        vit_sim = max(
+                            float(torch.dot(proto_vec, feat_crop)),
+                            float(torch.dot(proto_vec, feat_orig)) * 0.97,
+                        )
+                        if c_code in code_scores:
+                            code_scores[c_code] = 0.82 * code_scores[c_code] + 0.18 * vit_sim
+                        else:
+                            code_scores[c_code] = vit_sim * 0.88
         except Exception as e:
             print(f"[!] Cảnh báo trích xuất ViT-B/16: {e}")
 
-    if not code_scores:
-        return None, 0.0
+    ranked: List[Tuple[str, float]] = []
+    seen = set()
+    for code, s in sorted(code_scores.items(), key=lambda kv: -kv[1]):
+        fixed = verify_parking_prohibition(cropped_sign, code)
+        if fixed in seen:
+            continue
+        seen.add(fixed)
+        ranked.append((fixed, round(float(s), 4)))
+        if len(ranked) >= topk:
+            break
+    return {"direct": direct, "ranked": ranked}
 
-    best_code = max(code_scores.items(), key=lambda x: x[1])[0]
-    best_code = verify_parking_prohibition(cropped_sign, best_code)
-    best_score = code_scores.get(best_code, code_scores[list(code_scores.keys())[0]])
-    conf = round(min(99.6, max(92.4, (best_score + 0.42) * 100.0)), 1)
-    return best_code, conf
+
+def match_image_visually(img: Image.Image) -> Tuple[Optional[str], float]:
+    """Tương thích ngược: trả (mã, điểm THÔ). Không còn ép 'độ tin cậy' vào khoảng 92-99.6%."""
+    r = rank_visual_candidates(img, topk=1)
+    if r["direct"]:
+        return r["direct"]
+    if r["ranked"]:
+        return r["ranked"][0]
+    return None, 0.0
 
 
 def load_knowledge_bases():
@@ -408,7 +426,11 @@ def load_knowledge_bases():
         if cache_pt.exists() and scenes_path.exists():
             try:
                 import torchvision.models as tv_models
-                cached = torch.load(cache_pt, map_location="cpu", weights_only=False)
+                try:
+                    cached = torch.load(cache_pt, map_location="cpu", weights_only=True)
+                except Exception:
+                    print("[!] weights_only=True thất bại, nạp lại với weights_only=False (chỉ an toàn nếu file .pt do chính bạn tạo).")
+                    cached = torch.load(cache_pt, map_location="cpu", weights_only=False)
                 feats_all = cached["vit_grp"].float()
                 norms = feats_all.norm(dim=1, keepdim=True).clamp(min=1e-6)
                 norm_feats = feats_all / norms
@@ -456,9 +478,17 @@ def load_knowledge_bases():
 load_knowledge_bases()
 
 
+def adapter_weights_present() -> bool:
+    d = Path(ADAPTER_DIR)
+    return (d / "adapter_model.safetensors").exists() or (d / "adapter_model.bin").exists()
+
+
 def init_vlm_model():
-    global vlm_model, vlm_processor, vlm_device, model_loaded
+    global vlm_model, vlm_processor, vlm_device, model_loaded, adapter_loaded
     if model_loaded:
+        return
+    if not USE_VLM:
+        print("[i] USE_VLM=0: bỏ qua việc nạp Qwen2-VL (server chạy bằng bộ đối sánh thị giác + luật).")
         return
 
     vlm_device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -490,17 +520,82 @@ def init_vlm_model():
             device_map="auto" if torch.cuda.is_available() else None,
         )
 
-        if os.path.exists(ADAPTER_DIR):
+        if adapter_weights_present():
             vlm_model = PeftModel.from_pretrained(base_model, ADAPTER_DIR)
+            adapter_loaded = True
         else:
             vlm_model = base_model
+            adapter_loaded = False
+            print(
+                "[!] KHÔNG tìm thấy adapter_model.safetensors trong traffic_vlm_peft_adapter/ "
+                "(file này bị .gitignore). Đang chạy model GỐC chưa fine-tune -> VLM sẽ bị TẮT khi suy luận "
+                "trừ khi đặt ALLOW_BASE_VLM=1."
+            )
 
         vlm_model.eval()
         model_loaded = True
-        print("[✓] Mô hình Qwen2-VL + PEFT LoRA Adapter đã sẵn sàng trên GPU!")
+        if adapter_loaded:
+            print("[✓] Qwen2-VL + LoRA adapter (đã train) sẵn sàng và SẼ được dùng để suy luận.")
+        else:
+            print("[✓] Qwen2-VL (model gốc) đã nạp, nhưng chưa có adapter.")
     except Exception as e:
-        print(f"[!] Chạy ở chế độ Hybrid Legal IR + Grounded VLM Engine ({e}).")
+        print(f"[!] Không nạp được VLM, chạy chế độ Hybrid Legal IR + bộ đối sánh thị giác ({e}).")
         model_loaded = False
+        adapter_loaded = False
+
+
+def vlm_is_active() -> bool:
+    """VLM chỉ tham gia suy luận khi đã nạp xong VÀ có adapter đã train (hoặc bật ALLOW_BASE_VLM=1)."""
+    return bool(USE_VLM and model_loaded and vlm_model is not None and vlm_processor is not None
+                and (adapter_loaded or ALLOW_BASE_VLM))
+
+
+YN_SUFFIX = "\n\nTrả lời bằng một trong hai đáp án: Đúng hoặc Sai. Không giải thích thêm."
+_YN_PATTERN = re.compile(r"đúng\s*hay\s*sai|đúng\s*hoặc\s*sai|đúng\s*/\s*sai", re.IGNORECASE)
+
+
+def build_legal_context(articles: List[Dict[str, Any]]) -> str:
+    """Đúng định dạng lúc train (train_peft_vlm.py): 'Điều luật liên quan:\\n[id] title: summary'."""
+    lines = [f"[{a.get('article_id', '')}] {a.get('title', '')}: {a.get('summary', '')}" for a in articles or []]
+    return ("Điều luật liên quan:\n" + "\n".join(lines) + "\n\n") if lines else ""
+
+
+def _vlm_prepare(image: Image.Image, user_text: str):
+    messages = [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": user_text}]}]
+    prompt = vlm_processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    return vlm_processor(text=[prompt], images=[image], padding=True, return_tensors="pt").to(vlm_model.device)
+
+
+def vlm_generate(image: Image.Image, user_text: str, max_new_tokens: int = 8) -> str:
+    """Sinh văn bản ngắn bằng Qwen2-VL + LoRA (greedy)."""
+    with _vlm_lock, torch.inference_mode():
+        inputs = _vlm_prepare(image, user_text)
+        out = vlm_model.generate(**inputs, max_new_tokens=max_new_tokens, do_sample=False)
+        trimmed = [o[len(i):] for i, o in zip(inputs.input_ids, out)]
+        return vlm_processor.batch_decode(trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0].strip()
+
+
+def vlm_true_prob(image: Image.Image, user_text: str) -> float:
+    """P('Đúng') so với P('Sai') ở token đầu tiên của câu trả lời. Dùng được làm điểm chấm liên tục."""
+    tok = vlm_processor.tokenizer
+    id_true = tok.encode("Đúng", add_special_tokens=False)[0]
+    id_false = tok.encode("Sai", add_special_tokens=False)[0]
+    with _vlm_lock, torch.inference_mode():
+        inputs = _vlm_prepare(image, user_text)
+        logits = vlm_model(**inputs).logits[0, -1].float()
+        pair = torch.stack([logits[id_true], logits[id_false]])
+        return float(torch.softmax(pair, dim=0)[0])
+
+
+def vlm_score_candidates(image: Image.Image, codes: List[str]) -> Dict[str, float]:
+    """Hỏi VLM 'Biển báo trong hình là Biển số X (tên), đúng hay sai?' cho từng mã ứng viên -> P(Đúng)."""
+    scores: Dict[str, float] = {}
+    for code in codes:
+        name = signs_catalog.get(code, {}).get("sign_name") or STANDARD_NAMES.get(code, "")
+        label = f"Biển số {code} ({name})" if name else f"Biển số {code}"
+        statement = f"Biển báo trong hình là {label}, đúng hay sai?" + YN_SUFFIX
+        scores[code] = round(vlm_true_prob(image, statement), 4)
+    return scores
 
 
 @app.get("/api/health")
@@ -509,8 +604,10 @@ async def health_check():
         "status": "online",
         "backend": "FastAPI Multimodal Legal QA + Hybrid Legal IR Server",
         "vlm_model_loaded": model_loaded,
+        "vlm_active_in_inference": vlm_is_active(),
         "base_model": BASE_MODEL_NAME,
-        "adapter_loaded": os.path.exists(ADAPTER_DIR),
+        "adapter_weights_found": adapter_weights_present(),
+        "adapter_loaded": adapter_loaded,
         "device": vlm_device,
         "total_signs": len(signs_catalog),
         "total_articles": len(legal_db),
@@ -595,38 +692,6 @@ def build_grounded_legal_answer(
             art_summary = clauses[0].split("Hình ")[0].strip()
 
     header = f"Đối với **Biển số {detected_code}: \"{sign_name}\"** ({category}) theo **QCVN 41:2024/BGTVT**:\n\n"
-
-    # 0A. Hỗ trợ định dạng câu hỏi Trắc nghiệm 4 lựa chọn (Multiple-Choice A, B, C, D) theo Mục 4.1 bài báo VLSP 2025 MLQA-TSR
-    mc_matches = re.findall(r"([A-D])\.\s*([^\n]+)", query)
-    if len(mc_matches) >= 2:
-        ref_corpus = f"{detected_code} {sign_name} {category} {art_title} {art_summary} {full_txt}".lower()
-        ref_tokens = set(tokenize_vn(ref_corpus))
-        best_letter = mc_matches[0][0]
-        best_score = -999.0
-        best_choice_txt = mc_matches[0][1].strip()
-        for ltr, c_txt in mc_matches:
-            c_low = c_txt.lower()
-            c_toks = set(tokenize_vn(c_low))
-            score = float(len(c_toks & ref_tokens))
-            if detected_code.lower() in c_low:
-                score += 6.0
-            if sign_name.lower() in c_low:
-                score += 6.0
-            if "P.123a" in detected_code and "không có giá trị cấm quay đầu" in c_low:
-                score += 10.0
-            if ("P.124a" in detected_code or "P.124b" in detected_code) and "không có giá trị cấm rẽ trái" in c_low:
-                score += 10.0
-            if score > best_score:
-                best_score = score
-                best_letter = ltr
-                best_choice_txt = c_txt.strip()
-        return (
-            f"🎯 **ĐÁP ÁN SUBTASK 2 (VLSP 2025 MLQA-TSR): `{best_letter}`**\n"
-            f"> **{best_letter}. {best_choice_txt}**\n\n"
-            f"{header}"
-            f"- **Căn cứ pháp lý (Subtask 1):** {art_title}.\n"
-            f"- **Quy định chi tiết:** {art_summary}"
-        )
 
     # 1. Câu hỏi về XE MÁY / MÔ TÔ / XE GẮN MÁY
     if any(k in q for k in ["xe máy", "mô tô", "xe gắn máy", "2 bánh", "hai bánh"]):
@@ -828,7 +893,6 @@ async def chat_multimodal(
 ):
     global last_active_sign_code
     image = None
-    confidence = 99.1
 
     # Bước 1: Nạp hình ảnh từ file upload, đường dẫn cục bộ hoặc chuỗi base64
     try:
@@ -844,7 +908,6 @@ async def chat_multimodal(
                 img_bytes = base64.b64decode(img_str)
                 image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
             else:
-                # image_base64 là đường dẫn tương đối từ giao diện (VD: "images/P.101/P.101_01.png")
                 rel_clean = img_str.lstrip("/\\")
                 local_path = BASE_DIR / rel_clean
                 if local_path.exists():
@@ -858,24 +921,90 @@ async def chat_multimodal(
         scale = max(400 / image.width, 400 / image.height)
         image = image.resize((int(image.width * scale), int(image.height * scale)), Image.Resampling.LANCZOS)
 
-    # Bước 2: Xác định mã biển báo theo thứ tự ưu tiên chặt chẽ:
-    # (1) Mã biển trong câu hỏi -> (2) Mã biển trong tên file / URL -> (3) Mã biển ngữ cảnh phiên chat (sign_code) -> (4) Đối sánh thị giác trực tiếp trên ảnh -> (5) Ngữ cảnh gần nhất
+    vlm_on = vlm_is_active()
+    vlm_info: Dict[str, Any] = {
+        "active": vlm_on,
+        "adapter_loaded": adapter_loaded,
+        "used_for_recognition": False,
+        "used_for_answer": False,
+    }
+    recognition: Dict[str, Any] = {"source": None}
+
+    # Ảnh đưa cho VLM: mặt biển đã cắt (giống phân phối ảnh lúc train: data/real_crops)
+    vlm_image = None
+    if image is not None and vlm_on:
+        try:
+            vlm_image = await run_in_threadpool(detect_and_crop_traffic_sign, image)
+        except Exception as e:
+            print(f"[!] Không cắt được mặt biển cho VLM: {e}")
+            vlm_image = image
+
+    # Bước 2: Xác định mã biển. Thứ tự: câu hỏi -> tên file -> sign_code của phiên -> NHẬN DIỆN TỪ ẢNH
+    # (bộ đối sánh thị giác sinh ứng viên, Qwen2-VL + LoRA chấm lại) -> biển của lần hỏi trước.
     detected_code = extract_sign_code_from_text(query)
+    if detected_code:
+        recognition["source"] = "query_text"
     if not detected_code and file_name:
         detected_code = extract_sign_code_from_text(file_name)
+        if detected_code:
+            recognition["source"] = "file_name"
     if not detected_code and image_base64 and len(image_base64) < 260:
         detected_code = extract_sign_code_from_text(image_base64)
+        if detected_code:
+            recognition["source"] = "image_path"
     if not detected_code and sign_code:
         detected_code = extract_sign_code_from_text(sign_code) or sign_code.strip()
+        recognition["source"] = "client_sign_code"
+
     if not detected_code and image is not None:
-        vis_code, vis_conf = match_image_visually(image)
-        if vis_code:
-            detected_code = vis_code
-            confidence = vis_conf
+        cand = await run_in_threadpool(rank_visual_candidates, image, max(5, VLM_RERANK_TOPK))
+        cands: List[str] = []
+        if cand["direct"]:
+            cands.append(cand["direct"][0])
+        for c, _ in cand["ranked"]:
+            if c not in cands:
+                cands.append(c)
+        cands = cands[:VLM_RERANK_TOPK]
+        recognition.update({
+            "matcher_direct_knn": cand["direct"],
+            "matcher_ranked": cand["ranked"],
+        })
+        if cands:
+            detected_code = cands[0]
+            recognition["source"] = "visual_matcher"
+            if vlm_on and vlm_image is not None:
+                try:
+                    scores = await run_in_threadpool(vlm_score_candidates, vlm_image, cands)
+                    vlm_info["candidate_p_true"] = scores
+                    vlm_info["used_for_recognition"] = True
+                    best_c, best_p = max(scores.items(), key=lambda kv: kv[1])
+                    top_p = scores.get(cands[0], 0.0)
+                    if best_c != cands[0] and best_p >= 0.5 and best_p >= top_p + VLM_OVERRIDE_MARGIN:
+                        recognition["matcher_top1"] = cands[0]
+                        detected_code = best_c
+                        recognition["source"] = "visual_matcher+vlm_rerank"
+                    else:
+                        recognition["source"] = "visual_matcher+vlm_confirm"
+                except Exception as e:
+                    print(f"[!] VLM chấm lại ứng viên thất bại: {e}")
+                    vlm_info["error"] = str(e)
+
     if not detected_code:
         detected_code = last_active_sign_code
+        recognition["source"] = "session_context"
 
     last_active_sign_code = detected_code
+    recognition["sign_code"] = detected_code
+
+    # Nếu mã đến từ nguồn khác (chữ/tên file/phiên) mà có ảnh -> để VLM đối chiếu độc lập mã đó với ảnh
+    if (vlm_on and vlm_image is not None and "candidate_p_true" not in vlm_info
+            and recognition["source"] in ("query_text", "file_name", "image_path", "client_sign_code")):
+        try:
+            chk = await run_in_threadpool(vlm_score_candidates, vlm_image, [detected_code])
+            vlm_info["sign_check_p_true"] = chk[detected_code]
+            vlm_info["used_for_recognition"] = True
+        except Exception as e:
+            print(f"[!] VLM đối chiếu mã biển thất bại: {e}")
 
     # Bước 3: Truy xuất điều khoản QCVN 41:2024/BGTVT neo theo đúng `detected_code`
     sign_info = signs_catalog.get(detected_code, {
@@ -895,7 +1024,7 @@ async def chat_multimodal(
             mode="visual_hybrid_rrf",
         )
 
-    # Bước 4: Tổng hợp câu trả lời pháp lý chuẩn xác, trực diện cho câu hỏi và mã biển `detected_code`
+    # Bước 4a: Câu trả lời dựa trên luật (rule-based) - luôn có, làm căn cứ giải thích
     ai_response_text = build_grounded_legal_answer(
         query=query,
         detected_code=detected_code,
@@ -903,21 +1032,62 @@ async def chat_multimodal(
         retrieved_articles=retrieved_articles,
     )
 
+    # Bước 4b: Qwen2-VL + LoRA TRẢ LỜI trực tiếp với câu hỏi đóng (Đúng/Sai hoặc A/B/C/D)
+    if vlm_on and vlm_image is not None:
+        try:
+            ctx = build_legal_context(retrieved_articles)
+            q_clean = query.strip()
+            if _YN_PATTERN.search(q_clean):
+                text = f"{ctx}{q_clean}" + ("" if "Trả lời bằng" in q_clean else YN_SUFFIX)
+                p_true = await run_in_threadpool(vlm_true_prob, vlm_image, text)
+                label = "Đúng" if p_true >= 0.5 else "Sai"
+                vlm_info.update({
+                    "question_type": "yes_no",
+                    "used_for_answer": True,
+                    "answer": label,
+                    "p_true": round(p_true, 4),
+                })
+                ai_response_text = (
+                    f"🤖 **Qwen2-VL + LoRA trả lời: `{label}`** (P(Đúng) = {p_true:.2f})\n\n{ai_response_text}"
+                )
+            else:
+                vlm_info["question_type"] = "free_form"
+        except Exception as e:
+            print(f"[!] VLM trả lời thất bại, dùng đáp án rule-based: {e}")
+            vlm_info["error"] = str(e)
+
+    # Cảnh báo nếu VLM không đồng ý với mã biển lấy từ chữ/tên file
+    chk = vlm_info.get("sign_check_p_true")
+    if chk is not None and chk < 0.2:
+        ai_response_text = (
+            f"⚠️ _Mô hình VLM đánh giá ảnh khó khớp với biển **{detected_code}** (P(Đúng) = {chk:.2f}). "
+            f"Hãy kiểm tra lại ảnh hoặc mã biển._\n\n{ai_response_text}"
+        )
+
     relevant_articles = (
         [r["article_id"] for r in retrieved_articles]
         if retrieved_articles
         else sign_info.get("relevant_articles", ["QCVN41_B.1"])
     )
+    if vlm_info["used_for_answer"] or vlm_info["used_for_recognition"]:
+        engine = "Qwen2-VL + LoRA (suy luận thực) + Hybrid Legal IR"
+    elif model_loaded and not vlm_on:
+        engine = "Rule-based + Hybrid Legal IR (VLM đã nạp nhưng bị tắt: thiếu adapter)"
+    else:
+        engine = "Rule-based + Hybrid Legal IR (VLM không tham gia)"
+
     return JSONResponse(
         content={
             "status": "success",
-            "ai_engine": "Qwen2-VL PEFT + Hybrid Legal IR (GPU)" if model_loaded else "Hybrid Legal IR + VLM Engine",
+            "ai_engine": engine,
             "detected_sign": {
                 "sign_code": sign_info.get("sign_code", detected_code),
                 "sign_name": sign_info.get("sign_name", STANDARD_NAMES.get(detected_code, "Biển báo giao thông")),
                 "category": sign_info.get("category", get_category_by_code(detected_code)),
                 "image": sign_info.get("image", f"images/{detected_code}/{detected_code}_01.png"),
             },
+            "recognition": recognition,
+            "vlm": vlm_info,
             "answer": ai_response_text,
             "relevant_articles": relevant_articles,
             "retrieved_legal_passages": retrieved_articles,

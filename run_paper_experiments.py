@@ -6,7 +6,7 @@ Pipeline thực nghiệm SẠCH (không rò rỉ nhãn) cho bài toán VLSP 2025
 Giao thức:
 - Train: `data/real_crops` (1.807 ảnh cắt biển báo thực tế, 52 lớp; chia grouped train/val theo cảnh).
 - Test : `data/pdf_signs` (51 ảnh biển chuẩn trích từ PDF QCVN 41:2024/BGTVT, 46 lớp).
-- Subtask 2 CHỈ dùng câu hỏi Đúng / Sai (Yes/No: "Đúng" hoặc "Sai") (đã bỏ trắc nghiệm Multiple-Choice A/B/C/D).
+- Subtask 2 CHỈ dùng câu hỏi Đúng / Sai (Yes/No: "Đúng" hoặc "Sai") .
 
 Nguyên tắc trung thực (đã sửa so với phiên bản cũ):
 1. KHÔNG dùng nhãn của ảnh test ở bất kỳ bước nào trước khi dự đoán. Hàm cũ `align_real_to_pdf_domain`
