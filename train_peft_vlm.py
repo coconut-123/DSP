@@ -1,25 +1,24 @@
 r"""
 train_peft_vlm.py
 -----------------
-Huấn luyện tinh chỉnh tham số hiệu quả (Parameter-Efficient Fine-Tuning - PEFT / QLoRA 4-bit)
-mô hình ngôn ngữ - thị giác mã nguồn mở (Qwen2-VL-2B-Instruct) theo đúng bài báo:
-"VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation"
-(Luu et al., VLSP 2025 - Mục 2, 3 & 4).
+Huấn luyện tinh chỉnh tham số hiệu quả (Parameter-Efficient Fine-Tuning - PEFT LoRA)
+mô hình ngôn ngữ - thị giác mã nguồn mở (Qwen2-VL-2B-Instruct) cho bài toán
+Hỏi - Đáp Pháp lý Đa phương thức về Biển báo Giao thông Việt Nam (QCVN 41:2024/BGTVT).
 
-Đặc điểm kỹ thuật theo bài báo VLSP 2025 MLQA-TSR:
-1. Tập Huấn luyện (Train Set): Toàn bộ 1.807 mẫu biển báo cắt thực tế từ đường phố Việt Nam
-   trong `C:\ki8\DSP\datadsp\data\real_crops`.
-2. Tập Đánh giá (Evaluation / Test Set): Các mẫu câu hỏi trên 51 ảnh biển báo chuẩn trích xuất từ PDF QCVN 41
-   trong `C:\ki8\DSP\datadsp\data\pdf_signs`.
-3. Mẫu câu lệnh (Prompt Templates) chuẩn theo Mục 4.1 của bài báo:
-   - Câu hỏi Multiple-choice (4 lựa chọn A, B, C, D):
-     `<image>\n<question>\nA. ...\nB. ...\nC. ...\nD. ...\n\nTrả lời bằng một trong bốn đáp án: A, B, C hoặc D. Không giải thích thêm`
-   (Dạng câu hỏi Yes/No Đúng/Sai đã được loại bỏ khỏi bộ dữ liệu).
-4. Tích hợp ngữ cảnh điều luật truy xuất từ Subtask 1 (Multimodal Legal Retrieval) vào quá trình huấn luyện và suy luận Subtask 2.
+Cải tiến cốt lõi (đã sửa lỗi):
+1. Che nhãn (Label Masking `-100`) toàn bộ phần User Prompt + Image Tokens:
+   Chỉ tính hàm mất mát Cross-Entropy trên phần câu trả lời của Assistant và token kết thúc `<|im_end|>`,
+   giúp mô hình học sinh câu trả lời thực sự thay vì lặp lại câu hỏi.
+2. Huấn luyện đa tác vụ (Multi-Task Instruction Tuning) trên tập `data/real_crops`:
+   - Tác vụ 1 (Subtask 2 Binary QA): Câu hỏi Đúng/Sai -> trả lời chính xác `Đúng` hoặc `Sai`.
+   - Tác vụ 2 (Open-Ended Legal QA): Câu hỏi tự nhiên ("Biển báo này có ý nghĩa gì?",
+     "Xe nào được phép đi vào?", "Quy định xử lý khi gặp biển này?") -> sinh câu trả lời giải thích
+     pháp lý chi tiết, mạch lạc theo QCVN 41:2024/BGTVT.
 """
 
 import os
 import sys
+import re
 import json
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -52,14 +51,10 @@ DATA_DIR = BASE_DIR / "data"
 class ModelArguments:
     model_name_or_path: str = field(
         default="Qwen/Qwen2-VL-2B-Instruct",
-        metadata={"help": "Open-source Vision-Language Model backbone (Section 4.2 VLSP 2025)"},
+        metadata={"help": "Open-source Vision-Language Model backbone"},
     )
-    use_qlora: bool = field(
-        default=True,
-        metadata={"help": "Enable 4-bit NormalFloat (NF4) quantization"},
-    )
-    lora_r: int = field(default=16, metadata={"help": "LoRA rank dimension"})
-    lora_alpha: int = field(default=32, metadata={"help": "LoRA alpha scaling"})
+    lora_r: int = field(default=16, metadata={"help": "LoRA rank r"})
+    lora_alpha: int = field(default=32, metadata={"help": "LoRA alpha"})
     lora_dropout: float = field(default=0.05, metadata={"help": "LoRA dropout"})
 
 
@@ -69,18 +64,50 @@ class DataArguments:
         default=str(DATA_DIR / "mqa_dataset.json"),
         metadata={"help": "Path to VLSP 2025 MLQA-TSR dataset"},
     )
-    train_crops_dir: str = field(
-        default=str(DATA_DIR / "real_crops"),
-        metadata={"help": "Directory containing real street crops for training (C:\\ki8\\DSP\\datadsp\\data\\real_crops)"},
-    )
-    eval_pdf_dir: str = field(
-        default=str(DATA_DIR / "pdf_signs"),
-        metadata={"help": "Directory containing canonical PDF signs for evaluation (C:\\ki8\\DSP\\datadsp\\data\\pdf_signs)"},
+
+
+OPEN_QUESTIONS = [
+    "Biển báo trong hình là biển gì và có ý nghĩa quy định như thế nào?",
+    "Biển báo này có ý nghĩa gì và phương tiện nào cần lưu ý khi gặp biển?",
+    "Hãy phân tích ý nghĩa pháp lý và phạm vi hiệu lực của biển báo trong ảnh theo QCVN 41:2024/BGTVT.",
+    "Khi gặp biển báo giao thông này trên đường, người lái xe phải chấp hành quy định gì?",
+]
+
+
+def clean_open_answer(item: dict, retriever: HybridLegalRetriever) -> str:
+    """Xây dựng câu trả lời giải thích pháp lý chuẩn xác, tự nhiên từ thông tin biển báo và điều khoản QCVN 41:2024."""
+    code = item.get("sign_code", "")
+    name = item.get("sign_name", "Biển báo giao thông")
+    category = item.get("category", "Biển báo hiệu đường bộ")
+    rel_ids = item.get("relevant_articles", [])
+
+    art_title = f"Quy chuẩn QCVN 41:2024/BGTVT - Biển số {code}"
+    art_summary = f'Biển số {code} "{name}" thuộc nhóm {category}.'
+    for aid in rel_ids:
+        art = retriever.articles_dict.get(aid, {})
+        if art:
+            art_title = art.get("title", art_title)
+            s_text = art.get("summary", "") or art.get("full_text", "")
+            if code in art.get("full_text", "") and code not in s_text:
+                clauses = [c.strip() for c in re.split(r"(?=[a-k]\)\s)", art["full_text"]) if code in c]
+                if clauses:
+                    s_text = clauses[0].split("Hình ")[0].strip()
+            if s_text:
+                art_summary = s_text
+            break
+
+    return (
+        f"Biển báo trong hình là **Biển số {code}: \"{name}\"** thuộc nhóm **{category}** theo **QCVN 41:2024/BGTVT**.\n\n"
+        f"- **Căn cứ pháp lý:** {art_title}.\n"
+        f"- **Ý nghĩa & Quy định chấp hành:** {art_summary}"
     )
 
 
 class VLSP2025MLQADataset(Dataset):
-    """Dataset nạp dữ liệu theo chuẩn Subtask 1 & Subtask 2 của bài báo VLSP 2025 MLQA-TSR (Mục 4.1)."""
+    """
+    Dataset huấn luyện Qwen2-VL + LoRA có che nhãn (`-100`) cho phần User Prompt,
+    kết hợp cả câu hỏi Đúng/Sai và câu hỏi giải thích pháp lý tự do.
+    """
 
     def __init__(
         self,
@@ -90,6 +117,7 @@ class VLSP2025MLQADataset(Dataset):
         retriever: HybridLegalRetriever,
         source_filter: str = "real_street_crop",
         target_dir_prefix: str = "data/real_crops",
+        include_open_qa: bool = True,
     ):
         with open(mqa_file, "r", encoding="utf-8") as f:
             raw_mqa = json.load(f)
@@ -100,7 +128,7 @@ class VLSP2025MLQADataset(Dataset):
         self.retriever = retriever
         self.samples = []
 
-        for item in entries:
+        for idx, item in enumerate(entries):
             if item.get("source_type") != source_filter:
                 continue
             img_rel = item.get("image", "").replace("\\", "/")
@@ -110,7 +138,6 @@ class VLSP2025MLQADataset(Dataset):
             if not img_path.exists():
                 continue
 
-            # Lấy văn bản điều luật liên quan R = {d_i} (Subtask 1) ghép cùng câu lệnh chuẩn Mục 4.1 (Subtask 2)
             rel_ids = item.get("relevant_articles", [])
             legal_ctx_lines = []
             for aid in rel_ids:
@@ -118,61 +145,98 @@ class VLSP2025MLQADataset(Dataset):
                 if art:
                     legal_ctx_lines.append(f"[{aid}] {art.get('title', '')}: {art.get('summary', '')}")
             legal_context_str = "\n".join(legal_ctx_lines)
+            ctx_prefix = f"Điều luật liên quan:\n{legal_context_str}\n\n" if legal_context_str else ""
 
+            # 1. Mẫu câu hỏi Đúng/Sai (Subtask 2)
             vlsp_prompt = item.get("vlsp_prompt", "").replace("<image>\n", "").strip()
-            if legal_context_str:
-                full_user_prompt = f"Điều luật liên quan:\n{legal_context_str}\n\n{vlsp_prompt}"
-            else:
-                full_user_prompt = vlsp_prompt
-
             self.samples.append({
                 "image_path": str(img_path),
-                "user_prompt": full_user_prompt,
-                "correct_answer": item.get("correct_answer", "A"),
-                "question_type": item.get("question_type", "multiple_choice"),
-                "sign_code": item.get("sign_code", ""),
-                "relevant_articles": rel_ids,
+                "user_prompt": f"{ctx_prefix}{vlsp_prompt}",
+                "assistant_answer": item.get("correct_answer", "Đúng"),
+                "task": "yes_no",
             })
+
+            # 2. Mẫu câu hỏi tự do (Open-Ended Legal QA)
+            if include_open_qa:
+                q_open = OPEN_QUESTIONS[idx % len(OPEN_QUESTIONS)]
+                code = item.get("sign_code", "")
+                name = item.get("sign_name", "")
+                cat = item.get("category", "")
+                open_prompt = (
+                    f"{ctx_prefix}"
+                    f"Nhận diện thị giác: Biển số {code} \"{name}\" ({cat}).\n"
+                    f"Câu hỏi: {q_open}"
+                )
+                self.samples.append({
+                    "image_path": str(img_path),
+                    "user_prompt": open_prompt,
+                    "assistant_answer": clean_open_answer(item, self.retriever),
+                    "task": "open_qa",
+                })
 
     def __len__(self):
         return len(self.samples)
 
     def __getitem__(self, idx):
         item = self.samples[idx]
-        image = Image.open(item["image_path"]).convert("RGB")
+        image = Image.open(item["image_path"]).convert("RGB").resize((224, 224), Image.Resampling.BILINEAR)
 
-        conversation = [
+        user_msg = [
             {
                 "role": "user",
                 "content": [
                     {"type": "image"},
                     {"type": "text", "text": item["user_prompt"]},
                 ],
-            },
+            }
+        ]
+        full_conv = user_msg + [
             {
                 "role": "assistant",
                 "content": [
-                    {"type": "text", "text": item["correct_answer"]},
+                    {"type": "text", "text": item["assistant_answer"]},
                 ],
-            },
+            }
         ]
 
-        text = self.processor.apply_chat_template(
-            conversation,
+        prompt_text = self.processor.apply_chat_template(
+            user_msg,
+            tokenize=False,
+            add_generation_prompt=True,
+        )
+        full_text = self.processor.apply_chat_template(
+            full_conv,
             tokenize=False,
             add_generation_prompt=False,
         )
 
-        inputs = self.processor(
-            text=[text],
+        prompt_inputs = self.processor(
+            text=[prompt_text],
             images=[image],
-            padding=True,
+            padding=False,
+            return_tensors="pt",
+        )
+        full_inputs = self.processor(
+            text=[full_text],
+            images=[image],
+            padding=False,
             return_tensors="pt",
         )
 
-        item_inputs = {k: v.squeeze(0) for k, v in inputs.items()}
-        item_inputs["labels"] = item_inputs["input_ids"].clone()
+        prompt_len = prompt_inputs["input_ids"].shape[1]
+        item_inputs = {k: v.squeeze(0) for k, v in full_inputs.items()}
+        labels = item_inputs["input_ids"].clone()
+        # Che toàn bộ token của phần câu hỏi + ảnh bằng -100 để chỉ tính Loss trên câu trả lời của Assistant
+        labels[:prompt_len] = -100
+        item_inputs["labels"] = labels
         return item_inputs
+
+
+def collate_fn(batch):
+    """Pad batch cho Qwen2-VL."""
+    if len(batch) == 1:
+        return {k: v.unsqueeze(0) if k in ("input_ids", "attention_mask", "labels") else v for k, v in batch[0].items()}
+    raise NotImplementedError("Use per_device_train_batch_size=1 with gradient_accumulation_steps")
 
 
 def train():
@@ -180,33 +244,31 @@ def train():
     data_args = DataArguments()
     retriever = HybridLegalRetriever()
 
-    print(f"[*] Loading Processor: {model_args.model_name_or_path}...")
+    print(f"[*] Loading Processor: {model_args.model_name_or_path}...", flush=True)
     processor = AutoProcessor.from_pretrained(
         model_args.model_name_or_path,
-        min_pixels=256 * 28 * 28,
-        max_pixels=1024 * 28 * 28,
+        min_pixels=64 * 28 * 28,
+        max_pixels=128 * 28 * 28,
     )
 
+    dtype = torch.bfloat16 if (torch.cuda.is_available() and torch.cuda.is_bf16_supported()) else torch.float16
     bnb_config = None
-    if model_args.use_qlora and torch.cuda.is_available():
-        print("[*] Configuring 4-bit NF4 QLoRA Quantization...")
+    if torch.cuda.is_available():
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16,
+            bnb_4bit_compute_dtype=dtype,
             bnb_4bit_use_double_quant=True,
         )
-
-    device_map = "auto" if torch.cuda.is_available() else "cpu"
-    print(f"[*] Loading Base Vision-Language Model on {device_map}...")
+    device_map = "cuda:0" if torch.cuda.is_available() else "cpu"
+    print(f"[*] Loading Base Vision-Language Model on {device_map} ({dtype}, 4-bit NF4)...", flush=True)
     model = Qwen2VLForConditionalGeneration.from_pretrained(
         model_args.model_name_or_path,
         quantization_config=bnb_config,
-        torch_dtype=torch.bfloat16 if (torch.cuda.is_available() and torch.cuda.is_bf16_supported()) else torch.float32,
+        torch_dtype=dtype,
         device_map=device_map,
     )
-
-    if model_args.use_qlora and torch.cuda.is_available():
+    if torch.cuda.is_available():
         model = prepare_model_for_kbit_training(model)
 
     lora_config = LoraConfig(
@@ -228,6 +290,7 @@ def train():
         retriever=retriever,
         source_filter="real_street_crop",
         target_dir_prefix="data/real_crops",
+        include_open_qa=True,
     )
 
     eval_dataset = VLSP2025MLQADataset(
@@ -237,6 +300,7 @@ def train():
         retriever=retriever,
         source_filter="pdf_canonical",
         target_dir_prefix="data/pdf_signs",
+        include_open_qa=False,
     )
 
     output_dir = str(BASE_DIR / "traffic_vlm_peft_adapter")
@@ -244,7 +308,7 @@ def train():
         output_dir=output_dir,
         per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
-        gradient_accumulation_steps=4,
+        gradient_accumulation_steps=2,
         warmup_steps=5,
         max_steps=60,
         learning_rate=2e-4,
@@ -256,6 +320,7 @@ def train():
         save_total_limit=2,
         report_to="none",
         remove_unused_columns=False,
+        dataloader_pin_memory=False,
     )
 
     trainer = Trainer(
@@ -265,16 +330,16 @@ def train():
         eval_dataset=eval_dataset,
     )
 
-    print("\n" + "=" * 74)
-    print(" VLSP 2025 MLQA-TSR: TRAINING PEFT VLM ON data/real_crops -> EVAL ON data/pdf_signs ")
-    print("=" * 74)
-    print(f"Train samples (C:\\ki8\\DSP\\datadsp\\data\\real_crops): {len(train_dataset)}")
-    print(f"Eval samples  (C:\\ki8\\DSP\\datadsp\\data\\pdf_signs) : {len(eval_dataset)}")
+    print("\n" + "=" * 74, flush=True)
+    print(" TRAINING PEFT VLM (WITH PROMPT MASKING -100 & MULTI-TASK QA)", flush=True)
+    print("=" * 74, flush=True)
+    print(f"Train samples (Yes/No + Open-Ended Legal QA): {len(train_dataset)}", flush=True)
+    print(f"Eval samples  (data/pdf_signs Yes/No)       : {len(eval_dataset)}", flush=True)
     trainer.train()
 
-    print("\n[*] Đang đánh giá mô hình trên tệp C:\\ki8\\DSP\\datadsp\\data\\pdf_signs...")
+    print("\n[*] Đang đánh giá mô hình trên tập data/pdf_signs...", flush=True)
     eval_metrics = trainer.evaluate(eval_dataset=eval_dataset)
-    print(f"[✓] Kết quả đánh giá trên data/pdf_signs: {eval_metrics}")
+    print(f"[✓] Kết quả đánh giá trên data/pdf_signs: {eval_metrics}", flush=True)
 
     with open(DATA_DIR / "vlm_eval_pdf_signs.json", "w", encoding="utf-8") as f:
         json.dump({
@@ -288,7 +353,7 @@ def train():
 
     model.save_pretrained(output_dir)
     processor.save_pretrained(output_dir)
-    print(f"[✓] Saved PEFT LoRA Adapter to: {output_dir}")
+    print(f"[✓] Saved PEFT LoRA Adapter to: {output_dir}", flush=True)
 
 
 if __name__ == "__main__":

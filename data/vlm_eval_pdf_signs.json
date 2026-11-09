@@ -1,0 +1,14 @@
+{
+  "paper_reference": "VLSP 2025 MLQA-TSR Challenge: Vietnamese Multimodal Legal Question Answering on Traffic Sign Regulation",
+  "train_source": "C:\\ki8\\DSP\\datadsp\\data\\real_crops",
+  "eval_source": "C:\\ki8\\DSP\\datadsp\\data\\pdf_signs",
+  "train_samples": 3528,
+  "eval_samples": 60,
+  "eval_metrics": {
+    "eval_loss": 0.5936785936355591,
+    "eval_runtime": 28.4694,
+    "eval_samples_per_second": 2.108,
+    "eval_steps_per_second": 2.108,
+    "epoch": 0.034013605442176874
+  }
+}

@@ -1903,9 +1903,9 @@ async function sendUserMessage(textQuery) {
     if (currentFileName) {
       formData.append("file_name", currentFileName);
     }
-    // Chỉ gửi sign_code ngữ cảnh khi người dùng hỏi tiếp bằng chữ (!hasImage) hoặc bấm chọn thẻ mẫu (isDemoCard)
-    // Khi tải ảnh / dán ảnh mới (!isDemoCard), để Backend nhận diện trực tiếp từ ảnh
-    if ((!hasImage || isDemoCard) && currentContextSign && currentContextSign.sign_code) {
+    // Chỉ gửi sign_code ngữ cảnh khi người dùng hỏi tiếp bằng chữ mà không đính kèm ảnh (!hasImage)
+    // Khi có ảnh đính kèm (hasImage), luôn để Mạng Nơ-ron (TrafficSignClassifier + VLM) tại Backend nhận diện trực tiếp từ pixel ảnh
+    if (!hasImage && currentContextSign && currentContextSign.sign_code) {
       formData.append("sign_code", currentContextSign.sign_code);
     }
 

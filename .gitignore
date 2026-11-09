@@ -12,6 +12,7 @@ data/backbone_features_cache.pt
 traffic_vlm_peft_adapter/checkpoint-*/
 traffic_vlm_peft_adapter/*.safetensors
 *.pt
+!models/traffic_classifier_head.pt
 *.pth
 
 # Local folder junctions
